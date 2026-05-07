@@ -1,0 +1,26 @@
+.login-container {
+  background-color: #036077 !important;
+  background-image: url('/assets/images/fondo_login.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-login {
+  width: 20rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.50);
+  backdrop-filter: blur(5px);
+}
+
+:host ::ng-deep .p-password,
+:host ::ng-deep .p-password input {
+  width: 100%;
+}
+
+:host ::ng-deep .w-full button {
+    width: 100%;
+}
