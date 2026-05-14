@@ -1,8 +1,13 @@
+@import "primeicons/primeicons.css";
+@import "primeflex/primeflex.css";
+
 :root {
   --background-color: #E7E9EB;
 }
 
 body {
+  margin: 0;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-size: 12px !important;
   background-color: var(--background-color);
 }

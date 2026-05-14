@@ -1,8 +1,9 @@
 .login-container {
-  background-color: #036077 !important;
+  background-color:  #326d7b !important;
   background-image: url('/assets/images/fondo_login.png');
   background-repeat: no-repeat;
   background-position: center;
+  background-size: contain;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -23,4 +24,12 @@
 
 :host ::ng-deep .w-full button {
     width: 100%;
+}
+
+/* Celulares */
+@media (max-width: 480px) {
+  .login-container {
+    background-size: 100%;
+    background-position: center top;
+  }
 }

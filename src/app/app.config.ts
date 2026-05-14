@@ -12,16 +12,16 @@ import { MessageService } from 'primeng/api';
 const MyNoraPreset = definePreset(Nora, {
   semantic: {
     primary: {
-      50: '#eef9fb',
-      100: '#d9f0f3',
-      200: '#b3e0e7',
-      300: '#80cad5',
-      400: '#4daebe',
-      500: '#1f8aa0',
-      600: '#036077',
-      700: '#024e61',
-      800: '#023f4e',
-      900: '#012f3b'
+      50: '#f4fbfc',
+      100: '#e6f5f7',
+      200: '#cbeaed',
+      300: '#a8d8df',
+      400: '#7fc0cb',
+      500: '#5ca7b5',
+      600: '#3f8797',
+      700: '#326d7b',
+      800: '#285864',
+      900: '#1d424c'
     }
   },
   components: {

@@ -19,6 +19,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { ToastModule } from 'primeng/toast';
 import { Toolbar } from 'primeng/toolbar';
+import { TooltipModule } from 'primeng/tooltip';
 
 export const PRIMENG_MODULES = [
   ButtonModule,
@@ -42,5 +43,6 @@ export const PRIMENG_MODULES = [
   TextareaModule,
   TieredMenuModule,
   ToastModule,
+  TooltipModule,
   Toolbar
 ];

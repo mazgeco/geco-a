@@ -1,5 +1,22 @@
-<div class="main-container">
-  <p-card>
-    
-  </p-card>
+<div class="container">
+  <p-toolbar>
+    <ng-template #start>
+      <p-button icon="pi pi-sign-out" class="mr-2" text severity="secondary" label="Salir" (onClick)="logout()" />
+    </ng-template>
+    <ng-template #end>
+      <span>Usuario</span>
+    </ng-template>
+  </p-toolbar>
+  <div class="modules-container">
+    @for (modulo of modulos(); track modulo.nombre) {
+    <div class="module-card" [pTooltip]="modulo.descripcion" tooltipPosition="bottom" (click)="abrirModulo(modulo)">
+      <div class="icon-container">
+        <i [class]="modulo.icono"  [style.color]="modulo.color"></i>
+      </div>
+      <span class="module-title">
+        {{ modulo.nombre }}
+      </span>
+    </div>
+    }
+  </div>
 </div>
