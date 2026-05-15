@@ -76,9 +76,4 @@ export class MainPage implements OnInit {
     this.router.navigate([modulo.ruta]);
   }
 
-  logout(): void {
-    this.router.navigate(['/login']);
-  }
-
-
 }
