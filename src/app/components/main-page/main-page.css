@@ -1,10 +1,15 @@
+.container {
+  background-color: #c0c1eca4;
+  min-height: 100vh;
+}
+
 .modules-container {
   display: grid;
   /* 3 columnas fijas */
   grid-template-columns: repeat(3, 1fr);
-  gap: 2.5rem;
-  padding: 3rem;
-  max-width: 900px;
+  gap: 2rem;
+  padding: 2.5rem;
+  max-width: 700px;
   margin: auto;
 }
 
@@ -21,9 +26,9 @@
 }
 
 .icon-container {
-  width: 130px;
-  height: 130px;
-  border-radius: 24px;
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
   background: white;
   display: flex;
   justify-content: center;

@@ -1,13 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { PRIMENG_MODULES } from '../../shared/primeng/primeng.imports';
 import { Router } from '@angular/router';
-
-interface Modulo {
-  nombre: string;
-  descripcion: string;
-  icono: string;
-  color: string;
-}
+import { Modulo } from '../../interfaces/general.interface';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-main-page',
@@ -15,51 +10,70 @@ interface Modulo {
   templateUrl: './main-page.html',
   styleUrl: './main-page.css',
 })
-export class MainPage {
+export class MainPage implements OnInit {
 
+  menuItems: MenuItem[] | undefined;
   router = inject(Router);
+  modulos = signal<Modulo[]>([]);
 
-  modulos = signal<Modulo[]>([
+  ngOnInit(): void {
+
+    this.menuItems = [
+      {
+        label: "Salir",
+        icon: "pi pi-power-off",
+        routerLink: '/login'
+      }
+    ];
+
+    this.modulos.set([
     {
       nombre: 'Personas',
       descripcion: 'Administración de las personas del sistema',
+      ruta: '/personas/home',
       icono: 'pi pi-users',
       color: '#f59e0b'
     },
     {
       nombre: 'Productos',
       descripcion: 'Administración de todos los productos para la venta',
+      ruta: '/productos/home',
       icono: 'pi pi-objects-column',
       color: '#10b981'
     },
     {
       nombre: 'Proveedores',
       descripcion: 'Control de proveedores e insumos',
+      ruta: '/personas/home',
       icono: 'pi pi-tags',
       color: '#044e35'
     },
     {
       nombre: 'Reservas',
       descripcion: 'Gestión de reservas',
+      ruta: '/reservas/home',
       icono: 'pi pi-calendar-plus',
       color: '#730fd1'
     },
     {
       nombre: 'Seguridad',
       descripcion: 'Roles y permisos',
+      ruta: '/seguridad/home',
       icono: 'pi pi-shield',
       color: '#e9e517'
     },
     {
       nombre: 'Configuración',
       descripcion: 'Parámetros generales',
+      ruta: '/configuracion/home',
       icono: 'pi pi-cog',
       color: '#b91035'
     }
   ]);
+  }
 
   abrirModulo(modulo: Modulo): void {
-    console.log(modulo.descripcion);
+    this.router.navigate([modulo.ruta]);
   }
 
   logout(): void {

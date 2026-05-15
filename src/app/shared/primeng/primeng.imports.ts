@@ -9,6 +9,7 @@ import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
+import { MenubarModule } from 'primeng/menubar';
 import { MessageModule } from 'primeng/message';
 import { PanelMenu, PanelMenuModule } from 'primeng/panelmenu';
 import { PasswordModule } from 'primeng/password';
@@ -33,6 +34,7 @@ export const PRIMENG_MODULES = [
   InputNumberModule,
   IftaLabelModule,
   MenuModule,
+  MenubarModule,
   MessageModule,
   PanelMenu,
   PanelMenuModule,
