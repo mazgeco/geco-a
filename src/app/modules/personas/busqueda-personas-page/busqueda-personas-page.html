@@ -1,0 +1,14 @@
+<p-toolbar>
+  <ng-template #start>
+    <p-button label="Nuevo" (onClick)="openPersona()"></p-button>
+  </ng-template>
+  <ng-template #center>
+    <p-iconfield iconPosition="left">
+      <p-inputicon class="pi pi-search" />
+      <input type="text" pInputText placeholder="Search" />
+    </p-iconfield>
+  </ng-template>
+  <ng-template #end>
+    <span>end</span>
+  </ng-template>
+</p-toolbar>

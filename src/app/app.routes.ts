@@ -1,34 +1,29 @@
 import { Routes } from '@angular/router';
-import { LoginPage } from './components/login-page/login-page';
-import { MainPage } from './components/main-page/main-page';
 import { AuthLayout } from './layouts/auth-layout/auth-layout';
 import { MainLayout } from './layouts/main-layout/main-layout';
 import { PersonasLayout } from './layouts/personas-layout/personas-layout';
-import { HomePersonasPage } from './modules/personas/home-personas-page/home-personas-page';
+import { DashPersonasPage } from './modules/personas/dash-personas-page/dash-personas-page';
+import { PersonasPage } from './modules/personas/personas-page/personas-page';
+import { BusquedaPersonasPage } from './modules/personas/busqueda-personas-page/busqueda-personas-page';
 
 export const routes: Routes = [
   {
-    path: '',
-    component: AuthLayout,
-    children: [
-      { path: 'login', component: LoginPage },
-      { path: '', redirectTo: 'login', pathMatch: 'full' }
-    ]
+    path: 'login',
+    component: AuthLayout
   },
   {
     path: 'main',
-    component: MainLayout,
-    children: [
-      { path: 'main', component: MainPage },
-      { path: '', redirectTo: 'main', pathMatch: 'full' }
-    ]
+    component: MainLayout
   },
   {
     path: 'personas',
     component: PersonasLayout,
-    children:[
-      {path: 'home', component: HomePersonasPage},
-      { path: '', redirectTo: 'home', pathMatch: 'full' }
+    children: [
+      { path: 'dash', component: DashPersonasPage },
+      { path: 'search', component: BusquedaPersonasPage },
+      { path: 'persona', component: PersonasPage },
+      { path: '', redirectTo: 'dash', pathMatch: 'full' }
     ]
-  }
+  },
+  { path: '', redirectTo: 'login', pathMatch: 'full' }
 ];

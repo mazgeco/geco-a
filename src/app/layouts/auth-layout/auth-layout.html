@@ -1,1 +1,63 @@
-<router-outlet></router-outlet>
+<div class="login-container">
+  <div class="grid">
+    <div class="image-login col bg-white">
+      <img src="../../../assets/images/imagen_login.jpg" alt="">
+    </div>
+    <div class="col bg-white">
+      <p-card class="card-login min-h-full p-5">
+
+        <ng-template #title>
+          Ingreso
+        </ng-template>
+
+        <ng-template #subtitle>
+          Digite su nombre de usuario y su clave para ingresar
+        </ng-template>
+
+        <form (ngSubmit)="onSubmit()" [formGroup]="loginForm" class="w-full mt-4">
+          <div class="form-group">
+            <label for="username">Usuario</label>
+            <input type="text" pInputText pSize="small" id="username" class="w-full" formControlName="username"
+              [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('username')}" />
+            @if (isInvalid('username')) {
+            <small class="text-danger">
+              Campo obligatorio
+            </small>
+            }
+          </div>
+
+          <div class="form-group">
+            <div class="form-group">
+              <label for="password">Clave</label>
+              <p-password id="password" formControlName="password" size="small" [feedback]="false" [toggleMask]="true"
+                autocomplete="off" class="w-full" [ngClass]="{'ng-invalid ng-dirty': isInvalid('password')}">
+              </p-password>
+              @if (isInvalid('password')) {
+              <small class="text-danger">
+                Campo obligatorio
+              </small>
+              }
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <p-button label="Ingresar" type="submit" />
+          </div>
+
+          <div class="mb-2">
+            <p-button label="Olvidé mi clave" type="submit" />
+          </div>
+          @if (invalidLogin()) {
+          <div class="row text-danger">
+            <div class="col-12">
+              <small>
+                Usuario o clave inválidos
+              </small>
+            </div>
+          </div>
+          }
+        </form>
+      </p-card>
+    </div>
+  </div>
+</div>

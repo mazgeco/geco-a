@@ -21,6 +21,8 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { ToastModule } from 'primeng/toast';
 import { Toolbar } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 export const PRIMENG_MODULES = [
   ButtonModule,
@@ -32,6 +34,8 @@ export const PRIMENG_MODULES = [
   FormsModule,
   InputTextModule,
   InputNumberModule,
+  IconFieldModule,
+  InputIconModule,
   IftaLabelModule,
   MenuModule,
   MenubarModule,
