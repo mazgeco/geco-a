@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { PRIMENG_MODULES } from '../../../shared/primeng/primeng.imports';
 
+
 @Component({
-  selector: 'app-personas-page',
+  selector: 'app-win-per0018',
   imports: [...PRIMENG_MODULES],
-  templateUrl: './personas-page.html',
-  styleUrl: './personas-page.css',
+  templateUrl: './win-per0018.html',
+  styleUrl: './win-per0018.css',
 })
-export class PersonasPage implements OnInit {
+export class WinPer0018 implements OnInit {
 
   ngOnInit(): void {
     

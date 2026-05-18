@@ -27,7 +27,16 @@ export class PersonasLayout implements OnInit {
       {
         label: 'Personas',
         icon: 'pi pi-users',
-        routerLink: '/personas/search/'
+        items: [
+          {
+            label: 'Persona (búsqueda/creación)',
+            routerLink: '/personas/search/'
+          },
+          {
+            label: 'Unificar duplicados',
+            routerLink: '/personas/duplicates/'
+          }
+        ]
       },
       {
         label: 'Reportes',

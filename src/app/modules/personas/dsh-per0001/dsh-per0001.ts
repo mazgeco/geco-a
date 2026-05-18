@@ -3,12 +3,12 @@ import { PRIMENG_MODULES } from '../../../shared/primeng/primeng.imports';
 import { ChartModule } from 'primeng/chart';
 
 @Component({
-  selector: 'app-dash-personas-page',
+  selector: 'app-dsh-per0001',
   imports: [...PRIMENG_MODULES, ChartModule],
-  templateUrl: './dash-personas-page.html',
-  styleUrl: './dash-personas-page.css',
+  templateUrl: './dsh-per0001.html',
+  styleUrl: './dsh-per0001.css',
 })
-export class DashPersonasPage implements OnInit {
+export class DshPer0001 implements OnInit {
 
   data: any;
   options: any;
