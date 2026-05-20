@@ -23,6 +23,10 @@ import { Toolbar } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { DatePickerModule } from 'primeng/datepicker';
+import { FieldsetModule } from 'primeng/fieldset';
+import { PanelModule } from 'primeng/panel';
+import { TabsModule } from 'primeng/tabs';
 
 export const PRIMENG_MODULES = [
   ButtonModule,
@@ -30,7 +34,9 @@ export const PRIMENG_MODULES = [
   CardModule,
   CheckboxModule,
   DialogModule,
+  DatePickerModule,
   FileUploadModule,
+  FieldsetModule,
   FormsModule,
   InputTextModule,
   InputNumberModule,
@@ -43,9 +49,11 @@ export const PRIMENG_MODULES = [
   PanelMenu,
   PanelMenuModule,
   PasswordModule,
+  PanelModule,
   SelectModule,
   SplitButtonModule,
   TableModule,
+  TabsModule,
   TextareaModule,
   TieredMenuModule,
   ToastModule,

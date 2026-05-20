@@ -4,12 +4,12 @@ import { provideRouter } from '@angular/router';
 
 import { providePrimeNG } from 'primeng/config';
 import { definePreset } from '@primeuix/themes';
-import Nora from '@primeuix/themes/nora';
+import Aura from '@primeuix/themes/aura';
 
 import { routes } from './app.routes';
 import { MessageService } from 'primeng/api';
 
-const MyNoraPreset = definePreset(Nora, {
+const MyNoraPreset = definePreset(Aura, {
   semantic: {
     primary: {
       50: '#f4fbfc',
@@ -44,7 +44,8 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: MyNoraPreset,
         options: {
-          darkModeSelector: 'none'
+          darkModeSelector: 'none',
+          ripple: true
         }
       }
     }),

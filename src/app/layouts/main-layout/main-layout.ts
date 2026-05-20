@@ -32,6 +32,7 @@ export class MainLayout implements OnInit {
         descripcion: 'Administración de las personas del sistema',
         ruta: '/personas',
         icono: 'pi pi-users',
+        imagen: 'mod_per.png',
         color: '#f59e0b'
       },
       {
@@ -39,6 +40,7 @@ export class MainLayout implements OnInit {
         descripcion: 'Administración de todos los productos para la venta',
         ruta: '/productos/home',
         icono: 'pi pi-objects-column',
+        imagen: 'mod_prd.png',
         color: '#10b981'
       },
       {
@@ -46,6 +48,7 @@ export class MainLayout implements OnInit {
         descripcion: 'Control de proveedores e insumos',
         ruta: '/personas/home',
         icono: 'pi pi-tags',
+        imagen: 'mod_prv.png',
         color: '#044e35'
       },
       {
@@ -53,13 +56,15 @@ export class MainLayout implements OnInit {
         descripcion: 'Gestión de reservas',
         ruta: '/reservas/home',
         icono: 'pi pi-calendar-plus',
+        imagen: 'mod_res.png',
         color: '#730fd1'
       },
       {
-        nombre: 'Seguridad',
+        nombre: 'Seguridades',
         descripcion: 'Roles y permisos',
         ruta: '/seguridad/home',
         icono: 'pi pi-shield',
+        imagen: 'mod_seg.png',
         color: '#e9e517'
       },
       {
@@ -67,6 +72,7 @@ export class MainLayout implements OnInit {
         descripcion: 'Parámetros generales',
         ruta: '/configuracion/home',
         icono: 'pi pi-cog',
+        imagen: 'mod_adm.png',
         color: '#b91035'
       }
     ]);
