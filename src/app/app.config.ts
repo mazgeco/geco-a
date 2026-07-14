@@ -9,7 +9,7 @@ import Aura from '@primeuix/themes/aura';
 import { routes } from './app.routes';
 import { MessageService } from 'primeng/api';
 
-const MyNoraPreset = definePreset(Aura, {
+const MyAuraPreset = definePreset(Aura, {
   semantic: {
     primary: {
       50: '#f4fbfc',
@@ -42,7 +42,7 @@ export const appConfig: ApplicationConfig = {
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     providePrimeNG({
       theme: {
-        preset: MyNoraPreset,
+        preset: MyAuraPreset,
         options: {
           darkModeSelector: 'none',
           ripple: true

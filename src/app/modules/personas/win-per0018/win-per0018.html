@@ -1,372 +1,318 @@
 <p-toolbar>
-  <p-button label="Activar"></p-button>
+  <ng-template #start>
+    <p-button label="Activar"></p-button>
+  </ng-template>
+
+  <ng-template #center>
+    <p-selectbutton [(ngModel)]="datoVer" [options]="opciones" optionLabel="label" optionValue="value" size="small"
+      (onChange)="cambiaDatoVer($event)" />
+  </ng-template>
+
+  <ng-template #end>
+    <label pLabel>Notificaciones</label>
+  </ng-template>
+
 </p-toolbar>
 <p-toast />
+
+
+@if(datoVer() === "general"){
 <form class="grid m-2">
 
-  <!-- ===================================== -->
-  <!-- COLUMNA 1 -->
-  <!-- ===================================== -->
-  <p-panel class="col-12 md:col-6 p-0">
-
-    <!-- Código -->
-    <div class="field grid m-1">
-      <label for="codigo" class="flex col-12 md:col-5 lg:col-4">
-        Código:
-      </label>
-
-      <div class="col-12 md:col-7 lg:col-8">
-        <input id="codigo" type="text" pInputText class="w-full" />
+  <!-- ====================================================== -->
+  <!-- PANEL SUPERIOR -->
+  <!-- ====================================================== -->
+  <p-panel class="col-12">
+    <!-- Código y Estado -->
+    <div class="grid mb-4">
+      <div class="col-12 md:col-6">
+        <label class="font-bold">
+          COD. 1
+        </label>
+      </div>
+      <div class="col-12 md:col-6 text-right">
+        <label class="font-bold text-green-600">
+          ACTIVO
+        </label>
       </div>
     </div>
 
-    <!-- Tipo persona -->
-    <div class="field grid m-1">
-      <label for="tipoPersona" class="flex col-12 md:col-5 lg:col-4">
-        Tipo persona:
+    <!-- Razón Social -->
+    <div class="field mb-2">
+      <label for="razonSocial">
+        Razón social
       </label>
-
-      <div class="col-12 md:col-7 lg:col-8">
-        <p-select id="tipoPersona" [options]="[]" optionLabel="label" placeholder="Seleccione" class="w-full" />
-      </div>
+      <input id="razonSocial" type="text" pInputText class="w-full">
     </div>
-
-    <!-- Denominación -->
-    <div class="field grid m-1">
-      <label for="denominacion" class="flex col-12 md:col-5 lg:col-4">
-        Denominación:
+    <!-- Nombre Comercial -->
+    <div class="field mb-1">
+      <label for="nombreComercial">
+        Nombre comercial
       </label>
-
-      <div class="col-12 md:col-7 lg:col-8">
-        <p-select id="denominacion" [options]="[]" optionLabel="label" placeholder="Seleccione" class="w-full" />
-      </div>
-    </div>
-
-    <!-- Apellido 1 -->
-    <div class="field grid m-1">
-      <label for="apellido1" class="flex col-12 md:col-5 lg:col-4">
-        Apellido 1:
-      </label>
-
-      <div class="col-12 md:col-7 lg:col-8">
-        <input id="apellido1" type="text" pInputText class="w-full" />
-      </div>
-    </div>
-
-    <!-- Apellido 2 -->
-    <div class="field grid m-1">
-      <label for="apellido2" class="flex col-12 md:col-5 lg:col-4">
-        Apellido 2:
-      </label>
-
-      <div class="col-12 md:col-7 lg:col-8">
-        <input id="apellido2" type="text" pInputText class="w-full" />
-      </div>
-    </div>
-
-    <!-- Nombre 1 -->
-    <div class="field grid m-1">
-      <label for="nombre1" class="flex col-12 md:col-5 lg:col-4">
-        Nombre 1:
-      </label>
-
-      <div class="col-12 md:col-7 lg:col-8">
-        <input id="nombre1" type="text" pInputText class="w-full" />
-      </div>
-    </div>
-
-    <!-- Nombre 2 -->
-    <div class="field grid m-1">
-      <label for="nombre2" class="flex col-12 md:col-5 lg:col-4">
-        Nombre 2:
-      </label>
-
-      <div class="col-12 md:col-7 lg:col-8">
-        <input id="nombre2" type="text" pInputText class="w-full" />
-      </div>
+      <input id="nombreComercial" type="text" pInputText class="w-full">
     </div>
 
   </p-panel>
 
-  <!-- ===================================== -->
-  <!-- COLUMNA 2 -->
-  <!-- ===================================== -->
-  <p-panel class="col-12 md:col-6 p-0">
 
-    <!-- Razón social -->
-    <div class="field grid m-1">
-      <label for="razonSocial" class="flex col-12 md:col-5 lg:col-4">
-        Razón social:
-      </label>
+  <!-- ====================================================== -->
+  <!-- PANEL INFERIOR -->
+  <!-- ====================================================== -->
+  <p-panel class="col-12">
 
-      <div class="col-12 md:col-7 lg:col-8">
-        <input id="razonSocial" type="text" pInputText class="w-full" />
+    <div class="grid">
+
+      <!-- ======================= -->
+      <!-- FILA 1 -->
+      <!-- ======================= -->
+
+      <div class="col-12 md:col-6">
+        <div class="field mb-1">
+          <label>Nombre 1</label>
+          <input pInputText class="w-full">
+        </div>
+      </div>
+
+      <div class="col-12 md:col-6">
+        <div class="field mb-1">
+          <label>Nombre 2</label>
+          <input pInputText class="w-full">
+        </div>
+      </div>
+
+      <!-- ======================= -->
+      <!-- FILA 2 -->
+      <!-- ======================= -->
+
+      <div class="col-12 md:col-6">
+        <div class="field mb-1">
+          <label>Apellido 1</label>
+          <input pInputText class="w-full">
+        </div>
+      </div>
+
+      <div class="col-12 md:col-6">
+        <div class="field mb-1">
+          <label>Apellido 2</label>
+          <input pInputText class="w-full">
+        </div>
+      </div>
+
+      <!-- ======================= -->
+      <!-- FILA 3 -->
+      <!-- ======================= -->
+
+      <div class="col-12 md:col-4">
+        <div class="field mb-1">
+          <label>Tipo persona</label>
+          <p-select class="w-full"></p-select>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <div class="field mb-1">
+          <label>Tipo organización</label>
+          <p-select class="w-full"></p-select>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <div class="field mb-1">
+          <label>Denominación</label>
+          <p-select class="w-full"></p-select>
+        </div>
+      </div>
+
+      <!-- ======================= -->
+      <!-- FILA 4 -->
+      <!-- ======================= -->
+
+      <div class="col-12 md:col-4">
+        <div class="field mb-1">
+          <label>Fecha nacimiento</label>
+          <p-datepicker class="w-full"></p-datepicker>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <div class="field mb-1">
+          <label>Género</label>
+          <p-select class="w-full"></p-select>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <div class="field mb-1">
+          <label>Estado civil</label>
+          <p-select class="w-full"></p-select>
+        </div>
+      </div>
+
+      <!-- ======================= -->
+      <!-- FILA 5 -->
+      <!-- ======================= -->
+
+      <div class="col-12 md:col-4">
+        <div class="field mb-1">
+          <label>Nacionalidad</label>
+          <p-select class="w-full"></p-select>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <div class="field mb-1">
+          <label>País residencia</label>
+          <p-select class="w-full"></p-select>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <div class="field mb-1">
+          <label>Entidad financiera</label>
+          <p-select class="w-full"></p-select>
+        </div>
+      </div>
+
+      <!-- ======================= -->
+      <!-- FILA 6 -->
+      <!-- ======================= -->
+
+      <div class="col-12 md:col-6">
+        <div class="field mb-1">
+          <label>E-mail</label>
+          <input type="email" pInputText class="w-full">
+        </div>
+      </div>
+
+      <div class="col-12 md:col-6">
+        <div class="field mb-1">
+          <label>Página web</label>
+          <input pInputText class="w-full">
+        </div>
       </div>
     </div>
-
-    <!-- Nombre comercial -->
-    <div class="field grid m-1">
-      <label for="nombreComercial" class="flex col-12 md:col-5 lg:col-4">
-        Nombre comercial:
-      </label>
-
-      <div class="col-12 md:col-7 lg:col-8">
-        <input id="nombreComercial" type="text" pInputText class="w-full" />
-      </div>
-    </div>
-
-    <!-- Nacionalidad -->
-    <div class="field grid m-1">
-      <label for="nacionalidad" class="flex col-12 md:col-5 lg:col-4">
-        Nacionalidad:
-      </label>
-
-      <div class="col-12 md:col-7 lg:col-8">
-        <p-select id="nacionalidad" [options]="[]" optionLabel="label" placeholder="Seleccione" class="w-full" />
-      </div>
-    </div>
-
-    <!-- Género -->
-    <div class="field grid m-1">
-      <label for="genero" class="flex col-12 md:col-5 lg:col-4">
-        Género:
-      </label>
-
-      <div class="col-12 md:col-7 lg:col-8">
-        <p-select id="genero" [options]="[]" optionLabel="label" placeholder="Seleccione" class="w-full" />
-      </div>
-    </div>
-
-    <!-- Estado -->
-    <div class="field grid m-1">
-      <label for="estado" class="flex col-12 md:col-5 lg:col-4">
-        Estado:
-      </label>
-
-      <div class="col-12 md:col-7 lg:col-8">
-        <p-select id="estado" [options]="[]" optionLabel="label" placeholder="Seleccione" class="w-full" />
-      </div>
-    </div>
-
-    <!-- Fecha nacimiento -->
-    <div class="field grid m-1">
-      <label for="fechaNacimiento" class="flex col-12 md:col-5 lg:col-4">
-        Fecha nacimiento:
-      </label>
-
-      <div class="col-12 md:col-7 lg:col-8">
-        <p-datepicker id="fechaNacimiento" appendTo="body" dateFormat="dd/mm/yy" class="w-full" />
-      </div>
-    </div>
-
-    <!-- Estado civil -->
-    <div class="field grid m-1">
-      <label for="estadoCivil" class="flex col-12 md:col-5 lg:col-4">
-        Estado civil:
-      </label>
-
-      <div class="col-12 md:col-7 lg:col-8">
-        <p-select id="estadoCivil" [options]="[]" optionLabel="label" placeholder="Seleccione" class="w-full" />
-      </div>
-    </div>
-
   </p-panel>
 </form>
-<p-card class="m-2">
-  <p-tabs value="0">
-    <p-tablist>
-      <p-tab value="0">Datos adicionales</p-tab>
-      <p-tab value="1">Identificaciones</p-tab>
-      <p-tab value="2">Direcciones</p-tab>
-      <p-tab value="3">Teléfonos</p-tab>
-      <p-tab value="4">Características</p-tab>
-      <p-tab value="5">Ficha médica</p-tab>
-    </p-tablist>
-    <p-tabpanels>
-      <p-tabpanel value="0">
-        <!-- ===================================== -->
-        <!-- TAB 0: DATOS ADICIONALES -->
-        <!-- ===================================== -->
-        <form>
+}
 
-          <!-- País residencia -->
-          <div class="field grid m-1">
-            <label for="paisResidencia" class="flex col-12 md:col-5 lg:col-4">
-              País residencia:
-            </label>
+@if(datoVer() === "identificaciones"){
+<p-panel>
+  <!-- ===================================== -->
+  <!-- TAB 1: IDENTIFICACIONES -->
+  <!-- ===================================== -->
+  <p-table [value]="identificaciones()" editMode="row" dataKey="idIdentificacion" showGridlines class="p-datatable-sm">
 
-            <div class="col-12 md:col-7 lg:col-8">
-              <p-select id="paisResidencia" [options]="[]" optionLabel="label" placeholder="Seleccione"
-                class="w-full" />
-            </div>
-          </div>
+    <!-- HEADER -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 25%">Tipo</th>
+        <th style="width: 30%">Identificación</th>
+        <th style="width: 25%">Fecha caducidad</th>
+        <th style="width: 10%">Preferido</th>
+        <th style="width: 10%"></th>
+      </tr>
+    </ng-template>
+    <!-- BODY -->
+    <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+      <tr [pEditableRow]="rowData">
+        <!-- TIPO -->
+        <td>
+          <p-cellEditor>
+            <!-- INPUT -->
+            <ng-template pTemplate="input">
+              <p-select [options]="[]" optionLabel="nombre" optionValue="id" [(ngModel)]="rowData.idTipoIdentificacion"
+                placeholder="Seleccione" class="w-full" />
+            </ng-template>
+            <!-- OUTPUT -->
+            <ng-template pTemplate="output">
+              {{ rowData.idTipoIdentificacion }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- IDENTIFICACION -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="rowData.descripcionIdentificacion" class="w-full" />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ rowData.descripcionIdentificacion }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- FECHA CADUCIDAD -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-datepicker [(ngModel)]="rowData.fechaCaducidad" appendTo="body" dateFormat="yy-mm-dd" class="w-full" />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ rowData.fechaCaducidad | date:'yyyy-MM-dd' }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- PREFERIDO -->
+        <td class="text-center">
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-checkbox [(ngModel)]="rowData.principalIdentificacion" [binary]="true" />
+            </ng-template>
+            <ng-template pTemplate="output">
+              <i class="pi"
+                [ngClass]="rowData.principalIdentificacion == 'S' ? 'pi-check-circle text-green-500' : 'pi-circle'"></i>
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- ACCIONES -->
+        <td class="text-center">
+          <!-- EDITAR -->
+          @if (!editing) {
+          <button pButton pInitEditableRow icon="pi pi-pencil" text rounded severity="primary"></button>
+          }
+          <!-- GUARDAR / CANCELAR -->
+          @if (editing) {
+          <button pButton pSaveEditableRow icon="pi pi-check" text rounded severity="success" class="mr-1"></button>
+          <button pButton pCancelEditableRow icon="pi pi-times" text rounded severity="danger"></button>
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-panel>
+}
 
-          <!-- Página web -->
-          <div class="field grid m-1">
-            <label for="paginaWeb" class="flex col-12 md:col-5 lg:col-4">
-              Página web:
-            </label>
+@if(datoVer() === "direcciones"){
+<p-panel>
+  <!-- ===================================== -->
+  <!-- TAB 1: DIRECCIONES -->
+  <!-- ===================================== -->
+  <p>Aquí panel 2</p>
+</p-panel>
+}
 
-            <div class="col-12 md:col-7 lg:col-8">
-              <input id="paginaWeb" type="text" pInputText class="w-full" />
-            </div>
-          </div>
+@if(datoVer() === "telefonos"){
+<p-panel>
+  <!-- ===================================== -->
+  <!-- TAB 1: DIRECCIONES -->
+  <!-- ===================================== -->
+  <p>Aquí panel 2</p>
+</p-panel>
+}
 
-          <!-- Email -->
-          <div class="field grid m-1">
-            <label for="email" class="flex col-12 md:col-5 lg:col-4">
-              E-mail:
-            </label>
+@if(datoVer() === "caracteristicas"){
+<p-panel>
+  <!-- ===================================== -->
+  <!-- TAB 1: DIRECCIONES -->
+  <!-- ===================================== -->
+  <p>Aquí panel 2</p>
+</p-panel>
+}
 
-            <div class="col-12 md:col-7 lg:col-8">
-              <input id="email" type="email" pInputText class="w-full" />
-            </div>
-          </div>
-
-          <!-- Tipo organización -->
-          <div class="field grid m-1">
-            <label for="tipoOrganizacion" class="flex col-12 md:col-5 lg:col-4">
-              Tipo organización:
-            </label>
-
-            <div class="col-12 md:col-7 lg:col-8">
-              <p-select id="tipoOrganizacion" [options]="[]" optionLabel="label" placeholder="Seleccione"
-                class="w-full" />
-            </div>
-          </div>
-
-          <!-- Entidad financiera -->
-          <div class="field grid m-1">
-            <label for="entidadFinanciera" class="flex col-12 md:col-5 lg:col-4">
-              Entidad financiera:
-            </label>
-
-            <div class="col-12 md:col-7 lg:col-8">
-              <p-select id="entidadFinanciera" [options]="[]" optionLabel="label" placeholder="Seleccione"
-                class="w-full" />
-            </div>
-          </div>
-
-          <!-- Días time limit -->
-          <div class="field grid m-1">
-            <label for="diasTimeLimit" class="flex col-12 md:col-5 lg:col-4">
-              Días time limit:
-            </label>
-
-            <div class="col-12 md:col-7 lg:col-8">
-              <p-inputNumber id="diasTimeLimit" [min]="0" class="w-full" />
-            </div>
-          </div>
-        </form>
-      </p-tabpanel>
-      <p-tabpanel value="1">
-        <!-- ===================================== -->
-        <!-- TAB 1: IDENTIFICACIONES -->
-        <!-- ===================================== -->
-        <p-table [value]="identificaciones()" editMode="row" dataKey="idIdentificacion" showGridlines  class="p-datatable-sm">
-
-          <!-- HEADER -->
-          <ng-template pTemplate="header">
-            <tr>
-              <th style="width: 25%">Tipo</th>
-              <th style="width: 30%">Identificación</th>
-              <th style="width: 25%">Fecha caducidad</th>
-              <th style="width: 10%">Preferido</th>
-              <th style="width: 10%"></th>
-            </tr>
-          </ng-template>
-          <!-- BODY -->
-          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-            <tr [pEditableRow]="rowData">
-              <!-- TIPO -->
-              <td>
-                <p-cellEditor>
-                  <!-- INPUT -->
-                  <ng-template pTemplate="input">
-                    <p-select [options]="[]" optionLabel="nombre" optionValue="id"
-                      [(ngModel)]="rowData.idTipoIdentificacion" placeholder="Seleccione" class="w-full" />
-                  </ng-template>
-                  <!-- OUTPUT -->
-                  <ng-template pTemplate="output">
-                    {{ rowData.idTipoIdentificacion }}
-                  </ng-template>
-                </p-cellEditor>
-              </td>
-              <!-- IDENTIFICACION -->
-              <td>
-                <p-cellEditor>
-                  <ng-template pTemplate="input">
-                    <input pInputText type="text" [(ngModel)]="rowData.descripcionIdentificacion" class="w-full" />
-                  </ng-template>
-                  <ng-template pTemplate="output">
-                    {{ rowData.descripcionIdentificacion }}
-                  </ng-template>
-                </p-cellEditor>
-              </td>
-              <!-- FECHA CADUCIDAD -->
-              <td>
-                <p-cellEditor>
-                  <ng-template pTemplate="input">
-                    <p-datepicker [(ngModel)]="rowData.fechaCaducidad" appendTo="body" dateFormat="yy-mm-dd"
-                      class="w-full" />
-                  </ng-template>
-                  <ng-template pTemplate="output">
-                    {{ rowData.fechaCaducidad | date:'yyyy-MM-dd' }}
-                  </ng-template>
-                </p-cellEditor>
-              </td>
-              <!-- PREFERIDO -->
-              <td class="text-center">
-                <p-cellEditor>
-                  <ng-template pTemplate="input">
-                    <p-checkbox [(ngModel)]="rowData.principalIdentificacion" [binary]="true" />
-                  </ng-template>
-                  <ng-template pTemplate="output">
-                    <i class="pi" [ngClass]="rowData.principalIdentificacion == 'S' ? 'pi-check-circle text-green-500' : 'pi-circle'"></i>
-                  </ng-template>
-                </p-cellEditor>
-              </td>
-              <!-- ACCIONES -->
-              <td class="text-center">
-                <!-- EDITAR -->
-                @if (!editing) {
-                <button pButton pInitEditableRow icon="pi pi-pencil" text rounded severity="primary"></button>
-                }
-                <!-- GUARDAR / CANCELAR -->
-                @if (editing) {
-                <button pButton pSaveEditableRow icon="pi pi-check" text rounded severity="success"
-                  class="mr-1"></button>
-                <button pButton pCancelEditableRow icon="pi pi-times" text rounded severity="danger"></button>
-                }
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </p-tabpanel>
-      <p-tabpanel value="2">
-        <!-- ===================================== -->
-        <!-- TAB 1: DIRECCIONES -->
-        <!-- ===================================== -->
-        <p>Aquí panel 2</p>
-      </p-tabpanel>
-      <p-tabpanel value="3">
-        <!-- ===================================== -->
-        <!-- TAB 1: TELÉFONOS -->
-        <!-- ===================================== -->
-        <p>Aquí panel 3</p>
-      </p-tabpanel>
-      <p-tabpanel value="4">
-        <!-- ===================================== -->
-        <!-- TAB 1: CARACTERÍSTICAS -->
-        <!-- ===================================== -->
-        <p>Aquí panel 4</p>
-      </p-tabpanel>
-      <p-tabpanel value="5">
-        <!-- ===================================== -->
-        <!-- TAB 1: FICHA MÉDICA -->
-        <!-- ===================================== -->
-        <p>Aquí panel 5</p>
-      </p-tabpanel>
-    </p-tabpanels>
-  </p-tabs>
-</p-card>
+@if(datoVer() === "ficha"){
+<p-panel>
+  <!-- ===================================== -->
+  <!-- TAB 1: DIRECCIONES -->
+  <!-- ===================================== -->
+  <p>Aquí panel 2</p>
+</p-panel>
+}

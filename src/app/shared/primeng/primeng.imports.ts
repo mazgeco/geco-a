@@ -27,6 +27,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { FieldsetModule } from 'primeng/fieldset';
 import { PanelModule } from 'primeng/panel';
 import { TabsModule } from 'primeng/tabs';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 export const PRIMENG_MODULES = [
   ButtonModule,
@@ -51,6 +52,7 @@ export const PRIMENG_MODULES = [
   PasswordModule,
   PanelModule,
   SelectModule,
+  SelectButtonModule,
   SplitButtonModule,
   TableModule,
   TabsModule,

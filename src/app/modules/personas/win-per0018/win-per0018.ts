@@ -12,6 +12,17 @@ import { DatePipe, NgClass } from '@angular/common';
 })
 export class WinPer0018 implements OnInit {
 
+  datoVer = signal<string>("general");
+
+  opciones: any[] = [
+    {label:"Datos generales", value:'general'},
+    {label:"Identificaciones", value:'identificaciones'},
+    {label:"Direcciones", value:'direcciones'},
+    {label:"Teléfonos", value:'telefonos'},
+    {label:"Características", value:'caracteristicas'},
+    {label:"Ficha médica", value:'ficha'}
+  ];
+
   identificaciones = signal<Identificaciones[]>([
     {
       idIdentificacion: 1,
@@ -41,5 +52,9 @@ export class WinPer0018 implements OnInit {
 
   ngOnInit(): void {
     
+  }
+
+  cambiaDatoVer(event: any):void {
+    this.datoVer.set(event.value);
   }
 }
