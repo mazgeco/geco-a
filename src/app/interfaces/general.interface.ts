@@ -3,6 +3,5 @@ export interface Modulo {
   descripcion: string;
   ruta: string;
   icono: string;
-  imagen: string;
   color: string;
 };

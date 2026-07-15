@@ -1,5 +1,5 @@
 <div class="container">
-  <p-menubar [model]="menuItems">  
+  <p-menubar [model]="menuItems">
     <ng-template #end>
       <span>Usuario</span>
     </ng-template>
@@ -7,12 +7,8 @@
   <div class="modules-container">
     @for (modulo of modulos(); track modulo.nombre) {
     <div class="module-card" [pTooltip]="modulo.descripcion" tooltipPosition="bottom" (click)="abrirModulo(modulo)">
-      <div class="icon-container">
-        <img
-          [src]="'../../../assets/images/' + modulo.imagen"
-          [alt]="modulo.nombre"
-          class="module-image"
-        />
+      <div class="icon-container" [style.--module-color]="modulo.color">
+        <i [class]="modulo.icono"></i>
       </div>
       <span class="module-title">
         {{ modulo.nombre }}

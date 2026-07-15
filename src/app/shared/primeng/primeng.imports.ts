@@ -28,6 +28,7 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { PanelModule } from 'primeng/panel';
 import { TabsModule } from 'primeng/tabs';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { ListboxModule } from 'primeng/listbox';
 
 export const PRIMENG_MODULES = [
   ButtonModule,
@@ -44,6 +45,7 @@ export const PRIMENG_MODULES = [
   IconFieldModule,
   InputIconModule,
   IftaLabelModule,
+  ListboxModule,
   MenuModule,
   MenubarModule,
   MessageModule,
