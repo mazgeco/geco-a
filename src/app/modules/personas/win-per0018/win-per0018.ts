@@ -1,7 +1,8 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { PRIMENG_MODULES } from '../../../shared/primeng/primeng.imports';
 import { Identificaciones } from '../../../interfaces/personas.interfaces';
 import { DatePipe, NgClass } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -12,7 +13,9 @@ import { DatePipe, NgClass } from '@angular/common';
 })
 export class WinPer0018 implements OnInit {
 
+  private route = inject(ActivatedRoute);
   datoVer = signal<string>("general");
+  idPersona = signal<number>(0);
 
   opciones: any[] = [
     {label:"Datos generales", value:'general'},
@@ -51,7 +54,7 @@ export class WinPer0018 implements OnInit {
   ]);
 
   ngOnInit(): void {
-    
+    this.idPersona.set(Number(this.route.snapshot.paramMap.get('id')));
   }
 
   cambiaDatoVer(event: any):void {

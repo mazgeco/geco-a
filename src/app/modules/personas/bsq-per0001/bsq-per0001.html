@@ -9,6 +9,37 @@
     </p-iconfield>
   </ng-template>
   <ng-template #end>
-    <span>end</span>
+    <span></span>
   </ng-template>
 </p-toolbar>
+
+<div class="grid m-3">
+  @for (persona of personas(); track persona.idPersona) {
+  <div class="col-12 md:col-6 lg:col-4 xl:col-3">
+    <p-card class="resultado-card h-full cursor-pointer" (click)="seleccionarPersona(persona)">
+      <ng-template #title>
+        <div class="font-semibold text-sm">
+          {{ persona.razonSocial }}
+        </div>
+      </ng-template>
+      <div class="text-sm">
+        <div>
+          <span class="font-semibold">Código:</span>
+          {{ persona.idPersona }}
+        </div>
+        <div>
+          {{ persona.tipoPersona }}
+        </div>
+        <div>
+          <span class="font-semibold">Identificación:</span>
+          {{ persona.identificacion }}
+        </div>
+        <div>
+          <span class="font-semibold">Telf.:</span>
+          {{ persona.telefono }}
+        </div>
+      </div>
+    </p-card>
+  </div>
+  }
+</div>

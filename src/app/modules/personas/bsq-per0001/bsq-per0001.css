@@ -1,0 +1,19 @@
+.resultado-card {
+    height: 100%;
+    transition: all .18s ease;
+    cursor: pointer;
+}
+
+.resultado-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--p-overlay-shadow);
+}
+
+.resultado-card .p-card-body {
+    padding: .75rem;
+}
+
+.resultado-card .p-card-title {
+    margin-bottom: .5rem;
+    font-size: .95rem;
+}
