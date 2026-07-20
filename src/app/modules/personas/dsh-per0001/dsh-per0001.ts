@@ -16,11 +16,11 @@ export class DshPer0001 implements OnInit {
   barOptions: any;
 
   ngOnInit(): void {
-    this.initPieChart();
-    this.initBarChart();
+    this.initPieChartPersonas();
+    this.initBarChartPersonas();
   }
 
-  initPieChart(): void {
+  initPieChartPersonas(): void {
     this.data = {
       labels: ['Java', 'Angular', 'Spring Boot', 'Docker'],
       datasets: [
@@ -53,7 +53,7 @@ export class DshPer0001 implements OnInit {
     };
   }
 
-  initBarChart(): void {
+  initBarChartPersonas(): void {
     this.barData = {
       labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
       datasets: [

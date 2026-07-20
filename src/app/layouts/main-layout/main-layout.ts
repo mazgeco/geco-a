@@ -37,35 +37,35 @@ export class MainLayout implements OnInit {
       {
         nombre: 'Productos',
         descripcion: 'Administración de todos los productos para la venta',
-        ruta: '/productos/home',
+        ruta: '/productos',
         icono: 'pi pi-box',
         color: '#22c55e'
       },
       {
         nombre: 'Proveedores',
         descripcion: 'Control de proveedores e insumos',
-        ruta: '/personas/home',
+        ruta: '/proveedores',
         icono: 'pi pi-truck',
         color: '#f59e0b'
       },
       {
         nombre: 'Reservas',
         descripcion: 'Gestión de reservas',
-        ruta: '/reservas/home',
+        ruta: '/reservas',
         icono: 'pi pi-calendar-plus',
         color: '#8b5cf6'
       },
       {
         nombre: 'Seguridades',
         descripcion: 'Roles y permisos',
-        ruta: '/seguridad/home',
+        ruta: '/seguridades',
         icono: 'pi pi-shield',
         color: '#ef4444'
       },
       {
         nombre: 'Configuración',
         descripcion: 'Parámetros generales',
-        ruta: '/configuracion/home',
+        ruta: '/configuracion',
         icono: 'pi pi-cog',
         color: '#14b8a6'
       }

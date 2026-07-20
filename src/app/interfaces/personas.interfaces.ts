@@ -23,10 +23,10 @@ export interface Personas {
   nombre2?: string | null;
   razonSocial: string;
   nombreComercial?: string | null;
-  fechaNacimiento?: Date | null;
+  fechaNacimiento?: string | null;
   correoElectronico?: string | null;
   paginaWeb?: string | null;
-  estadoPersona: string;
+  estadoPersona: EstadoPersona;
   esEntidadFinanciera?: string | null;
   genero?: string | null;
   tipoPersona?: string;
@@ -34,8 +34,29 @@ export interface Personas {
   identificacion?: string | null;
   telefono?: string | null;
   nombreTipoPersona?: string | null;
-  idUsuarioCrea?: string | null;
-  fechaCrea?: Date | null;
+  idUsuarioCrea: string | null;
+  fechaCrea: string | null;
   idUsuarioModifica?: string | null;
-  fechaModifica?: Date | null;
+  fechaModifica?: string | null;
+}
+
+export interface TipoEmpresas {
+  idTipoEmpresa: string;
+  descripcionTipoEmpresa: string;
+  tipoEmpresaInterno: string | null;
+  idUsuarioCrea: string | null;
+  fechaCrea: Date | null;
+  idUsuarioModifica: string | null;
+  fechaModifica: Date | null;
+}
+
+
+export enum Opcion {
+    N = "N",
+    S = "S",
+}
+
+export enum EstadoPersona {
+    A = "A",
+    I = "I",
 }

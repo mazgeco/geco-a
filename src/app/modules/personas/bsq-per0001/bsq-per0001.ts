@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { PRIMENG_MODULES } from '../../../shared/primeng/primeng.imports';
 import { Router } from '@angular/router';
-import { Personas } from '../../../interfaces/personas.interfaces';
+import { EstadoPersona, Personas } from '../../../interfaces/personas.interfaces';
 
 @Component({
   selector: 'app-bsq-per0001',
@@ -16,34 +16,42 @@ export class BsqPer0001 implements OnInit {
     {
       idPersona: 5303,
       razonSocial: "Aseguradora del Sur",
-      estadoPersona: "A",
+      estadoPersona: EstadoPersona.A,
       nombreTipoPersona: "Jurídica",
       telefono: "+593 22-22-22",
-      identificacion: "1712345678001"
+      identificacion: "1712345678001",
+      idUsuarioCrea: "sistemas",
+      fechaCrea: "2020-01-01"
     },
     {
       idPersona: 2504,
       razonSocial: "29 TRAVEL",
-      estadoPersona: "A",
+      estadoPersona: EstadoPersona.A,
       nombreTipoPersona: "Jurídica",
       telefono: "+593 22-22-22",
-      identificacion: "1712345678001"
+      identificacion: "1712345678001",
+      idUsuarioCrea: "sistemas",
+      fechaCrea: "2020-01-01"
     },
     {
       idPersona: 2400,
       razonSocial: "Abercrombie & Kent Ecuador S.A",
-      estadoPersona: "A",
+      estadoPersona:EstadoPersona.A,
       nombreTipoPersona: "Jurídica",
       telefono: "+593 22-22-22",
-      identificacion: "1712345678001"
+      identificacion: "1712345678001",
+      idUsuarioCrea: "sistemas",
+      fechaCrea: "2020-01-01"
     },
     {
       idPersona: 2400,
       razonSocial: "Achiote Ecuador Cuisine",
-      estadoPersona: "A",
+      estadoPersona: EstadoPersona.A,
       nombreTipoPersona: "Jurídica",
       telefono: "+593 22-22-22",
-      identificacion: "1712345678001"
+      identificacion: "1712345678001",
+      idUsuarioCrea: "sistemas",
+      fechaCrea: "2020-01-01"
     }
   ]);
 
@@ -52,7 +60,7 @@ export class BsqPer0001 implements OnInit {
   }
 
   openPersona(): void {
-    this.router.navigate(['/personas/persona/']);
+    this.router.navigate(['/personas/persona/', '0']);
   }
 
   seleccionarPersona(persona: Personas):void{

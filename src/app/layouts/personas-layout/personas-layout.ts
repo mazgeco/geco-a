@@ -9,7 +9,7 @@ import { PRIMENG_MODULES } from '../../shared/primeng/primeng.imports';
   templateUrl: './personas-layout.html'
 })
 export class PersonasLayout implements OnInit {
-   router = inject(Router);
+  router = inject(Router);
   menuItems: MenuItem[] | undefined;
 
   ngOnInit(): void {
