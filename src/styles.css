@@ -7,7 +7,7 @@
 
 body {
   margin: 0;
-  font-family: fantasy;
+  font-family: 'Poppins', sans-serif;
   font-size: 12px !important;
   background-color: var(--background-color);
 }
@@ -26,12 +26,12 @@ body {
   height: 1.8rem !important;
   font-size: 0.8rem !important;
   border-radius: 0.2rem !important;
-  background-color: #F8FAFC !important;
+  background-color: #eeeeee !important;
 }
 
 .p-select-label {
   padding: 0.2rem 0.6rem !important;
-  font-size: 0.7rem !important;
+  font-size: 0.8rem !important;
   line-height: 1.7rem !important;
 }
 

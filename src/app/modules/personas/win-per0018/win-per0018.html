@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <p-toolbar>
   <ng-template #start>
     <p-button label="Activar"></p-button>
@@ -17,7 +18,7 @@
 
 
 @if(datoVer() === "general"){
-<form class="grid m-2">
+<form class="grid m-2" [formGroup]="dataForm">
 
   <!-- ====================================================== -->
   <!-- PANEL SUPERIOR -->
@@ -31,8 +32,8 @@
         </label>
       </div>
       <div class="col-12 md:col-6 text-right">
-        <label class="font-bold text-green-600">
-          ACTIVO
+        <label class="font-bold" [style.color]="esActivo ? '#4caf50' : '#f44336'">
+          {{ estadoPersona() }}
         </label>
       </div>
     </div>
@@ -42,14 +43,14 @@
       <label for="razonSocial">
         Razón social
       </label>
-      <input id="razonSocial" type="text" pInputText class="w-full">
+      <input id="razonSocial" type="text" pInputText class="w-full" formControlName="razonSocial">
     </div>
     <!-- Nombre Comercial -->
     <div class="field mb-1">
       <label for="nombreComercial">
         Nombre comercial
       </label>
-      <input id="nombreComercial" type="text" pInputText class="w-full">
+      <input id="nombreComercial" type="text" pInputText class="w-full" formControlName="nombreComercial">
     </div>
 
   </p-panel>
@@ -69,14 +70,14 @@
       <div class="col-12 md:col-6">
         <div class="field mb-1">
           <label>Nombre 1</label>
-          <input pInputText class="w-full">
+          <input pInputText class="w-full" formControlName="nombre1">
         </div>
       </div>
 
       <div class="col-12 md:col-6">
         <div class="field mb-1">
           <label>Nombre 2</label>
-          <input pInputText class="w-full">
+          <input pInputText class="w-full" formControlName="nombre2">
         </div>
       </div>
 
@@ -87,14 +88,14 @@
       <div class="col-12 md:col-6">
         <div class="field mb-1">
           <label>Apellido 1</label>
-          <input pInputText class="w-full">
+          <input pInputText class="w-full" formControlName="apellido1">
         </div>
       </div>
 
       <div class="col-12 md:col-6">
         <div class="field mb-1">
           <label>Apellido 2</label>
-          <input pInputText class="w-full">
+          <input pInputText class="w-full" formControlName="apellido2">
         </div>
       </div>
 
@@ -105,21 +106,39 @@
       <div class="col-12 md:col-4">
         <div class="field mb-1">
           <label>Tipo persona</label>
-          <p-select class="w-full"></p-select>
+          <p-select 
+           class="w-full" 
+           [options]="tipoPersona()" 
+           formControlName="tipoPersona"
+           optionLabel="etiqueta"
+           optionValue="codigo"
+          ></p-select>
         </div>
       </div>
 
       <div class="col-12 md:col-4">
         <div class="field mb-1">
           <label>Tipo organización</label>
-          <p-select class="w-full"></p-select>
+          <p-select 
+           class="w-full"
+           [options]="tipoEmpresas()" 
+           formControlName="idTipoEmpresa"
+           optionLabel="descripcionTipoEmpresa"
+           optionValue="idTipoEmpresa"
+          ></p-select>
         </div>
       </div>
 
       <div class="col-12 md:col-4">
         <div class="field mb-1">
           <label>Denominación</label>
-          <p-select class="w-full"></p-select>
+          <p-select 
+           class="w-full" 
+           [options]="denominaciones()" 
+           formControlName="idDenominacion"
+           optionLabel="descripcionDenominacion"
+           optionValue="idDenominacion"
+          ></p-select>
         </div>
       </div>
 
@@ -130,21 +149,33 @@
       <div class="col-12 md:col-4">
         <div class="field mb-1">
           <label>Fecha nacimiento</label>
-          <p-datepicker class="w-full"></p-datepicker>
+          <p-datepicker class="w-full" dateFormat="yy-mm-dd" formControlName="fechaNacimiento"></p-datepicker>
         </div>
       </div>
 
       <div class="col-12 md:col-4">
         <div class="field mb-1">
           <label>Género</label>
-          <p-select class="w-full"></p-select>
+          <p-select 
+           class="w-full" 
+           [options]="genero()" 
+           formControlName="genero"
+           optionLabel="etiqueta"
+           optionValue="codigo"
+          ></p-select>
         </div>
       </div>
 
       <div class="col-12 md:col-4">
         <div class="field mb-1">
           <label>Estado civil</label>
-          <p-select class="w-full"></p-select>
+          <p-select 
+           class="w-full" 
+           [options]="estadoCivil()" 
+           formControlName="estadoCivil"
+           optionLabel="etiqueta"
+           optionValue="codigo"
+          ></p-select>
         </div>
       </div>
 
@@ -155,21 +186,39 @@
       <div class="col-12 md:col-4">
         <div class="field mb-1">
           <label>Nacionalidad</label>
-          <p-select class="w-full"></p-select>
+          <p-select 
+           class="w-full"
+           [options]="nacionalidades()" 
+           formControlName="idNacionalidad"
+           optionLabel="descripcionNacionalidad"
+           optionValue="idNacionalidad"
+           ></p-select>
         </div>
       </div>
 
       <div class="col-12 md:col-4">
         <div class="field mb-1">
           <label>País residencia</label>
-          <p-select class="w-full"></p-select>
+          <p-select 
+           class="w-full"
+           [options]="paises()" 
+           formControlName="idPais"
+           optionLabel="descripcionPais"
+           optionValue="idPais"
+           ></p-select>
         </div>
       </div>
 
       <div class="col-12 md:col-4">
         <div class="field mb-1">
           <label>Entidad financiera</label>
-          <p-select class="w-full"></p-select>
+          <p-select 
+           class="w-full" 
+           [options]="opcionSN()" 
+           formControlName="esEntidadFinanciera"
+           optionLabel="etiqueta"
+           optionValue="codigo"
+          ></p-select>
         </div>
       </div>
 
@@ -180,14 +229,14 @@
       <div class="col-12 md:col-6">
         <div class="field mb-1">
           <label>E-mail</label>
-          <input type="email" pInputText class="w-full">
+          <input type="email" pInputText class="w-full" formControlName="correoElectronico">
         </div>
       </div>
 
       <div class="col-12 md:col-6">
         <div class="field mb-1">
           <label>Página web</label>
-          <input pInputText class="w-full">
+          <input pInputText class="w-full" formControlName="paginaWeb">
         </div>
       </div>
     </div>

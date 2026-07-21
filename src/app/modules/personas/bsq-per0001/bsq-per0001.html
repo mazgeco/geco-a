@@ -9,13 +9,18 @@
     </p-iconfield>
   </ng-template>
   <ng-template #end>
-    <span></span>
+    <span>{{ notificacion() }}</span>
   </ng-template>
 </p-toolbar>
 <p-toast></p-toast>
 
-
+@if(loading()){
+<div class="flex justify-center">
+  <p-progress-spinner ariaLabel="loading" />
+</div>
+} @else {
 <div class="grid m-3">
+
   @for (persona of personas(); track persona.idPersona) {
   <div class="col-12 md:col-6 lg:col-4 xl:col-3">
     <p-card class="resultado-card h-full cursor-pointer" (click)="seleccionarPersona(persona)">
@@ -30,7 +35,14 @@
           {{ persona.idPersona }}
         </div>
         <div>
-          {{ persona.tipoPersona }}
+          <span class="font-semibold">Estado:</span>
+          <span class="font-semibold" [style.color]="persona.estadoPersona === 'A' ? '#4caf50' : '#f44336'">
+            {{ persona.estadoPersona === 'A' ? 'ACTIVO' : 'INACTIVO' }}
+          </span>
+        </div>
+        <div>
+          <span class="font-semibold">Tipo de persona:</span>
+          {{ persona.nombreTipoPersona }}
         </div>
         <div>
           <span class="font-semibold">Identificación:</span>
@@ -45,3 +57,4 @@
   </div>
   }
 </div>
+}

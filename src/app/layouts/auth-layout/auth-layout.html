@@ -2,23 +2,24 @@
   <div class="grid">
     <div class="image-login col bg-white">
       <img src="../../../assets/images/imagen_login.png" alt="">
-    </div>
+
     <div class="col bg-white">
       <p-card class="card-login min-h-full p-5">
-
         <ng-template #title>
           Ingreso
         </ng-template>
-
         <ng-template #subtitle>
           Digite su nombre de usuario y su clave para ingresar
         </ng-template>
-
         <form (ngSubmit)="onSubmit()" [formGroup]="loginForm" class="w-full mt-4">
+          <!-- Usuario -->
           <div class="form-group">
             <label for="username">Usuario</label>
-            <input type="text" pInputText pSize="small" id="username" class="w-full" formControlName="username"
-              [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('username')}" />
+            <span class="p-input-icon-left w-full">
+              <i class="pi pi-user"></i>
+              <input id="username" pInputText type="text" pSize="small" class="w-full" placeholder="Usuario"
+                formControlName="username" [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('username')}" />
+            </span>
             @if (isInvalid('username')) {
             <small class="text-danger">
               Campo obligatorio
@@ -26,37 +27,49 @@
             }
           </div>
 
+          <!-- Password -->
           <div class="form-group">
-            <div class="form-group">
-              <label for="password">Clave</label>
+            <label for="password">Clave</label>
+            <span class="password-wrapper">
+              <i class="pi pi-lock input-icon"></i>
               <p-password id="password" formControlName="password" size="small" [feedback]="false" [toggleMask]="true"
-                autocomplete="off" class="w-full" [ngClass]="{'ng-invalid ng-dirty': isInvalid('password')}">
+                autocomplete="off" placeholder="Clave" class="w-full"
+                [ngClass]="{'ng-invalid ng-dirty': isInvalid('password')}">
               </p-password>
-              @if (isInvalid('password')) {
-              <small class="text-danger">
-                Campo obligatorio
-              </small>
-              }
-            </div>
+            </span>
+            @if (isInvalid('password')) {
+            <small class="text-danger">
+              Campo obligatorio
+            </small>
+            }
           </div>
 
-          <div class="mb-2">
-            <p-button label="Ingresar" type="submit" />
+          <!-- Botón -->
+          <div class="mb-3">
+            <p-button label="Ingresar" type="submit">
+            </p-button>
           </div>
 
-          <div class="mb-2">
-            <p-button label="Olvidé mi clave" type="submit" />
+          <!-- Link -->
+          <div class="forgot-password">
+            <a href="#">
+              Olvidé mi clave
+            </a>
           </div>
+
           @if (invalidLogin()) {
-          <div class="row text-danger">
-            <div class="col-12">
-              <small>
-                Usuario o clave inválidos
-              </small>
-            </div>
+          <div class="text-danger mt-3">
+            <small>
+              Usuario o clave inválidos
+            </small>
           </div>
           }
         </form>
+
+        <!-- Imagen inferior -->
+        <div class="footer-image">
+          <img src="../../../assets/images/gekito.png" alt="footer">
+        </div>
       </p-card>
     </div>
   </div>

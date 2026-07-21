@@ -1,33 +1,133 @@
 .login-container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .image-login {
-  /*width: 501px;*/
-  display: flex;
+    display: flex;
 }
 
 .card-login {
-  width: 25rem;
-  overflow: hidden;
+    width: 25rem;
+    overflow: hidden;
 }
 
-:host ::ng-deep .p-password,
-:host ::ng-deep .p-password input {
-  width: 100%;
+/*==========================
+LOGO
+===========================*/
+
+.logo-login {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-:host ::ng-deep .w-full button {
-  width: 100%;
+.logo-login img {
+    width: 90px;
 }
 
-/* Celulares */
-@media (max-width: 480px) {
-  .login-container {
-    background-size: 100%;
-    background-position: center top;
-  }
+/*==========================
+INPUTS
+===========================*/
+
+:host ::ng-deep .p-input-icon-left {
+    position: relative;
+    display: block;
+}
+
+:host ::ng-deep .p-input-icon-left i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    z-index: 2;
+}
+
+:host ::ng-deep .p-input-icon-left input {
+    padding-left: 42px;
+}
+
+/*==========================
+PASSWORD
+===========================*/
+
+.password-wrapper {
+    position: relative;
+    display: block;
+}
+
+.password-wrapper .input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    z-index: 10;
+}
+
+:host ::ng-deep .password-wrapper .p-password {
+    width: 100%;
+}
+
+:host ::ng-deep .password-wrapper .p-password input {
+    width: 100%;
+    padding-left: 42px;
+}
+
+/*==========================
+BOTÓN
+===========================*/
+
+:host ::ng-deep .p-button {
+    width: 100%;
+}
+
+/*==========================
+LINK
+===========================*/
+
+.forgot-password {
+    text-align: center;
+    margin-top: 12px;
+}
+
+.forgot-password a {
+    color: #3F8797;
+    text-decoration: none;
+    font-size: .9rem;
+    transition: .25s;
+}
+
+.forgot-password a:hover {
+    color: #68A7B5;
+    text-decoration: underline;
+}
+
+/*==========================
+IMAGEN INFERIOR
+===========================*/
+
+.footer-image {
+    margin-top: 35px;
+    text-align: center;
+}
+
+
+/*==========================
+RESPONSIVE
+===========================*/
+
+@media (max-width:480px){
+
+    .login-container{
+        background-size:100%;
+        background-position:center top;
+    }
+
+    .card-login{
+        width:100%;
+    }
+
 }
