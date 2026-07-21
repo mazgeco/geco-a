@@ -5,13 +5,15 @@
   <ng-template #center>
     <p-iconfield iconPosition="left">
       <p-inputicon class="pi pi-search" />
-      <input type="text" pInputText placeholder="Search" />
+      <input type="text" pInputText placeholder="Search" #searchInput (change)="buscarPersona(searchInput.value)" />
     </p-iconfield>
   </ng-template>
   <ng-template #end>
     <span></span>
   </ng-template>
 </p-toolbar>
+<p-toast></p-toast>
+
 
 <div class="grid m-3">
   @for (persona of personas(); track persona.idPersona) {
