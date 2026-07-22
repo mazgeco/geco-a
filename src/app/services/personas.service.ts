@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ListaDenominacionesResponse, ListaNacionalidadesResponse, ListaPaisesResponse, ListaPersonasResponse, ListaTipoEmpresasResponse, PersonaResponse } from '../interfaces/personas.interfaces';
+import { GraficosResponse, ListaDenominacionesResponse, ListaNacionalidadesResponse, ListaPaisesResponse, ListaPersonasResponse, ListaTipoEmpresasResponse, PersonaResponse } from '../interfaces/personas.interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +34,18 @@ export class PersonasService {
 
   listaTipoEmpresas(): Observable<ListaTipoEmpresasResponse>{
     return this.http.get<ListaTipoEmpresasResponse>(`${this.apiUrl}personas/tipoempresas`);
+  }
+
+  graficoNacionalidades(): Observable<GraficosResponse>{
+    return this.http.get<GraficosResponse>(`${this.apiUrl}personas/graficonacionalidades`);
+  }
+
+  graficoTipoEmpresas(): Observable<GraficosResponse>{
+    return this.http.get<GraficosResponse>(`${this.apiUrl}personas/graficotipoempresas`);
+  }
+
+  graficoPersonasModulos(): Observable<GraficosResponse>{
+    return this.http.get<GraficosResponse>(`${this.apiUrl}personas/graficopersonasmodulos`);
   }
   
 }

@@ -138,3 +138,15 @@ export interface Identificaciones {
   idUsuarioModifica: string;
   fechaModifica: Date | null;
 }
+
+//GRÁFICOS
+export interface GraficosResponse {
+    status:  string;
+    message: string;
+    data:    Grafico[];
+}
+
+export interface Grafico {
+    descripcion: string;
+    cuantos:     number;
+}
