@@ -20,10 +20,9 @@ export class WinPer0018 implements OnInit {
   private personasService = inject(PersonasService);
   private toastService = inject(ToastService);
 
-  datoVer = signal<string>("general");
+  successfullySaved = signal(false);
   idPersona = signal<number>(0);
   estadoPersona = signal<string>("INACTIVO");
-  successfullySaved = signal(false);
   denominaciones = signal<Denominaciones[]>([]);
   nacionalidades = signal<Nacionalidades[]>([]);
   tipoEmpresas = signal<TipoEmpresas[]>([]);
@@ -72,6 +71,11 @@ export class WinPer0018 implements OnInit {
       etiqueta: "Casado"
     }
   ]);
+  tiposIdentificacion = signal<Combo[]>([
+    { codigo: "C", etiqueta: "Cédula" },
+    { codigo: "R", etiqueta: "RUC" },
+    { codigo: "P", etiqueta: "Pasaporte" },
+  ]);
   esActivo: boolean = false;
   private fb = inject(FormBuilder);
 
@@ -117,42 +121,7 @@ export class WinPer0018 implements OnInit {
     return this.dataForm.get('razonSocial')?.value;
   }
 
-
-  opciones: any[] = [
-    { label: "Datos generales", value: 'general' },
-    { label: "Identificaciones", value: 'identificaciones' },
-    { label: "Direcciones", value: 'direcciones' },
-    { label: "Teléfonos", value: 'telefonos' },
-    { label: "Características", value: 'caracteristicas' },
-    { label: "Ficha médica", value: 'ficha' }
-  ];
-
-  identificaciones = signal<Identificaciones[]>([
-    {
-      idIdentificacion: 1,
-      idPersona: 1,
-      idTipoIdentificacion: "C",
-      descripcionIdentificacion: "1714361647",
-      principalIdentificacion: "S",
-      fechaCaducidad: new Date('2030-05-31'),
-      idUsuarioCrea: "mgzapata",
-      fechaCrea: new Date('2025-05-31'),
-      idUsuarioModifica: "mgzapata",
-      fechaModifica: new Date('2025-05-31')
-    },
-    {
-      idIdentificacion: 2,
-      idPersona: 1,
-      idTipoIdentificacion: "R",
-      descripcionIdentificacion: "1714361647001",
-      principalIdentificacion: "N",
-      fechaCaducidad: new Date('2030-05-31'),
-      idUsuarioCrea: "mgzapata",
-      fechaCrea: new Date('2025-05-31'),
-      idUsuarioModifica: "mgzapata",
-      fechaModifica: new Date('2025-05-31')
-    }
-  ]);
+  identificaciones = signal<Identificaciones[]>([]);
 
   ngOnInit(): void {
 
@@ -172,7 +141,7 @@ export class WinPer0018 implements OnInit {
         this.nacionalidades.set(resp.data);
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las denominaciones: " + err.error.message);
+        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las nacionalidades: " + err.error.message);
       }
     });
 
@@ -182,7 +151,7 @@ export class WinPer0018 implements OnInit {
         this.paises.set(resp.data);
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las denominaciones: " + err.error.message);
+        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las países: " + err.error.message);
       }
     });
 
@@ -192,15 +161,14 @@ export class WinPer0018 implements OnInit {
         this.tipoEmpresas.set(resp.data);
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las denominaciones: " + err.error.message);
+        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las tipos de empresas: " + err.error.message);
       }
     });
-
 
     //CARGA LOS DATOS DE LA PERSONA CONSULTADA
     this.idPersona.set(Number(this.route.snapshot.paramMap.get('id')));
     if (this.idPersona() !== 0) {
-      this.personasService.personaPorId((this.idPersona())).subscribe({
+      this.personasService.personaPorId(this.idPersona()).subscribe({
         next: (resp) => {
           //ESTADO
           let estado = (resp.data.estadoPersona === "A" ? "ACTIVO" : "INACTIVO");
@@ -216,11 +184,16 @@ export class WinPer0018 implements OnInit {
           this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar los datos de la persona: " + err.error.message);
         }
       });
-    }
-  }
 
-  cambiaDatoVer(event: any): void {
-    this.datoVer.set(event.value);
+      this.personasService.listaIdentificaciones(this.idPersona()).subscribe({
+        next: (resp) => {
+          this.identificaciones.set(resp.data);
+        },
+        error: (err) => {
+          this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las identificaciones de la persona: " + err.error.message);
+        }
+      });
+    }
   }
 
   // Función para convertir YYYY-MM-DD a Date sin errores de zona horaria
@@ -229,6 +202,20 @@ export class WinPer0018 implements OnInit {
     const partes = fechaStr.split('-').map(Number); // [1978, 3, 2]
     // Nota: el mes en JS va de 0 a 11, por eso restamos 1
     return new Date(partes[0], partes[1] - 1, partes[2]);
+  }
+
+  obtenerEtiqueta(codigo: string, tipo: string): string {
+    let retorno = "";
+    switch (tipo) {
+      case "TID":
+        {
+          retorno = this.tiposIdentificacion()
+            .find(item => item.codigo === codigo)?.etiqueta ?? '';
+          break;
+        }
+    }
+
+    return retorno;
   }
 
 }

@@ -5,382 +5,326 @@
   </ng-template>
 
   <ng-template #center>
-    <p-selectbutton [(ngModel)]="datoVer" [options]="opciones" optionLabel="label" optionValue="value" size="small"
-      (onChange)="cambiaDatoVer($event)" />
+
   </ng-template>
 
   <ng-template #end>
-    <small>Datos cargados con éxito.</small>
+    <span>Datos cargados con éxito.</span>
   </ng-template>
 
 </p-toolbar>
 <p-toast />
 
+<p-tabs value="0">
+  <p-tablist>
+    <p-tab value="0">Datos generales</p-tab>
+    <p-tab value="1">Identificaciones</p-tab>
+    <p-tab value="2">Direcciones</p-tab>
+    <p-tab value="3">Teléfonos</p-tab>
+    <p-tab value="4">Características</p-tab>
+    <p-tab value="5">Ficha médica</p-tab>
+  </p-tablist>
+  <p-tabpanels>
+    <p-tabpanel value="0">
+      <form class="grid m-2" [formGroup]="dataForm">
+        <!-- ====================================================== -->
+        <!-- PANEL SUPERIOR -->
+        <!-- ====================================================== -->
+        <p-panel class="col-12">
+          <!-- Código y Estado -->
+          <div class="grid mb-4">
+            <div class="col-12 md:col-4">
+              <label class="font-bold">
+                COD. {{ idPersona() }}
+              </label>
+            </div>
+            <div class="col-12 md:col-4">
+              <label class="font-bold razonSocial">
+                {{ razonSocialPersona }}
+              </label>
+            </div>
+            <div class="estado col-12 md:col-4">
+              <label class="font-bold" [style.color]="esActivo ? '#4caf50' : '#f44336'">
+                {{ estadoPersona() }}
+              </label>
+            </div>
+          </div>
 
-@if(datoVer() === "general"){
-<form class="grid m-2" [formGroup]="dataForm">
-
-  <!-- ====================================================== -->
-  <!-- PANEL SUPERIOR -->
-  <!-- ====================================================== -->
-  <p-panel class="col-12">
-    <!-- Código y Estado -->
-    <div class="grid mb-4">
-      <div class="col-12 md:col-4">
-        <label class="font-bold">
-          COD. {{ idPersona() }}
-        </label>
-      </div>
-      <div class="col-12 md:col-4">
-        <label class="font-bold razonSocial">
-          {{ razonSocialPersona }}
-        </label>
-      </div>
-      <div class="col-12 md:col-4 text-right">
-        <label class="font-bold" [style.color]="esActivo ? '#4caf50' : '#f44336'">
-          {{ estadoPersona() }}
-        </label>
-      </div>
-    </div>
-
-    <!-- Tipo Persona -->
-    <div class="field mb-2">
-      <div class="field mb-1">
-          <label for="tipoPersona">Tipo persona</label>
-          <p-select 
-           class="w-full" 
-           [options]="tipoPersona()" 
-           formControlName="tipoPersona"
-           optionLabel="etiqueta"
-           optionValue="codigo"
-          ></p-select>
-        </div>
-    </div>
-    @if(tipoPersonaActual === "J"){
-    <!-- Razón Social -->
-    <div class="field mb-1">
-      <label for="razonSocial">
-        Razón social
-      </label>
-      <input id="razonSocial" type="text" pInputText class="w-full" formControlName="razonSocial">
-    </div>
-    <!-- Nombre Comercial -->
-    <div class="field mb-1">
-      <label for="nombreComercial">
-        Nombre comercial
-      </label>
-      <input id="nombreComercial" type="text" pInputText class="w-full" formControlName="nombreComercial">
-    </div>
-    }
-    
-
-  </p-panel>
-
-
-  <!-- ====================================================== -->
-  <!-- PANEL INFERIOR -->
-  <!-- ====================================================== -->
-  <p-panel class="col-12">
-
-    <div class="grid">
-
-      @if(tipoPersonaActual === "N"){
-      <!-- ======================= -->
-      <!-- FILA 1 -->
-      <!-- ======================= -->
-
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Nombre 1</label>
-          <input pInputText class="w-full" formControlName="nombre1">
-        </div>
-      </div>
-
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Nombre 2</label>
-          <input pInputText class="w-full" formControlName="nombre2">
-        </div>
-      </div>
-
-      <!-- ======================= -->
-      <!-- FILA 2 -->
-      <!-- ======================= -->
-
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Apellido 1</label>
-          <input pInputText class="w-full" formControlName="apellido1">
-        </div>
-      </div>
-
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Apellido 2</label>
-          <input pInputText class="w-full" formControlName="apellido2">
-        </div>
-      </div>
-      }
-
-      <!-- ======================= -->
-      <!-- FILA 3 -->
-      <!-- ======================= -->
-
-      @if(tipoPersonaActual === "J"){
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Tipo organización</label>
-          <p-select 
-           class="w-full"
-           [options]="tipoEmpresas()" 
-           formControlName="idTipoEmpresa"
-           optionLabel="descripcionTipoEmpresa"
-           optionValue="idTipoEmpresa"
-          ></p-select>
-        </div>
-      </div>
-
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Entidad financiera</label>
-          <p-select 
-           class="w-full" 
-           [options]="opcionSN()" 
-           formControlName="esEntidadFinanciera"
-           optionLabel="etiqueta"
-           optionValue="codigo"
-          ></p-select>          
-        </div>
-      </div>
-      }
-      @if(tipoPersonaActual === "N"){
-      <!-- ======================= -->
-      <!-- FILA 4 -->
-      <!-- ======================= -->
-
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Fecha nacimiento</label>
-          <p-datepicker class="w-full" dateFormat="yy-mm-dd" formControlName="fechaNacimiento"></p-datepicker>
-        </div>
-      </div>
-
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Género</label>
-          <p-select 
-           class="w-full" 
-           [options]="genero()" 
-           formControlName="genero"
-           optionLabel="etiqueta"
-           optionValue="codigo"
-          ></p-select>
-        </div>
-      </div>
-
-      <!-- ======================= -->
-      <!-- FILA 5 -->
-      <!-- ======================= -->
-
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Estado civil</label>
-          <p-select 
-           class="w-full" 
-           [options]="estadoCivil()" 
-           formControlName="estadoCivil"
-           optionLabel="etiqueta"
-           optionValue="codigo"
-          ></p-select>
-        </div>
-      </div>
-
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Denominación</label>
-          <p-select 
-           class="w-full" 
-           [options]="denominaciones()" 
-           formControlName="idDenominacion"
-           optionLabel="descripcionDenominacion"
-           optionValue="idDenominacion"
-          ></p-select>
-        </div>
-      </div>
-      }
-
-      <!-- ======================= -->
-      <!-- FILA 5 -->
-      <!-- ======================= -->
-
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Nacionalidad</label>
-          <p-select 
-           class="w-full"
-           [options]="nacionalidades()" 
-           formControlName="idNacionalidad"
-           optionLabel="descripcionNacionalidad"
-           optionValue="idNacionalidad"
-           ></p-select>
-        </div>
-      </div>
-
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>País residencia</label>
-          <p-select 
-           class="w-full"
-           [options]="paises()" 
-           formControlName="idPais"
-           optionLabel="descripcionPais"
-           optionValue="idPais"
-           ></p-select>
-        </div>
-      </div>
-
-      
-
-      <!-- ======================= -->
-      <!-- FILA 6 -->
-      <!-- ======================= -->
-
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>E-mail</label>
-          <input type="email" pInputText class="w-full" formControlName="correoElectronico">
-        </div>
-      </div>
-
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Página web</label>
-          <input pInputText class="w-full" formControlName="paginaWeb">
-        </div>
-      </div>
-    </div>
-  </p-panel>
-</form>
-}
-
-@if(datoVer() === "identificaciones"){
-<p-panel>
-  <!-- ===================================== -->
-  <!-- TAB 1: IDENTIFICACIONES -->
-  <!-- ===================================== -->
-  <p-table [value]="identificaciones()" editMode="row" dataKey="idIdentificacion" showGridlines class="p-datatable-sm">
-
-    <!-- HEADER -->
-    <ng-template pTemplate="header">
-      <tr>
-        <th style="width: 25%">Tipo</th>
-        <th style="width: 30%">Identificación</th>
-        <th style="width: 25%">Fecha caducidad</th>
-        <th style="width: 10%">Preferido</th>
-        <th style="width: 10%"></th>
-      </tr>
-    </ng-template>
-    <!-- BODY -->
-    <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-      <tr [pEditableRow]="rowData">
-        <!-- TIPO -->
-        <td>
-          <p-cellEditor>
-            <!-- INPUT -->
-            <ng-template pTemplate="input">
-              <p-select [options]="[]" optionLabel="nombre" optionValue="id" [(ngModel)]="rowData.idTipoIdentificacion"
-                placeholder="Seleccione" class="w-full" />
-            </ng-template>
-            <!-- OUTPUT -->
-            <ng-template pTemplate="output">
-              {{ rowData.idTipoIdentificacion }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <!-- IDENTIFICACION -->
-        <td>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input pInputText type="text" [(ngModel)]="rowData.descripcionIdentificacion" class="w-full" />
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ rowData.descripcionIdentificacion }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <!-- FECHA CADUCIDAD -->
-        <td>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <p-datepicker [(ngModel)]="rowData.fechaCaducidad" appendTo="body" dateFormat="yy-mm-dd" class="w-full" />
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ rowData.fechaCaducidad | date:'yyyy-MM-dd' }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <!-- PREFERIDO -->
-        <td class="text-center">
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <p-checkbox [(ngModel)]="rowData.principalIdentificacion" [binary]="true" />
-            </ng-template>
-            <ng-template pTemplate="output">
-              <i class="pi"
-                [ngClass]="rowData.principalIdentificacion == 'S' ? 'pi-check-circle text-green-500' : 'pi-circle'"></i>
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <!-- ACCIONES -->
-        <td class="text-center">
-          <!-- EDITAR -->
-          @if (!editing) {
-          <button pButton pInitEditableRow icon="pi pi-pencil" text rounded severity="primary"></button>
+          <!-- Tipo Persona -->
+          <div class="field mb-2">
+            <div class="field mb-1">
+              <label for="tipoPersona">Tipo persona</label>
+              <p-select class="w-full" [options]="tipoPersona()" formControlName="tipoPersona" optionLabel="etiqueta"
+                optionValue="codigo"></p-select>
+            </div>
+          </div>
+          @if(tipoPersonaActual === "J"){
+          <!-- Razón Social -->
+          <div class="field mb-1">
+            <label for="razonSocial">
+              Razón social
+            </label>
+            <input id="razonSocial" type="text" pInputText class="w-full" formControlName="razonSocial">
+          </div>
+          <!-- Nombre Comercial -->
+          <div class="field mb-1">
+            <label for="nombreComercial">
+              Nombre comercial
+            </label>
+            <input id="nombreComercial" type="text" pInputText class="w-full" formControlName="nombreComercial">
+          </div>
           }
-          <!-- GUARDAR / CANCELAR -->
-          @if (editing) {
-          <button pButton pSaveEditableRow icon="pi pi-check" text rounded severity="success" class="mr-1"></button>
-          <button pButton pCancelEditableRow icon="pi pi-times" text rounded severity="danger"></button>
-          }
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-</p-panel>
-}
+        </p-panel>
 
-@if(datoVer() === "direcciones"){
-<p-panel>
-  <!-- ===================================== -->
-  <!-- TAB 1: DIRECCIONES -->
-  <!-- ===================================== -->
-  <p>Aquí panel 2</p>
-</p-panel>
-}
 
-@if(datoVer() === "telefonos"){
-<p-panel>
-  <!-- ===================================== -->
-  <!-- TAB 1: DIRECCIONES -->
-  <!-- ===================================== -->
-  <p>Aquí panel 2</p>
-</p-panel>
-}
+        <!-- ====================================================== -->
+        <!-- PANEL INFERIOR -->
+        <!-- ====================================================== -->
+        <p-panel class="col-12">
 
-@if(datoVer() === "caracteristicas"){
-<p-panel>
-  <!-- ===================================== -->
-  <!-- TAB 1: DIRECCIONES -->
-  <!-- ===================================== -->
-  <p>Aquí panel 2</p>
-</p-panel>
-}
+          <div class="grid">
 
-@if(datoVer() === "ficha"){
-<p-panel>
-  <!-- ===================================== -->
-  <!-- TAB 1: DIRECCIONES -->
-  <!-- ===================================== -->
-  <p>Aquí panel 2</p>
-</p-panel>
-}
+            @if(tipoPersonaActual === "N"){
+            <!-- ======================= -->
+            <!-- FILA 1 -->
+            <!-- ======================= -->
+
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label>Nombre 1</label>
+                <input pInputText class="w-full" formControlName="nombre1">
+              </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label>Nombre 2</label>
+                <input pInputText class="w-full" formControlName="nombre2">
+              </div>
+            </div>
+
+            <!-- ======================= -->
+            <!-- FILA 2 -->
+            <!-- ======================= -->
+
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label>Apellido 1</label>
+                <input pInputText class="w-full" formControlName="apellido1">
+              </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label>Apellido 2</label>
+                <input pInputText class="w-full" formControlName="apellido2">
+              </div>
+            </div>
+            }
+
+            <!-- ======================= -->
+            <!-- FILA 3 -->
+            <!-- ======================= -->
+
+            @if(tipoPersonaActual === "J"){
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label>Tipo organización</label>
+                <p-select class="w-full" [options]="tipoEmpresas()" formControlName="idTipoEmpresa"
+                  optionLabel="descripcionTipoEmpresa" optionValue="idTipoEmpresa"></p-select>
+              </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label>Entidad financiera</label>
+                <p-select class="w-full" [options]="opcionSN()" formControlName="esEntidadFinanciera"
+                  optionLabel="etiqueta" optionValue="codigo"></p-select>
+              </div>
+            </div>
+            }
+            @if(tipoPersonaActual === "N"){
+            <!-- ======================= -->
+            <!-- FILA 4 -->
+            <!-- ======================= -->
+
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label>Fecha nacimiento</label>
+                <p-datepicker class="w-full" dateFormat="yy-mm-dd" formControlName="fechaNacimiento"></p-datepicker>
+              </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label>Género</label>
+                <p-select class="w-full" [options]="genero()" formControlName="genero" optionLabel="etiqueta"
+                  optionValue="codigo"></p-select>
+              </div>
+            </div>
+
+            <!-- ======================= -->
+            <!-- FILA 5 -->
+            <!-- ======================= -->
+
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label>Estado civil</label>
+                <p-select class="w-full" [options]="estadoCivil()" formControlName="estadoCivil" optionLabel="etiqueta"
+                  optionValue="codigo"></p-select>
+              </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label>Denominación</label>
+                <p-select class="w-full" [options]="denominaciones()" formControlName="idDenominacion"
+                  optionLabel="descripcionDenominacion" optionValue="idDenominacion"></p-select>
+              </div>
+            </div>
+            }
+
+            <!-- ======================= -->
+            <!-- FILA 5 -->
+            <!-- ======================= -->
+
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label>Nacionalidad</label>
+                <p-select class="w-full" [options]="nacionalidades()" formControlName="idNacionalidad"
+                  optionLabel="descripcionNacionalidad" optionValue="idNacionalidad"></p-select>
+              </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label>País residencia</label>
+                <p-select class="w-full" [options]="paises()" formControlName="idPais" optionLabel="descripcionPais"
+                  optionValue="idPais"></p-select>
+              </div>
+            </div>
+
+
+
+            <!-- ======================= -->
+            <!-- FILA 6 -->
+            <!-- ======================= -->
+
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label>E-mail</label>
+                <input type="email" pInputText class="w-full" formControlName="correoElectronico">
+              </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label>Página web</label>
+                <input pInputText class="w-full" formControlName="paginaWeb">
+              </div>
+            </div>
+          </div>
+        </p-panel>
+      </form>
+    </p-tabpanel>
+    <p-tabpanel value="1">
+      <!-- ===================================== -->
+      <!-- TAB 1: IDENTIFICACIONES -->
+      <!-- ===================================== -->
+      <p-table [value]="identificaciones()" editMode="row" dataKey="idIdentificacion" showGridlines
+        class="p-datatable-sm">
+        <!-- HEADER -->
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 25%">Tipo</th>
+            <th style="width: 30%">Identificación</th>
+            <th style="width: 25%">Fecha caducidad</th>
+            <th style="width: 10%">Preferido</th>
+            <th style="width: 10%"></th>
+          </tr>
+        </ng-template>
+        <!-- BODY -->
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          <tr [pEditableRow]="rowData">
+            <!-- TIPO -->
+            <td>
+              <p-cellEditor>
+                <!-- INPUT -->
+                <ng-template pTemplate="input">
+                  <p-select [options]="tiposIdentificacion()" optionLabel="etiqueta" optionValue="codigo"
+                    [(ngModel)]="rowData.idTipoIdentificacion" placeholder="Seleccione" class="w-full"
+                    appendTo="body" />
+                </ng-template>
+                <!-- OUTPUT -->
+                <ng-template pTemplate="output">
+                  {{ obtenerEtiqueta(rowData.idTipoIdentificacion, "TID") }}
+                </ng-template>
+              </p-cellEditor>
+            </td>
+            <!-- IDENTIFICACION -->
+            <td>
+              <p-cellEditor>
+                <ng-template pTemplate="input">
+                  <input pInputText type="text" [(ngModel)]="rowData.descripcionIdentificacion" class="w-full" />
+                </ng-template>
+                <ng-template pTemplate="output">
+                  {{ rowData.descripcionIdentificacion }}
+                </ng-template>
+              </p-cellEditor>
+            </td>
+            <!-- FECHA CADUCIDAD -->
+            <td>
+              <p-cellEditor>
+                <ng-template pTemplate="input">
+                  <p-datepicker [(ngModel)]="rowData.fechaCaducidad" appendTo="body" dateFormat="yy-mm-dd"
+                    class="w-full" />
+                </ng-template>
+                <ng-template pTemplate="output">
+                  {{ rowData.fechaCaducidad | date:'yyyy-MM-dd' }}
+                </ng-template>
+              </p-cellEditor>
+            </td>
+            <!-- PREFERIDO -->
+            <td class="text-center">
+              <p-cellEditor>
+                <ng-template pTemplate="input">
+                  <p-checkbox [binary]="true" [ngModel]="rowData.principalIdentificacion === 'S'"
+                    (ngModelChange)="rowData.principalIdentificacion = $event ? 'S' : 'N'">
+                  </p-checkbox>
+                </ng-template>
+                <ng-template pTemplate="output">
+                  <i class="pi"
+                    [ngClass]="rowData.principalIdentificacion == 'S' ? 'pi-check-circle text-green-500' : 'pi-circle'"></i>
+                </ng-template>
+              </p-cellEditor>
+            </td>
+            <!-- ACCIONES -->
+            <td class="text-center">
+              <!-- EDITAR -->
+              @if (!editing) {
+              <button pButton pInitEditableRow icon="pi pi-pencil" text rounded severity="primary"></button>
+              }
+              <!-- GUARDAR / CANCELAR -->
+              @if (editing) {
+              <button pButton pSaveEditableRow icon="pi pi-check" text rounded severity="success" class="mr-1"></button>
+              <button pButton pCancelEditableRow icon="pi pi-times" text rounded severity="danger"></button>
+              }
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabpanel>
+    <p-tabpanel value="2">
+      <span>--------</span>
+    </p-tabpanel>
+    <p-tabpanel value="3">
+      <span>--------</span>
+    </p-tabpanel>
+    <p-tabpanel value="4">
+      <span>--------</span>
+    </p-tabpanel>
+    <p-tabpanel value="5">
+      <span>--------</span>
+    </p-tabpanel>
+  </p-tabpanels>
+</p-tabs>

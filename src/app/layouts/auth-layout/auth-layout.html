@@ -1,11 +1,14 @@
 <div class="login-container">
-  <div class="grid">
-    <div class="image-login col bg-white">
+  <div class="grid bg-white">
+    <div class="image-login hidden md:block md:col-6 p-2">
       <img src="../../../assets/images/imagen_login.png" alt="">
-
-    <div class="col bg-white">
+    </div>
+    <div class="col-12 md:col-6">
       <p-card class="card-login min-h-full p-5">
         <ng-template #title>
+          <div class="logo md:hidden p-3">
+            <img src="../../../assets/images/logo.png" alt="">
+          </div>
           Ingreso
         </ng-template>
         <ng-template #subtitle>
@@ -73,4 +76,3 @@
       </p-card>
     </div>
   </div>
-</div>

@@ -133,10 +133,16 @@ export interface Identificaciones {
   descripcionIdentificacion: string;
   fechaCaducidad: Date | null;
   principalIdentificacion: string;
-  idUsuarioCrea: string;
+  idUsuarioCrea: string | null;
   fechaCrea: Date | null;
   idUsuarioModifica: string;
   fechaModifica: Date | null;
+}
+
+export interface IdentificacionesResponse {
+    status:  string;
+    message: string;
+    data:    Identificaciones[];
 }
 
 //GRÁFICOS

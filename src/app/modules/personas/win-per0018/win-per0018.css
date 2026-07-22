@@ -1,3 +1,17 @@
 .razonSocial {
   font-size: large;
 }
+
+.estado {
+  text-align: right;
+}
+
+:host ::ng-deep .p-tabpanels {
+    background: var(--background-color);
+}
+
+@media (max-width:768px) {
+  .estado {
+    text-align: left;
+  }
+}

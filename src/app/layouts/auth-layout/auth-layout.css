@@ -1,30 +1,29 @@
 .login-container {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .image-login {
-    display: flex;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
 }
 
-.card-login {
-    width: 25rem;
-    overflow: hidden;
+.image-login img {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  object-fit: contain;
 }
 
-/*==========================
-LOGO
-===========================*/
-
-.logo-login {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.logo-login img {
-    width: 90px;
+.logo img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  display: block;
 }
 
 /*==========================
@@ -32,21 +31,21 @@ INPUTS
 ===========================*/
 
 :host ::ng-deep .p-input-icon-left {
-    position: relative;
-    display: block;
+  position: relative;
+  display: block;
 }
 
 :host ::ng-deep .p-input-icon-left i {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #888;
-    z-index: 2;
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  z-index: 2;
 }
 
 :host ::ng-deep .p-input-icon-left input {
-    padding-left: 42px;
+  padding-left: 42px;
 }
 
 /*==========================
@@ -54,26 +53,26 @@ PASSWORD
 ===========================*/
 
 .password-wrapper {
-    position: relative;
-    display: block;
+  position: relative;
+  display: block;
 }
 
 .password-wrapper .input-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #888;
-    z-index: 10;
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  z-index: 10;
 }
 
 :host ::ng-deep .password-wrapper .p-password {
-    width: 100%;
+  width: 100%;
 }
 
 :host ::ng-deep .password-wrapper .p-password input {
-    width: 100%;
-    padding-left: 42px;
+  width: 100%;
+  padding-left: 42px;
 }
 
 /*==========================
@@ -81,7 +80,7 @@ BOTÓN
 ===========================*/
 
 :host ::ng-deep .p-button {
-    width: 100%;
+  width: 100%;
 }
 
 /*==========================
@@ -89,20 +88,20 @@ LINK
 ===========================*/
 
 .forgot-password {
-    text-align: center;
-    margin-top: 12px;
+  text-align: center;
+  margin-top: 12px;
 }
 
 .forgot-password a {
-    color: #3F8797;
-    text-decoration: none;
-    font-size: .9rem;
-    transition: .25s;
+  color: #3F8797;
+  text-decoration: none;
+  font-size: .9rem;
+  transition: .25s;
 }
 
 .forgot-password a:hover {
-    color: #68A7B5;
-    text-decoration: underline;
+  color: #68A7B5;
+  text-decoration: underline;
 }
 
 /*==========================
@@ -110,8 +109,8 @@ IMAGEN INFERIOR
 ===========================*/
 
 .footer-image {
-    margin-top: 35px;
-    text-align: center;
+  margin-top: 35px;
+  text-align: center;
 }
 
 
@@ -119,15 +118,25 @@ IMAGEN INFERIOR
 RESPONSIVE
 ===========================*/
 
-@media (max-width:480px){
+@media (max-width:480px) {
 
-    .login-container{
-        background-size:100%;
-        background-position:center top;
-    }
+  .image-login {
+    display: none;
+  }
 
-    .card-login{
-        width:100%;
-    }
+  .login-form {
+    width: 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .login-container {
+    background-size: 100%;
+    background-position: center top;
+  }
+
+  .card-login {
+    width: 100%;
+  }
 
 }
