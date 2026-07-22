@@ -109,6 +109,14 @@ export class WinPer0018 implements OnInit {
     return persona;
   }
 
+  get tipoPersonaActual(): string | null | undefined {
+    return this.dataForm.get('tipoPersona')?.value;
+  }
+
+  get razonSocialPersona(): string | null | undefined {
+    return this.dataForm.get('razonSocial')?.value;
+  }
+
 
   opciones: any[] = [
     { label: "Datos generales", value: 'general' },
