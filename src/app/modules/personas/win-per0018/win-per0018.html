@@ -1,16 +1,3 @@
-<p-toolbar>
-  <ng-template #start>
-    <span></span>
-  </ng-template>
-
-  <ng-template #center>
-    <span></span>
-  </ng-template>
-
-  <ng-template #end>
-    <span>Datos cargados con éxito.</span>
-  </ng-template>
-</p-toolbar>
 <p-toast />
 <p-confirmdialog />
 
@@ -28,7 +15,16 @@
       <div class="col-12">
         <p-toolbar>
           <ng-template #start>
-            <span></span>
+            @if(esActivo()){
+            <p-button icon="pi pi-check" class="mr-1" label="Inactivar" pTooltip="Inactiva a la persona"
+              tooltipPosition="bottom" (onClick)="cambiarEstado('I')" />
+            } @else {
+            <p-button icon="pi pi-check" class="mr-1" label="Activar" pTooltip="Activa a la persona"
+              tooltipPosition="bottom" (onClick)="cambiarEstado('A')" />
+            }
+            <p-button icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual"
+              tooltipPosition="bottom" />
+            <p-button icon="pi pi-info-circle" pTooltip="Información del objeto actual" tooltipPosition="bottom" />
           </ng-template>
 
           <ng-template #center>
@@ -36,20 +32,17 @@
           </ng-template>
 
           <ng-template #end>
-            @if(esActivo()){
-            <p-button icon="pi pi-check" class="mr-1" label="Inactivar" pTooltip="Inactiva a la persona"
-              tooltipPosition="bottom" (onClick)="cambiarEstado('I')" />
-            } @else {
-            <p-button icon="pi pi-check" class="mr-1" label="Activar" pTooltip="Activa a la persona"
-              tooltipPosition="bottom"  (onClick)="cambiarEstado('A')" />
+            @if (personaMessage()?.visible) {
+            <div class="message-container">
+            <p-message [severity]="personaMessage()!.severity" [icon]="personaMessage()!.icon">
+              {{ personaMessage()!.text }}
+            </p-message>
+            </div>
             }
-            <p-button icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual"
-              tooltipPosition="bottom" />
-            <p-button icon="pi pi-info-circle" pTooltip="Información del objeto actual" tooltipPosition="bottom" />
           </ng-template>
 
         </p-toolbar>
-        <form class="grid m-0" [formGroup]="dataForm">
+        <form id="frmPer0001" class="grid m-0" [formGroup]="dataForm">
           <!-- ====================================================== -->
           <!-- PANEL SUPERIOR -->
           <!-- ====================================================== -->
@@ -63,7 +56,7 @@
               </div>
               <div class="col-12 md:col-4">
                 <label class="font-bold razonSocial">
-                  {{ razonSocialPersona }}
+                  {{ razonSocialPersona() }}
                 </label>
               </div>
               <div class="estado col-12 md:col-4">
@@ -77,8 +70,8 @@
             <div class="field mb-2">
               <div class="field mb-1">
                 <label for="tipoPersona">Tipo persona</label>
-                <p-select class="w-full" [options]="tipoPersona()" [disabled]="esActivo()"  formControlName="tipoPersona" optionLabel="etiqueta"
-                  optionValue="codigo"></p-select>
+                <p-select class="w-full" [options]="tipoPersona()" [disabled]="esActivo()" formControlName="tipoPersona"
+                  optionLabel="etiqueta" optionValue="codigo"></p-select>
               </div>
             </div>
             @if(tipoPersonaActual === "J"){
@@ -87,7 +80,8 @@
               <label for="razonSocial">
                 Razón social
               </label>
-              <input id="razonSocial" type="text" pInputText class="w-full" [disabled]="esActivo()" formControlName="razonSocial">
+              <input id="razonSocial" type="text" pInputText class="w-full" [disabled]="esActivo()"
+                formControlName="razonSocial">
             </div>
             <!-- Nombre Comercial -->
             <div class="field mb-1">
@@ -258,7 +252,13 @@
       <div class="col-12">
         <p-toolbar>
           <ng-template #start>
-            <span></span>
+            <p-button id="btnGrdPer00101" icon="pi pi-plus" class="mr-1" label="Insertar" pTooltip="Activa a la persona"
+              tooltipPosition="bottom" (onClick)="insertarIdentificacion()" />
+            <p-button id="btnGrdPer00102" icon="pi pi-refresh" class="mr-1" pTooltip="Refresca los datos del grid" tooltipPosition="bottom"
+              (onClick)="cargaIdentificaciones()" />
+            <p-button id="btnGrdPer00103" icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual"
+              tooltipPosition="bottom" />
+            <p-button id="btnGrdPer00104" icon="pi pi-info-circle" pTooltip="Información del objeto actual" tooltipPosition="bottom" />
           </ng-template>
 
           <ng-template #center>
@@ -266,13 +266,7 @@
           </ng-template>
 
           <ng-template #end>
-            <p-button icon="pi pi-plus" class="mr-1" label="Insertar" pTooltip="Activa a la persona"
-              tooltipPosition="bottom" (onClick)="insertarIdentificacion()" />
-            <p-button icon="pi pi-refresh" class="mr-1" pTooltip="Refresca los datos del grid" tooltipPosition="bottom"
-              (onClick)="cargaIdentificaciones()" />
-            <p-button icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual"
-              tooltipPosition="bottom" />
-            <p-button icon="pi pi-info-circle" pTooltip="Información del objeto actual" tooltipPosition="bottom" />
+            <span></span>
           </ng-template>
 
         </p-toolbar>
@@ -350,16 +344,16 @@
               <td class="text-center">
                 <!-- EDITAR -->
                 @if (!editing) {
-                <button pButton [id]="'btnGrdPer00102' + rowData.idIdentificacion" pInitEditableRow icon="pi pi-pencil"
+                <button pButton [id]="'btnGrdPer00105' + rowData.idIdentificacion" pInitEditableRow icon="pi pi-pencil"
                   text rounded severity="primary"></button>
-                <button pButton icon="pi pi-trash" text rounded severity="danger"
+                <button pButton [id]="'btnGrdPer00106' + rowData.idIdentificacion" icon="pi pi-trash" text rounded severity="danger"
                   (click)="eliminarIdentificacion(rowData)"></button>
                 }
                 <!-- GUARDAR / CANCELAR -->
                 @if (editing) {
-                <button pButton pSaveEditableRow icon="pi pi-check" text rounded severity="success"
-                  class="mr-1"></button>
-                <button pButton pCancelEditableRow icon="pi pi-times" text rounded severity="danger"></button>
+                <button pButton [id]="'btnGrdPer00107' + rowData.idIdentificacion" pSaveEditableRow icon="pi pi-check" text rounded severity="success"
+                  class="mr-1" (click)="saveIdentificacion(rowData)"></button>
+                <button pButton [id]="'btnGrdPer00108' + rowData.idIdentificacion" pCancelEditableRow icon="pi pi-times" text rounded severity="danger"></button>
                 }
               </td>
             </tr>

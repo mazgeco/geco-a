@@ -51,12 +51,6 @@ export interface PersonaResponse {
   data: Personas;
 }
 
-export interface SavedRow {
-  status: string;
-  message: string;
-  idSecuencial: number;
-}
-
 //DENOMINACIONES
 export interface Denominaciones {
   idDenominacion: string;
@@ -113,7 +107,7 @@ export interface Paises {
 
 //IDENTIFICACIONES
 export interface Identificaciones {
-  idIdentificacion: number;
+  idIdentificacion: number | null;
   idPersona: number;
   idTipoIdentificacion: string;
   descripcionIdentificacion: string;

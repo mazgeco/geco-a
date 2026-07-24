@@ -1,9 +1,11 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { PRIMENG_MODULES } from '../../../shared/primeng/primeng.imports';
 import { Router } from '@angular/router';
 import { PersonasService } from '../../../services/personas.service';
 import { ToastService } from '../../../shared/toast.service';
 import { Personas } from '../../../interfaces/personas.interfaces';
+import { MessageService } from '../../../services/message.service';
+import { StatusMessage } from '../../../interfaces/general.interface';
 
 @Component({
   selector: 'app-bsq-per0001',
@@ -11,7 +13,7 @@ import { Personas } from '../../../interfaces/personas.interfaces';
   templateUrl: './bsq-per0001.html',
   styleUrl: './bsq-per0001.css',
 })
-export class BsqPer0001 implements OnInit {
+export class BsqPer0001 {
 
   router = inject(Router);
   personasService = inject(PersonasService)
@@ -20,9 +22,13 @@ export class BsqPer0001 implements OnInit {
   loading = signal<boolean>(false);
   notificacion = signal<string>("");
 
-  ngOnInit(): void {
+  //Variables para manejo de mensajes
+  messageService = inject(MessageService);
+  statusMessages = signal<Record<string, StatusMessage>>({});
+  busquedaMessage = computed(() =>
+    this.messageService.obtener(this.statusMessages, 'msgBsqPer0001')
+  );
 
-  }
 
   buscarPersona(nombre: string): void {
     this.loading.set(true),
@@ -30,7 +36,12 @@ export class BsqPer0001 implements OnInit {
         next: (resp) => {
           this.personas.set([]);
           this.personas.set(resp.data);
-          this.notificacion.set(`${resp.data.length} registros encontrados`);
+          this.messageService.mostrar(
+            this.statusMessages,
+            'msgBsqPer0001',
+            'success',
+            `${resp.data.length} registros encontrados`
+          );
           this.loading.set(false);
         },
         error: (err) => {

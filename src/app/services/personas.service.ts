@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { GraficosResponse, IdentificacionesResponse, ListaDenominacionesResponse, ListaNacionalidadesResponse, ListaPaisesResponse, ListaPersonasResponse, ListaTipoEmpresasResponse, PersonaResponse, Personas, SavedRow } from '../interfaces/personas.interfaces';
+import { GraficosResponse, Identificaciones, IdentificacionesResponse, ListaDenominacionesResponse, ListaNacionalidadesResponse, ListaPaisesResponse, ListaPersonasResponse, ListaTipoEmpresasResponse, PersonaResponse, Personas } from '../interfaces/personas.interfaces';
+import { SavedRow } from '../interfaces/general.interface'
 
 @Injectable({
   providedIn: 'root'
@@ -52,30 +53,48 @@ export class PersonasService {
     return this.http.get<IdentificacionesResponse>(`${this.apiUrl}personas/${idPersona}/identificaciones`);
   }
 
-  grabaPersona(idPersona: number, persona: Personas): Observable<SavedRow> | null {
+  grabaPersona(idPersona: number, persona: Personas): Observable<SavedRow> {
 
     let graba = true;
-
-    if (persona.idPersona === 0) {
-      if (persona.tipoPersona === 'J') {
-        if (persona.razonSocial === '') {
-          graba = false;
-        }
-      } else {
-        if (persona.nombre1 === '' || persona.apellido1 === '') {
-          graba = false;
-        }
-      }
-      if (graba) {
-        return this.http.post<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}`, persona);
+    if (persona.tipoPersona === 'J') {
+      if (persona.razonSocial === '') {
+        graba = false;
       }
     } else {
-      const params = new HttpParams().set('idPersona', idPersona);
-      return this.http.put<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}`, persona, {params});
+      if (persona.nombre1 === '' || persona.apellido1 === '') {
+        graba = false;
+      }
     }
 
+    if (graba) {
+      if (persona.idPersona === 0) {
+        return this.http.post<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}`, persona);
+      } else {
+        const params = new HttpParams().set('idPersona', idPersona);
+        return this.http.put<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}`, persona, { params });
+      }
+    }
 
-    return null;
+    return of({
+      status: 'NOT_FOUND',
+      message: 'Datos incompletos',
+      idSecuencial: persona.idPersona
+    } as SavedRow);
+  }
+
+  grabaIdentificacion(identificacion: Identificaciones): Observable<SavedRow> {
+    if (identificacion.idIdentificacion === 0) {
+      identificacion.idIdentificacion = null;
+      return this.http.post<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/identificaciones`, identificacion);
+    } else {
+      const params = new HttpParams().set('idIdentificacion', identificacion.idIdentificacion!);
+      return this.http.put<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/identificaciones`, identificacion, { params });
+    }
+  }
+
+  eliminaIdentificacion(idIdentificacion: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idIdentificacion', idIdentificacion!);
+      return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/identificaciones`, { params });
   }
 
 }

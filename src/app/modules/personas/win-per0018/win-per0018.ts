@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { PRIMENG_MODULES } from '../../../shared/primeng/primeng.imports';
 import { Combo, Denominaciones, Identificaciones, Nacionalidades, Opcion, Paises, Personas, TipoEmpresas } from '../../../interfaces/personas.interfaces';
 import { DatePipe, NgClass } from '@angular/common';
@@ -8,6 +8,8 @@ import { PersonasService } from '../../../services/personas.service';
 import { ToastService } from '../../../shared/toast.service';
 import { FuntionsService } from '../../../services/functions.service';
 import { ConfirmationService } from 'primeng/api';
+import { StatusMessage } from '../../../interfaces/general.interface';
+import { MessageService } from '../../../services/message.service'
 
 
 @Component({
@@ -27,11 +29,19 @@ export class WinPer0018 implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private fb = inject(FormBuilder);
 
+  //Variables para manejo de mensajes
+  messageService = inject(MessageService);
+  statusMessages = signal<Record<string, StatusMessage>>({});
+  personaMessage = computed(() =>
+    this.messageService.obtener(this.statusMessages, 'msgFrmPer0001')
+  );
+
   //Declaraciones de variables
   loadingPersona = signal(true);
   successfullySaved = signal(false);
   idPersona = signal<number>(0);
   estadoPersona = signal<string>("INACTIVO");
+  razonSocialPersona = signal<string>("");
   denominaciones = signal<Denominaciones[]>([]);
   nacionalidades = signal<Nacionalidades[]>([]);
   tipoEmpresas = signal<TipoEmpresas[]>([]);
@@ -79,6 +89,18 @@ export class WinPer0018 implements OnInit {
     {
       codigo: "C",
       etiqueta: "Casado"
+    },
+    {
+      codigo: "D",
+      etiqueta: "Divorciado"
+    },
+    {
+      codigo: "V",
+      etiqueta: "Viudo"
+    },
+    {
+      codigo: "U",
+      etiqueta: "Union Libre"
     }
   ]);
   tiposIdentificacion = signal<Combo[]>([
@@ -124,10 +146,6 @@ export class WinPer0018 implements OnInit {
     return this.dataForm.get('tipoPersona')?.value;
   }
 
-  get razonSocialPersona(): string | null | undefined {
-    return this.dataForm.get('razonSocial')?.value;
-  }
-
   identificaciones = signal<Identificaciones[]>([]);
 
   ngOnInit(): void {
@@ -135,15 +153,29 @@ export class WinPer0018 implements OnInit {
       if (this.loadingPersona()) {
         return;
       }
-      if(persona.tipoPersona === 'N'){
-        persona.razonSocial = persona.apellido1 + ' ' + persona.apellido2 + ' ' + persona.nombre1 + ' ' + persona.nombre2;
+      if (persona.tipoPersona === 'N') {
+        persona.razonSocial = persona.apellido1 + ' ' + (persona.apellido2 === null ? '' : persona.apellido2) + ' ' +
+          persona.nombre1 + ' ' + (persona.nombre2 === null ? '' : persona.nombre2);
+        this.razonSocialPersona.set(persona.razonSocial);
       }
+      this.messageService.mostrar(
+        this.statusMessages,
+        'msgFrmPer0001',
+        'success',
+        'Dato grabado correctamente.'
+      );
       this.saveForm(persona as Personas);
     });
 
     this.cargaCombos();
     this.idPersona.set(Number(this.route.snapshot.paramMap.get('id')));
     this.cargaPersona(this.idPersona());
+    this.messageService.mostrar(
+      this.statusMessages,
+      'msgFrm00011',
+      'success',
+      'Persona cargada correctamente.'
+    );
   }
 
   obtenerEtiqueta(codigo: string, tipo: string): string {
@@ -213,6 +245,7 @@ export class WinPer0018 implements OnInit {
           //ESTADO
           this.esActivo.set(resp.data.estadoPersona === "A" ? true : false);
           this.estadoPersona.set(resp.data.estadoPersona === "A" ? "ACTIVO" : "INACTIVO");
+          this.razonSocialPersona.set(resp.data.razonSocial);
           resp.data.fechaNacimiento = this.funciones.convertirAFecha(resp.data.fechaNacimiento);
           //PEGA LOS DATOS EN EL FORMULARIO
           this.dataForm.reset(resp.data);
@@ -240,27 +273,6 @@ export class WinPer0018 implements OnInit {
       }
     });
   }
-  insertarIdentificacion(): void {
-    const nueva: Identificaciones = {
-      idIdentificacion: 0, // Id temporal negativo
-      idPersona: this.idPersona(),   // o 0 si aún no existe
-      idTipoIdentificacion: '',
-      descripcionIdentificacion: '',
-      fechaCaducidad: null,
-      principalIdentificacion: 'N'
-    };
-
-    let mensaje = this.funciones.insertRow(
-      this.identificaciones,
-      nueva,
-      'idIdentificacion',
-      this.idPersona() !== 0,
-      'btnGrdPer001020'
-    );
-    if (mensaje !== '') {
-      this.toastService.showMessage("error", "Error", mensaje);
-    }
-  }
   cambiarEstado(estado: string): void {
     this.confirmationService.confirm({
       message: '¿Realmente desea cambiar el estado de esta persona?',
@@ -273,6 +285,43 @@ export class WinPer0018 implements OnInit {
         this.dataForm.patchValue({
           estadoPersona: estado
         });
+      }
+    });
+  }
+  insertarIdentificacion(): void {
+    const nueva: Identificaciones = {
+      idIdentificacion: 0, // Id temporal nulo para crear espera que sea null
+      idPersona: this.idPersona(),
+      idTipoIdentificacion: '',
+      descripcionIdentificacion: '',
+      fechaCaducidad: null,
+      principalIdentificacion: 'N'
+    };
+
+    let mensaje = this.funciones.insertRow(
+      this.identificaciones,
+      nueva,
+      'idIdentificacion',
+      this.idPersona() !== 0,
+      'btnGrdPer001050'
+    );
+    if (mensaje !== '') {
+      this.toastService.showMessage("error", "Error", mensaje);
+    }
+  }
+  saveIdentificacion(identificacion: Identificaciones): void {
+
+    if (identificacion.principalIdentificacion === "S" && (this.identificaciones().filter(item => item.principalIdentificacion === "S").length === 2)) {
+      this.toastService.showMessage("error", "Error", "No puede colocar otra identificación como principal si ya existe una");
+      identificacion.principalIdentificacion = "N";
+    }
+
+    this.personasService.grabaIdentificacion(identificacion).subscribe({
+      next: (resp) => {
+        identificacion.idIdentificacion = resp.idSecuencial;
+      },
+      error: (err) => {
+        this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
       }
     });
   }
@@ -299,10 +348,19 @@ export class WinPer0018 implements OnInit {
         acceptLabel: 'Aceptar',
         rejectLabel: 'Cancelar',
         accept: () => {
-          this.identificaciones.set(this.identificaciones().filter(item => item.idIdentificacion != rowData.idIdentificacion));
+          this.personasService.eliminaIdentificacion(rowData.idIdentificacion!).subscribe({
+            next: (resp) => {
+              this.identificaciones.set(this.identificaciones().filter(item => item.idIdentificacion != resp.idSecuencial));
+            },
+            error: (err) => {
+              this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
+            }
+          });
         }
       });
     }
   }
+
+
 
 }

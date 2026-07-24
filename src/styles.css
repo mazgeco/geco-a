@@ -50,3 +50,11 @@ body {
 .p-tabpanels {
   background: var(--background-color) !important;
 }
+
+.p-message .p-message-text {
+  font-size: 0.7rem !important;
+}
+
+.message-container {
+    height: 25px; /* la altura del mensaje */
+}

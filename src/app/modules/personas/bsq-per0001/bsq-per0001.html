@@ -9,7 +9,13 @@
     </p-iconfield>
   </ng-template>
   <ng-template #end>
-    <span>{{ notificacion() }}</span>
+    @if (busquedaMessage()?.visible) {
+    <div class="message-container">
+      <p-message [severity]="busquedaMessage()!.severity" [icon]="busquedaMessage()!.icon">
+        {{ busquedaMessage()!.text }}
+      </p-message>
+    </div>
+    }
   </ng-template>
 </p-toolbar>
 <p-toast></p-toast>

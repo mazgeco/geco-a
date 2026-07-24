@@ -56,6 +56,7 @@ export const PRIMENG_MODULES = [
   PanelMenuModule,
   PasswordModule,
   PanelModule,
+  MessageModule,
   ProgressSpinnerModule,
   SelectModule,
   SelectButtonModule,
