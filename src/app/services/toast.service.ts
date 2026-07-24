@@ -13,15 +13,18 @@ export class ToastService {
    * @param type: Puede ser: success, error, warn, info
    * @param summary 
    * @param detail 
+   * @param status: Es el status del error que viene del back-end
    * @param life 
    */
-  showMessage(type: string, summary: string, detail: string = '', life = 2000) {
-    this.messageService.add({
-      severity: type,
-      summary,
-      detail,
-      life
-    });
+  showMessage(type: string, summary: string, detail: string = '', status: string = '', life = 2000) {
+    if (status !== 'NOT_FOUND') {
+      this.messageService.add({
+        severity: type,
+        summary,
+        detail,
+        life
+      });
+    }
   }
 
   clear() {

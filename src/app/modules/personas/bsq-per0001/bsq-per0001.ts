@@ -46,27 +46,6 @@ export class BsqPer0001 implements OnInit {
       });
   }
 
-  /*
-  cargarTickets() {
-    this.loading = true;
-    this.rifaService.listarTicketsXDonante().subscribe({
-      next: (resp) => {
-        this.tickets.set(resp.data);
-        this.loading = false;
-      },
-      error: (err) => {
-        this.loading = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'No se pudieron cargar los tickets: ' + (err.error?.message || err.message)
-        });
-      }
-    });
-  }
-  
-  */
-
   openPersona(): void {
     this.router.navigate(['/personas/persona/', '0']);
   }

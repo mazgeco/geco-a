@@ -22,10 +22,6 @@ export interface Personas {
   identificacion?: string | null;
   telefono?: string | null;
   nombreTipoPersona?: string | null;
-  idUsuarioCrea?: string | null;
-  fechaCrea?: string | null;
-  idUsuarioModifica?: string | null;
-  fechaModifica?: string | null;
 }
 
 export enum Opcion {
@@ -55,14 +51,16 @@ export interface PersonaResponse {
   data: Personas;
 }
 
+export interface SavedRow {
+  status: string;
+  message: string;
+  idSecuencial: number;
+}
+
 //DENOMINACIONES
 export interface Denominaciones {
   idDenominacion: string;
   descripcionDenominacion: string;
-  idUsuarioCrea?: string | null;
-  fechaCrea?: string | null;
-  idUsuarioModifica?: string | null;
-  fechaModifica?: string | null;
 }
 
 export interface ListaDenominacionesResponse {
@@ -76,10 +74,6 @@ export interface TipoEmpresas {
   idTipoEmpresa: string;
   descripcionTipoEmpresa: string;
   tipoEmpresaInterno?: string | null;
-  idUsuarioCrea?: string | null;
-  fechaCrea?: Date | null;
-  idUsuarioModifica?: string | null;
-  fechaModifica?: Date | null;
 }
 
 export interface ListaTipoEmpresasResponse {
@@ -98,10 +92,6 @@ export interface ListaNacionalidadesResponse {
 export interface Nacionalidades {
   idNacionalidad: number;
   descripcionNacionalidad: string;
-  idUsuarioCrea?: string | null;
-  fechaCrea?: Date | null;
-  idUsuarioModifica?: string | null;
-  fechaModifica?: Date | null;
 }
 
 //PAISES
@@ -118,10 +108,6 @@ export interface Paises {
   codigoAts?: string | null;
   codigoParaisoFiscal?: string | null;
   tipoRegimenFiscal?: string | null;
-  idUsuarioCrea?: string | null;
-  fechaCrea?: Date | null;
-  idUsuarioModifica?: string | null;
-  fechaModifica?: Date | null;
 }
 
 
@@ -133,10 +119,6 @@ export interface Identificaciones {
   descripcionIdentificacion: string;
   fechaCaducidad: Date | null;
   principalIdentificacion: string;
-  idUsuarioCrea: string | null;
-  fechaCrea: Date | null;
-  idUsuarioModifica: string;
-  fechaModifica: Date | null;
 }
 
 export interface IdentificacionesResponse {

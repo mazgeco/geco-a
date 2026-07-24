@@ -6,8 +6,11 @@
   text-align: right;
 }
 
-:host ::ng-deep .p-tabpanels {
-    background: var(--background-color);
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  /* Espacio entre toolbar y formulario */
 }
 
 @media (max-width:768px) {

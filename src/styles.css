@@ -12,6 +12,12 @@ body {
   background-color: var(--background-color);
 }
 
+.menu-superior {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -39,4 +45,8 @@ body {
   font-size: 0.8rem !important;
   padding: 0.2rem 0.4rem !important;
   border-radius: 3px !important;
+}
+
+.p-tabpanels {
+  background: var(--background-color) !important;
 }

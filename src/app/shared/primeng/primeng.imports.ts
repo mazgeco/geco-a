@@ -30,12 +30,14 @@ import { TabsModule } from 'primeng/tabs';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ListboxModule } from 'primeng/listbox';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 export const PRIMENG_MODULES = [
   ButtonModule,
   CardModule,
   CardModule,
   CheckboxModule,
+  ConfirmDialogModule,
   DialogModule,
   DatePickerModule,
   FileUploadModule,
