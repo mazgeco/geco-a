@@ -1,0 +1,111 @@
+<div class="col-12">
+  <p-toolbar>
+    <ng-template #start>
+      <p-button id="btnGrdPer00101" icon="pi pi-plus" class="mr-1" label="Insertar" pTooltip="Activa a la persona"
+        tooltipPosition="bottom" (onClick)="insertarIdentificacion()" />
+      <p-button id="btnGrdPer00102" icon="pi pi-refresh" class="mr-1" pTooltip="Refresca los datos del grid"
+        tooltipPosition="bottom" (onClick)="cargaIdentificaciones()" />
+      <p-button id="btnGrdPer00103" icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual"
+        tooltipPosition="bottom" />
+      <p-button id="btnGrdPer00104" icon="pi pi-info-circle" pTooltip="Información del objeto actual"
+        tooltipPosition="bottom" />
+    </ng-template>
+
+    <ng-template #center>
+      <span></span>
+    </ng-template>
+
+    <ng-template #end>
+      <span></span>
+    </ng-template>
+
+  </p-toolbar>
+  <!-- ===================================== -->
+  <!-- TAB 1: IDENTIFICACIONES -->
+  <!-- ===================================== -->
+  <p-table id="grdPer0010" [value]="identificaciones()" editMode="row" dataKey="idIdentificacion" class="p-datatable-sm"
+    [paginator]="true" [rows]="10" showGridlines [size]="'small'">
+    <!-- HEADER -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 25%">Tipo</th>
+        <th style="width: 30%">Identificación</th>
+        <th style="width: 25%">Fecha caducidad</th>
+        <th style="width: 10%">Preferido</th>
+        <th style="width: 10%"></th>
+      </tr>
+    </ng-template>
+    <!-- BODY -->
+    <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+      <tr [pEditableRow]="rowData">
+        <!-- TIPO -->
+        <td>
+          <p-cellEditor>
+            <!-- INPUT -->
+            <ng-template pTemplate="input">
+              <p-select [options]="tiposIdentificacion()" optionLabel="etiqueta" optionValue="codigo"
+                [(ngModel)]="rowData.idTipoIdentificacion" placeholder="Seleccione" class="w-full" appendTo="body" />
+            </ng-template>
+            <!-- OUTPUT -->
+            <ng-template pTemplate="output">
+              {{ obtenerEtiqueta(rowData.idTipoIdentificacion, "TID") }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- IDENTIFICACION -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="rowData.descripcionIdentificacion" class="w-full" />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ rowData.descripcionIdentificacion }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- FECHA CADUCIDAD -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-datepicker [(ngModel)]="rowData.fechaCaducidad" appendTo="body" dateFormat="yy-mm-dd" class="w-full" />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ rowData.fechaCaducidad | date:'yyyy-MM-dd' }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- PREFERIDO -->
+        <td class="text-center">
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-checkbox [binary]="true" [ngModel]="rowData.principalIdentificacion === 'S'"
+                (ngModelChange)="rowData.principalIdentificacion = $event ? 'S' : 'N'">
+              </p-checkbox>
+            </ng-template>
+            <ng-template pTemplate="output">
+              <i class="pi"
+                [ngClass]="rowData.principalIdentificacion == 'S' ? 'pi-check-circle text-green-500' : 'pi-circle'"></i>
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- ACCIONES -->
+        <td class="text-center">
+          <!-- EDITAR -->
+          @if (!editing) {
+          <button pButton [id]="'btnGrdPer00105' + rowData.idIdentificacion" pInitEditableRow icon="pi pi-pencil" text
+            rounded severity="primary"></button>
+          <button pButton [id]="'btnGrdPer00106' + rowData.idIdentificacion" icon="pi pi-trash" text rounded
+            severity="danger" (click)="eliminarIdentificacion(rowData)"></button>
+          }
+          <!-- GUARDAR / CANCELAR -->
+          @if (editing) {
+          <button pButton [id]="'btnGrdPer00107' + rowData.idIdentificacion" pSaveEditableRow icon="pi pi-check" text
+            rounded severity="success" class="mr-1" (click)="saveIdentificacion(rowData)"></button>
+          <button pButton [id]="'btnGrdPer00108' + rowData.idIdentificacion" pCancelEditableRow icon="pi pi-times" text
+            rounded severity="danger"></button>
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -1,7 +1,6 @@
-import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { PRIMENG_MODULES } from '../../../shared/primeng/primeng.imports';
-import { Combo, Denominaciones, Identificaciones, Nacionalidades, Opcion, Paises, Personas, TipoEmpresas } from '../../../interfaces/personas.interfaces';
-import { DatePipe, NgClass } from '@angular/common';
+import { Combo, Denominaciones, Nacionalidades, Paises, Personas, TipoEmpresas } from '../../../interfaces/personas.interfaces';
 import { ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { PersonasService } from '../../../services/personas.service';
@@ -10,11 +9,12 @@ import { FuntionsService } from '../../../services/functions.service';
 import { ConfirmationService } from 'primeng/api';
 import { StatusMessage } from '../../../interfaces/general.interface';
 import { MessageService } from '../../../services/message.service'
+import { GrdPer0010 } from './grd-per0010/grd-per0010';
 
 
 @Component({
   selector: 'app-win-per0018',
-  imports: [...PRIMENG_MODULES, DatePipe, NgClass, ReactiveFormsModule],
+  imports: [...PRIMENG_MODULES, ReactiveFormsModule, GrdPer0010],
   providers: [ConfirmationService],
   templateUrl: './win-per0018.html',
   styleUrl: './win-per0018.css',
@@ -103,11 +103,6 @@ export class WinPer0018 implements OnInit {
       etiqueta: "Union Libre"
     }
   ]);
-  tiposIdentificacion = signal<Combo[]>([
-    { codigo: "C", etiqueta: "Cédula" },
-    { codigo: "R", etiqueta: "RUC" },
-    { codigo: "P", etiqueta: "Pasaporte" },
-  ]);
 
   //FORMULARIO
   public dataForm = this.fb.group({
@@ -144,9 +139,7 @@ export class WinPer0018 implements OnInit {
 
   get tipoPersonaActual(): string | null | undefined {
     return this.dataForm.get('tipoPersona')?.value;
-  }
-
-  identificaciones = signal<Identificaciones[]>([]);
+  }  
 
   ngOnInit(): void {
     this.dataForm.valueChanges.subscribe(persona => {
@@ -178,19 +171,7 @@ export class WinPer0018 implements OnInit {
     );
   }
 
-  obtenerEtiqueta(codigo: string, tipo: string): string {
-    let retorno = "";
-    switch (tipo) {
-      case "TID":
-        {
-          retorno = this.tiposIdentificacion()
-            .find(item => item.codigo === codigo)?.etiqueta ?? '';
-          break;
-        }
-    }
-
-    return retorno;
-  }
+  
 
   //FUNCIONES DE CARGA DE DATOS
   cargaCombos(): void {
@@ -256,8 +237,6 @@ export class WinPer0018 implements OnInit {
           this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar los datos de la persona: " + err.error.message, err.error.status);
         }
       });
-      //CARGA LAS IDENTIFICACIONES DE LA PERSONA CONSULTADA
-      this.cargaIdentificaciones();
     }
   }
 
@@ -288,79 +267,9 @@ export class WinPer0018 implements OnInit {
       }
     });
   }
-  insertarIdentificacion(): void {
-    const nueva: Identificaciones = {
-      idIdentificacion: 0, // Id temporal nulo para crear espera que sea null
-      idPersona: this.idPersona(),
-      idTipoIdentificacion: '',
-      descripcionIdentificacion: '',
-      fechaCaducidad: null,
-      principalIdentificacion: 'N'
-    };
 
-    let mensaje = this.funciones.insertRow(
-      this.identificaciones,
-      nueva,
-      'idIdentificacion',
-      this.idPersona() !== 0,
-      'btnGrdPer001050'
-    );
-    if (mensaje !== '') {
-      this.toastService.showMessage("error", "Error", mensaje);
-    }
+  muestraInfoObjeto(): void {
+    this.toastService.showMessage("info", "Información", "Contenedor: WinPer0018 \n Objeto: FrmPer0001 \n Tabla: 189 \n Permiso: Escritura", 5000);
   }
-  saveIdentificacion(identificacion: Identificaciones): void {
-
-    if (identificacion.principalIdentificacion === "S" && (this.identificaciones().filter(item => item.principalIdentificacion === "S").length === 2)) {
-      this.toastService.showMessage("error", "Error", "No puede colocar otra identificación como principal si ya existe una");
-      identificacion.principalIdentificacion = "N";
-    }
-
-    this.personasService.grabaIdentificacion(identificacion).subscribe({
-      next: (resp) => {
-        identificacion.idIdentificacion = resp.idSecuencial;
-      },
-      error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
-      }
-    });
-  }
-  //READ
-  cargaIdentificaciones(): void {
-    this.identificaciones.set([]);
-    this.personasService.listaIdentificaciones(this.idPersona()).subscribe({
-      next: (resp) => {
-        this.identificaciones.set(resp.data);
-      },
-      error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las identificaciones de la persona: " + err.error.message, err.error.status);
-      }
-    });
-  }
-  //DELETE
-  eliminarIdentificacion(rowData: Identificaciones): void {
-    if (rowData.idIdentificacion === 0) {
-      this.identificaciones.set(this.identificaciones().filter(item => item.idIdentificacion != rowData.idIdentificacion));
-    } else {
-      this.confirmationService.confirm({
-        message: '¿Desea eliminar la identificación?',
-        header: 'Eliminar',
-        acceptLabel: 'Aceptar',
-        rejectLabel: 'Cancelar',
-        accept: () => {
-          this.personasService.eliminaIdentificacion(rowData.idIdentificacion!).subscribe({
-            next: (resp) => {
-              this.identificaciones.set(this.identificaciones().filter(item => item.idIdentificacion != resp.idSecuencial));
-            },
-            error: (err) => {
-              this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
-            }
-          });
-        }
-      });
-    }
-  }
-
-
 
 }
