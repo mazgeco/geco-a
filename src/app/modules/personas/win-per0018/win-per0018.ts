@@ -139,7 +139,7 @@ export class WinPer0018 implements OnInit {
 
   get tipoPersonaActual(): string | null | undefined {
     return this.dataForm.get('tipoPersona')?.value;
-  }  
+  }
 
   ngOnInit(): void {
     this.dataForm.valueChanges.subscribe(persona => {
@@ -151,6 +151,7 @@ export class WinPer0018 implements OnInit {
           persona.nombre1 + ' ' + (persona.nombre2 === null ? '' : persona.nombre2);
         this.razonSocialPersona.set(persona.razonSocial);
       }
+
       this.messageService.mostrar(
         this.statusMessages,
         'msgFrmPer0001',
@@ -165,13 +166,13 @@ export class WinPer0018 implements OnInit {
     this.cargaPersona(this.idPersona());
     this.messageService.mostrar(
       this.statusMessages,
-      'msgFrm00011',
+      'msgFrmPer0001',
       'success',
       'Persona cargada correctamente.'
     );
   }
 
-  
+
 
   //FUNCIONES DE CARGA DE DATOS
   cargaCombos(): void {

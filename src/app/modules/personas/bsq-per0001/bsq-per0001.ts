@@ -58,10 +58,12 @@ export class BsqPer0001 {
   }
 
   openPersona(): void {
+    this.messageService.clearAllTimers();
     this.router.navigate(['/personas/persona/', '0']);
   }
 
   seleccionarPersona(persona: Personas): void {
+    this.messageService.clearAllTimers();
     this.router.navigate(['/personas/persona/', persona.idPersona]);
   }
 

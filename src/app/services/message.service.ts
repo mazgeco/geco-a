@@ -50,6 +50,13 @@ export class MessageService {
 
   }
 
+  clearAllTimers(): void {
+    for (const [id, timer] of Object.entries(this.timers)) {
+      clearTimeout(timer);
+      delete this.timers[id];
+    }
+  }
+
   ocultar(
     mensajes: WritableSignal<Record<string, StatusMessage>>,
     id: string
