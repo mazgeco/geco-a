@@ -157,6 +157,8 @@ export class GrdPer0006 implements OnInit {
     }
   }
 
+  
+
   //Función que muestra la información del objeto
   muestraInfoObjeto(): void {
     this.toastService.showMessage("info", "Información objeto", "Contenedor: WinPer0018 \n Objeto: GrdPer0006 \n Tabla: 182 \n Permiso: Escritura", 5000);
