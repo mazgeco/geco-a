@@ -10,14 +10,15 @@ import { ConfirmationService } from 'primeng/api';
 import { StatusMessage } from '../../../interfaces/general.interface';
 import { MessageService } from '../../../services/message.service'
 import { GrdPer0010 } from './grd-per0010/grd-per0010';
+import { GrdPer0006 } from "./grd-per0006/grd-per0006";
 
 
 @Component({
   selector: 'app-win-per0018',
-  imports: [...PRIMENG_MODULES, ReactiveFormsModule, GrdPer0010],
+  imports: [...PRIMENG_MODULES, ReactiveFormsModule, GrdPer0010, GrdPer0006],
   providers: [ConfirmationService],
   templateUrl: './win-per0018.html',
-  styleUrl: './win-per0018.css',
+  styleUrl: './win-per0018.css'
 })
 export class WinPer0018 implements OnInit {
 
@@ -127,7 +128,11 @@ export class WinPer0018 implements OnInit {
     estadoCivil: [''],
     identificacion: [''],
     telefono: [''],
-    nombreTipoPersona: ['']
+    nombreTipoPersona: [''],
+    idUsuarioCrea: [''],
+    fechaCrea: [''],
+    idUsuarioModifica: [''],
+    fechaModifica: ['']
   }, {
     updateOn: 'blur'
   });
@@ -270,7 +275,12 @@ export class WinPer0018 implements OnInit {
   }
 
   muestraInfoObjeto(): void {
-    this.toastService.showMessage("info", "Información", "Contenedor: WinPer0018 \n Objeto: FrmPer0001 \n Tabla: 189 \n Permiso: Escritura", 5000);
+    this.toastService.showMessage("info", "Información objeto", "Contenedor: WinPer0018 \n Objeto: FrmPer0001 \n Tabla: 189 \n Permiso: Escritura", 5000);
+  }
+
+  muestraAuditoriaRegistro(): void {
+    const info = this.currentData;
+    this.funciones.muestraAuditoria(this.idPersona(), "189", info);
   }
 
 }

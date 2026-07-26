@@ -9,7 +9,7 @@ import { DatePipe, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-grd-per0010',
-  imports: [...PRIMENG_MODULES, DatePipe, NgClass],
+  imports: [...PRIMENG_MODULES, NgClass, DatePipe],
   templateUrl: './grd-per0010.html',
   styleUrl: './grd-per0010.css',
 })
@@ -18,10 +18,14 @@ export class GrdPer0010 implements OnInit {
   @Input()
   idPersona!: number;
 
+  funciones = inject(FuntionsService);
+
   private confirmationService = inject(ConfirmationService);
-  private funciones = inject(FuntionsService);
   private personasService = inject(PersonasService);
   private toastService = inject(ToastService);
+
+  selectedRows!: Identificaciones[];
+  metaKey: boolean = true;
 
 
   identificaciones = signal<Identificaciones[]>([]);
@@ -37,20 +41,6 @@ export class GrdPer0010 implements OnInit {
     this.cargaIdentificaciones();
   }
 
-  obtenerEtiqueta(codigo: string, tipo: string): string {
-    let retorno = "";
-    switch (tipo) {
-      case "TID":
-        {
-          retorno = this.tiposIdentificacion()
-            .find(item => item.codigo === codigo)?.etiqueta ?? '';
-          break;
-        }
-    }
-
-    return retorno;
-  }
-
   //INSERTA UNA FILA en el grid
   insertarIdentificacion(): void {
     const nueva: Identificaciones = {
@@ -59,7 +49,11 @@ export class GrdPer0010 implements OnInit {
       idTipoIdentificacion: '',
       descripcionIdentificacion: '',
       fechaCaducidad: null,
-      principalIdentificacion: 'N'
+      principalIdentificacion: 'N',
+      idUsuarioCrea: '',
+      fechaCrea: '',
+      idUsuarioModifica: '',
+      fechaModifica: ''
     };
 
     let mensaje = this.funciones.insertRow(
@@ -84,6 +78,7 @@ export class GrdPer0010 implements OnInit {
     this.personasService.grabaIdentificacion(identificacion).subscribe({
       next: (resp) => {
         identificacion.idIdentificacion = resp.idSecuencial;
+        this.cargaIdentificaciones();
       },
       error: (err) => {
         this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
@@ -123,6 +118,48 @@ export class GrdPer0010 implements OnInit {
           });
         }
       });
+    }
+  }
+
+  eliminarVarias(): void {
+    const selected = this.selectedRows;
+    if (selected.length > 0) {
+      this.confirmationService.confirm({
+        message: '¿Desea eliminar todas las identificaciónes seleccionadas?',
+        header: 'Eliminar',
+        acceptLabel: 'Aceptar',
+        rejectLabel: 'Cancelar',
+        accept: () => {
+          for (let i = 0; i < selected.length; i++) {
+            let idIdentificacion = selected[i].idIdentificacion;
+            this.personasService.eliminaIdentificacion(idIdentificacion!).subscribe({
+              next: (resp) => {
+                this.identificaciones.set(this.identificaciones().filter(item => item.idIdentificacion != resp.idSecuencial));
+              },
+              error: (err) => {
+                this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
+              }
+            });
+          }
+        }
+      });
+    } else {
+      this.toastService.showMessage("error", "Error", "Seleccione varias filas");
+    }
+  }
+
+  //Función que muestra la información del objeto
+  muestraInfoObjeto(): void {
+    this.toastService.showMessage("info", "Información objeto", "Contenedor: WinPer0018 \n Objeto: GrdPer0010 \n Tabla: 185 \n Permiso: Escritura", 5000);
+  }
+
+  //Función que muestra la auditoría del registro seleccionado
+  muestraAuditoriaRegistro(): void {
+    const selected = this.selectedRows || [];
+    if (selected.length === 1) {
+      this.funciones.muestraAuditoria(selected[0].idIdentificacion, "185", selected[0])
+    } else {
+      this.toastService.showMessage("error", "Error", "Seleccione un registro para ver la auditoría");
     }
   }
 

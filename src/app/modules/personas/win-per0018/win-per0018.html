@@ -42,7 +42,7 @@
               tooltipPosition="bottom" (onClick)="cambiarEstado('A')" />
             }
             <p-button icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual"
-              tooltipPosition="bottom" />
+              tooltipPosition="bottom" (onClick)="muestraAuditoriaRegistro()" />
             <p-button icon="pi pi-info-circle" pTooltip="Información del objeto actual" tooltipPosition="bottom" (onClick)="muestraInfoObjeto()" />
           </ng-template>
 
@@ -252,7 +252,7 @@
       <app-grd-per0010 [idPersona]="idPersona()" />
     </p-tabpanel>
     <p-tabpanel value="2">
-      <span>--------</span>
+      <app-grd-per0006 [idPersona]="idPersona()" />
     </p-tabpanel>
     <p-tabpanel value="3">
       <span>--------</span>
