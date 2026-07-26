@@ -7,6 +7,8 @@ import { ToastService } from './toast.service';
 })
 export class FuntionsService {
 
+  toastService = inject(ToastService);
+
   // Función para convertir YYYY-MM-DD a Date sin errores de zona horaria
   convertirAFecha(fechaStr: any): Date | null | any {
     if (!fechaStr) return null;
@@ -46,6 +48,31 @@ export class FuntionsService {
       boton?.click();
     });
     return "";
+  }
+
+  //Funcion que le quita la T a la fecha que viene del frontend
+  formateaFecha(fecha: string | null): string {
+    if (fecha === null || fecha === '') {
+      return '';
+    }
+
+    return fecha.replace('T', ' ');
+  }
+
+  //Obtiene la etiqueta par aun combo
+  obtenerEtiqueta(tipos: any[], codigo: string): string {
+    return tipos.find(item => item.codigo === codigo)?.etiqueta ?? '';
+  }
+
+  //Funcion que muestra la auditoria de un registro
+  muestraAuditoria(id: any, idTabla: string, info: any): void {
+    let informacion = "Tabla auditada: " + idTabla + "\n" +
+      "Código: " + id + "\n" +
+      "Usuario creación: " + info.idUsuarioCrea + "\n" +
+      "Fecha creación: " + this.formateaFecha(info.fechaCrea!) + "\n" +
+      "Usuario modificación: " + info.idUsuarioModifica + "\n" +
+      "Fecha modificación: " + this.formateaFecha(info.fechaModifica!);
+    this.toastService.showMessage("info", "Información auditoría", informacion, "", 5000);
   }
 
 }

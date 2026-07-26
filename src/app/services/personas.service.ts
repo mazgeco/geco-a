@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { GraficosResponse, Identificaciones, IdentificacionesResponse, ListaDenominacionesResponse, ListaNacionalidadesResponse, ListaPaisesResponse, ListaPersonasResponse, ListaTipoEmpresasResponse, PersonaResponse, Personas } from '../interfaces/personas.interfaces';
+import { Direcciones, DireccionesResponse, GraficosResponse, Identificaciones, IdentificacionesResponse, ListaDenominacionesResponse, ListaNacionalidadesResponse, ListaPaisesResponse, ListaPersonasResponse, ListaTipoEmpresasResponse, PersonaResponse, Personas } from '../interfaces/personas.interfaces';
 import { SavedRow } from '../interfaces/general.interface'
 
 @Injectable({
@@ -49,10 +49,6 @@ export class PersonasService {
     return this.http.get<GraficosResponse>(`${this.apiUrl}personas/graficopersonasmodulos`);
   }
 
-  listaIdentificaciones(idPersona: number): Observable<IdentificacionesResponse> {
-    return this.http.get<IdentificacionesResponse>(`${this.apiUrl}personas/${idPersona}/identificaciones`);
-  }
-
   grabaPersona(idPersona: number, persona: Personas): Observable<SavedRow> {
 
     let graba = true;
@@ -82,6 +78,11 @@ export class PersonasService {
     } as SavedRow);
   }
 
+  listaIdentificaciones(idPersona: number): Observable<IdentificacionesResponse> {
+    return this.http.get<IdentificacionesResponse>(`${this.apiUrl}personas/${idPersona}/identificaciones`);
+  }
+
+
   grabaIdentificacion(identificacion: Identificaciones): Observable<SavedRow> {
     if (identificacion.idIdentificacion === 0) {
       identificacion.idIdentificacion = null;
@@ -96,5 +97,27 @@ export class PersonasService {
     const params = new HttpParams().set('idIdentificacion', idIdentificacion!);
       return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/identificaciones`, { params });
   }
+
+  listaDirecciones(idPersona: number): Observable<DireccionesResponse> {
+    return this.http.get<DireccionesResponse>(`${this.apiUrl}personas/${idPersona}/direcciones`);
+  }
+
+
+  grabaDireccion(direccion: Direcciones): Observable<SavedRow> {
+    if (direccion.idDireccion === 0) {
+      direccion.idDireccion = null;
+      return this.http.post<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/direcciones`, direccion);
+    } else {
+      const params = new HttpParams().set('idDireccion', direccion.idDireccion!);
+      return this.http.put<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/direcciones`, direccion, { params });
+    }
+  }
+
+  eliminaDireccion(idDireccion: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idDireccion', idDireccion!);
+      return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/direcciones`, { params });
+  }
+
+
 
 }

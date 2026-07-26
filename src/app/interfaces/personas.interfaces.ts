@@ -22,6 +22,10 @@ export interface Personas {
   identificacion?: string | null;
   telefono?: string | null;
   nombreTipoPersona?: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
 }
 
 export enum Opcion {
@@ -113,22 +117,54 @@ export interface Identificaciones {
   descripcionIdentificacion: string;
   fechaCaducidad: Date | null;
   principalIdentificacion: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
 }
 
 export interface IdentificacionesResponse {
-    status:  string;
-    message: string;
-    data:    Identificaciones[];
+  status: string;
+  message: string;
+  data: Identificaciones[];
 }
 
 //GRÁFICOS
 export interface GraficosResponse {
-    status:  string;
-    message: string;
-    data:    Grafico[];
+  status: string;
+  message: string;
+  data: Grafico[];
 }
 
 export interface Grafico {
-    descripcion: string;
-    cuantos:     number;
+  descripcion: string;
+  cuantos: number;
+}
+
+//DIRECCIONES
+export interface Direcciones {
+  idDireccion: number | null;
+  idTipoDireccion: string;
+  idPersona: number;
+  tipoDireccion?: string | null;
+  descripcionDireccion?: string | null;
+  sector?: string | null;
+  callePrincipal?: string | null;
+  nroCasaOEdificio?: string | null;
+  codigoNumerico?: number | null;
+  calleSecundaria?: string | null;
+  nombreEdificio?: string | null;
+  nroDepartamento?: string | null;
+  datoAdicional?: string | null;
+  principalDireccion: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+export interface DireccionesResponse {
+  status: string;
+  message: string;
+  data: Direcciones[];
 }
