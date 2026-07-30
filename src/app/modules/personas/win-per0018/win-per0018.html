@@ -41,9 +41,10 @@
             <p-button icon="pi pi-check" class="mr-1" label="Activar" pTooltip="Activa a la persona"
               tooltipPosition="bottom" (onClick)="cambiarEstado('A')" />
             }
-            <p-button icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual"
-              tooltipPosition="bottom" (onClick)="muestraAuditoriaRegistro()" />
-            <p-button icon="pi pi-info-circle" pTooltip="Información del objeto actual" tooltipPosition="bottom" (onClick)="muestraInfoObjeto()" />
+            <p-button icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual" tooltipPosition="bottom"
+              (onClick)="funciones.muestraAuditoria(idPersona(), idTabla(), currentData)" />
+            <p-button icon="pi pi-info-circle" pTooltip="Información del objeto actual" tooltipPosition="bottom"
+              (onClick)="funciones.muestraInfoObjeto(idContenedor(),idObjeto(),idTabla(), permiso())" />
           </ng-template>
 
           <ng-template #center>
@@ -61,7 +62,7 @@
           </ng-template>
 
         </p-toolbar>
-        <form id="frmPer0001" class="grid m-0" [formGroup]="dataForm">
+        <form id="frmPer0001" class="grid m-0" [formGroup]="frmPer0001">
           <!-- ====================================================== -->
           <!-- PANEL SUPERIOR -->
           <!-- ====================================================== -->
@@ -210,7 +211,7 @@
               <div class="col-12 md:col-6">
                 <div class="field mb-1">
                   <label>Nacionalidad</label>
-                  <p-select class="w-full" [options]="nacionalidades()" [filter]="true" [editable]="true"
+                  <p-select class="w-full" [options]="nacionalidades()" [filter]="true"
                     formControlName="idNacionalidad" optionLabel="descripcionNacionalidad"
                     optionValue="idNacionalidad"></p-select>
                 </div>
@@ -219,7 +220,7 @@
               <div class="col-12 md:col-6">
                 <div class="field mb-1">
                   <label>País residencia</label>
-                  <p-select class="w-full" [options]="paises()" [filter]="true" [editable]="true"
+                  <p-select class="w-full" [options]="paises()" [filter]="true"
                     formControlName="idPais" optionLabel="descripcionPais" optionValue="idPais"></p-select>
                 </div>
               </div>
@@ -249,19 +250,24 @@
       </div>
     </p-tabpanel>
     <p-tabpanel value="1">
+      <!-- Identificaciones -->
       <app-grd-per0010 [idPersona]="idPersona()" />
     </p-tabpanel>
     <p-tabpanel value="2">
+      <!-- Direcciones -->
       <app-grd-per0006 [idPersona]="idPersona()" />
     </p-tabpanel>
     <p-tabpanel value="3">
-      <span>--------</span>
+      <!-- Teléfonos -->
+      <app-grd-per0019 [idPersona]="idPersona()" />
     </p-tabpanel>
     <p-tabpanel value="4">
-      <span>--------</span>
+      <!-- Características -->
+      <app-grd-per0002 [idPersona]="idPersona()" />
     </p-tabpanel>
     <p-tabpanel value="5">
-      <span>--------</span>
+      <!-- Ficha Médica -->
+      <app-grd-per0008 [idPersona]="idPersona()" />
     </p-tabpanel>
   </p-tabpanels>
 </p-tabs>

@@ -146,6 +146,7 @@ export interface Direcciones {
   idDireccion: number | null;
   idTipoDireccion: string;
   idPersona: number;
+  idCiudadDireccion: number;
   tipoDireccion?: string | null;
   descripcionDireccion?: string | null;
   sector?: string | null;
@@ -157,6 +158,7 @@ export interface Direcciones {
   nroDepartamento?: string | null;
   datoAdicional?: string | null;
   principalDireccion: string;
+  preferida?: boolean | null;
   idUsuarioCrea?: string | null;
   fechaCrea?: string | null;
   idUsuarioModifica?: string | null;
@@ -167,4 +169,74 @@ export interface DireccionesResponse {
   status: string;
   message: string;
   data: Direcciones[];
+}
+
+//TIPOS DE DIRECCION
+export interface TipoDireccionesResponse {
+  status: string;
+  message: string;
+  data: TipoDirecciones[];
+}
+
+export interface TipoDirecciones {
+  idTipoDireccion: string;
+  descripcionTipoDireccion: string;
+  principalTipoDireccion: string;
+  idUsuarioCrea: null;
+  fechaCrea: null;
+  idUsuarioModifica: null;
+  fechaModifica: null;
+}
+
+//CIUDADES
+export interface CiudadesResponse {
+  status: string;
+  message: string;
+  data: Ciudades[];
+}
+
+export interface Ciudades {
+  idCiudad: number;
+  idProvincia: number;
+  descripcionCiudad: null | string;
+  idUsuarioCrea: null | string;
+  fechaCrea: null | string;
+  idUsuarioModifica: null | string;
+  fechaModifica: null | string;
+}
+
+//TELÉFONOS
+export interface TelefonosResponse {
+  status: string;
+  message: string;
+  data: Telefonos[];
+}
+
+export interface Telefonos {
+  idTelefono: number | null;
+  idPersona: number;
+  idTipoTelefono: string;
+  descripcionTelefono: string;
+  principalTelefono: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+//TIPOS DE TELÉFONOS
+export interface TipoTelefonosResponse {
+  status: string;
+  message: string;
+  data: TipoTelefonos[];
+}
+
+export interface TipoTelefonos {
+  idTipoTelefono: string;
+  descripcionTipoTelefono: string;
+  principalTipoTelefono: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
 }

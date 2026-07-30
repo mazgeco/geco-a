@@ -2,7 +2,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { PRIMENG_MODULES } from '../../../shared/primeng/primeng.imports';
 import { Router } from '@angular/router';
 import { PersonasService } from '../../../services/personas.service';
-import { ToastService } from '../../../shared/toast.service';
+import { ToastService } from '../../../services/toast.service';
 import { Personas } from '../../../interfaces/personas.interfaces';
 import { MessageService } from '../../../services/message.service';
 import { StatusMessage } from '../../../interfaces/general.interface';

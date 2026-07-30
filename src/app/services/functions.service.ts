@@ -9,7 +9,7 @@ export class FuntionsService {
 
   toastService = inject(ToastService);
 
-  // Función para convertir YYYY-MM-DD a Date sin errores de zona horaria
+  //Función para convertir YYYY-MM-DD a Date sin errores de zona horaria
   convertirAFecha(fechaStr: any): Date | null | any {
     if (!fechaStr) return null;
     if (typeof fechaStr === "string") {
@@ -59,9 +59,15 @@ export class FuntionsService {
     return fecha.replace('T', ' ');
   }
 
-  //Obtiene la etiqueta par aun combo
-  obtenerEtiqueta(tipos: any[], codigo: string): string {
-    return tipos.find(item => item.codigo === codigo)?.etiqueta ?? '';
+  //Obtiene la etiqueta para un combo
+  obtenerEtiqueta(tipos: any[], codigo: string, tipo = 'combo'): string {
+    switch(tipo){
+      case 'tipoTelefono':
+        return tipos.find(item => item.idTipoTelefono === codigo)?.descripcionTipoTelefono ?? '';
+      default:
+        return tipos.find(item => item.codigo === codigo)?.etiqueta ?? '';
+    }
+
   }
 
   //Funcion que muestra la auditoria de un registro
@@ -73,6 +79,14 @@ export class FuntionsService {
       "Usuario modificación: " + info.idUsuarioModifica + "\n" +
       "Fecha modificación: " + this.formateaFecha(info.fechaModifica!);
     this.toastService.showMessage("info", "Información auditoría", informacion, "", 5000);
+  }
+
+  muestraInfoObjeto(idContenedor: string, idObjeto: string, idTabla: string, permiso: string, pausa = 5000): void {
+
+    permiso = permiso === "w" ? "Escritura" : "Lectura";
+
+    this.toastService.showMessage("info", "Información objeto", "Contenedor: " + idContenedor +
+      " \n Objeto: " + idObjeto + " \n Tabla: " + idTabla + " \n Permiso: " + permiso, "", pausa);
   }
 
 }

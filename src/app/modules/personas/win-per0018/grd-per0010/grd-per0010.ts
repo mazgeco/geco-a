@@ -1,11 +1,13 @@
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
+import { DatePipe, NgClass } from '@angular/common';
+import { ConfirmationService } from 'primeng/api';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
 import { Combo, Identificaciones } from '../../../../interfaces/personas.interfaces';
 import { FuntionsService } from '../../../../services/functions.service';
 import { PersonasService } from '../../../../services/personas.service';
-import { ConfirmationService } from 'primeng/api';
-import { ToastService } from '../../../../shared/toast.service';
-import { DatePipe, NgClass } from '@angular/common';
+import { StatusMessage } from '../../../../interfaces/general.interface';
+import { MessageService } from '../../../../services/message.service'
+import { ToastService } from '../../../../services/toast.service';
 
 @Component({
   selector: 'app-grd-per0010',
@@ -15,19 +17,31 @@ import { DatePipe, NgClass } from '@angular/common';
 })
 export class GrdPer0010 implements OnInit {
 
+  //LLAMADA AL idPersona
   @Input()
   idPersona!: number;
 
-  funciones = inject(FuntionsService);
+  //IDENTIFICADORES PRINCIPALES
+  idContenedor = signal<string>("WinPer0018");
+  idObjeto = signal<string>("GrdPer0010");
+  idTabla = signal<string>("185");
+  permiso = signal<string>("w");
 
+  //INJECTIONS PÚBLICAS
+  funciones = inject(FuntionsService);
+  //INJECTIONS PRIVADAS
   private confirmationService = inject(ConfirmationService);
   private personasService = inject(PersonasService);
   private toastService = inject(ToastService);
-
+  //VARIABLES PARA EL MANEJO DE LOS MENSAJES
+  messageService = inject(MessageService);
+  statusMessages = signal<Record<string, StatusMessage>>({});
+  identificacionMessage = computed(() =>
+    this.messageService.obtener(this.statusMessages, 'msgGrdPer0010')
+  );
+  //Declaración de variables
   selectedRows!: Identificaciones[];
   metaKey: boolean = true;
-
-
   identificaciones = signal<Identificaciones[]>([]);
   tiposIdentificacion = signal<Combo[]>([
     { codigo: "C", etiqueta: "Cédula" },
@@ -146,11 +160,6 @@ export class GrdPer0010 implements OnInit {
     } else {
       this.toastService.showMessage("error", "Error", "Seleccione varias filas");
     }
-  }
-
-  //Función que muestra la información del objeto
-  muestraInfoObjeto(): void {
-    this.toastService.showMessage("info", "Información objeto", "Contenedor: WinPer0018 \n Objeto: GrdPer0010 \n Tabla: 185 \n Permiso: Escritura", 5000);
   }
 
   //Función que muestra la auditoría del registro seleccionado

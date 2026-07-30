@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Direcciones, DireccionesResponse, GraficosResponse, Identificaciones, IdentificacionesResponse, ListaDenominacionesResponse, ListaNacionalidadesResponse, ListaPaisesResponse, ListaPersonasResponse, ListaTipoEmpresasResponse, PersonaResponse, Personas } from '../interfaces/personas.interfaces';
+import { CiudadesResponse, Direcciones, DireccionesResponse, GraficosResponse, Identificaciones, IdentificacionesResponse, ListaDenominacionesResponse, ListaNacionalidadesResponse, ListaPaisesResponse, ListaPersonasResponse, ListaTipoEmpresasResponse, PersonaResponse, Personas, Telefonos, TelefonosResponse, TipoDireccionesResponse, TipoTelefonosResponse } from '../interfaces/personas.interfaces';
 import { SavedRow } from '../interfaces/general.interface'
 
 @Injectable({
@@ -93,6 +93,14 @@ export class PersonasService {
     }
   }
 
+  listaTipoDirecciones(): Observable<TipoDireccionesResponse>{
+    return this.http.get<TipoDireccionesResponse>(`${this.apiUrl}personas/tipodirecciones`);
+  }
+
+  listaCiudades(): Observable<CiudadesResponse>{
+    return this.http.get<CiudadesResponse>(`${this.apiUrl}personas/ciudades`);
+  }
+
   eliminaIdentificacion(idIdentificacion: number): Observable<SavedRow> {
     const params = new HttpParams().set('idIdentificacion', idIdentificacion!);
       return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/identificaciones`, { params });
@@ -101,7 +109,6 @@ export class PersonasService {
   listaDirecciones(idPersona: number): Observable<DireccionesResponse> {
     return this.http.get<DireccionesResponse>(`${this.apiUrl}personas/${idPersona}/direcciones`);
   }
-
 
   grabaDireccion(direccion: Direcciones): Observable<SavedRow> {
     if (direccion.idDireccion === 0) {
@@ -117,7 +124,29 @@ export class PersonasService {
     const params = new HttpParams().set('idDireccion', idDireccion!);
       return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/direcciones`, { params });
   }
+  
+  listaTiposTelefonos(): Observable<TipoTelefonosResponse> {
+    return this.http.get<TipoTelefonosResponse>(`${this.apiUrl}personas/tipotelefonos`);
+  }
 
+  listaTelefonos(idPersona: number): Observable<TelefonosResponse> {
+    return this.http.get<TelefonosResponse>(`${this.apiUrl}personas/${idPersona}/telefonos`);
+  }
+
+  grabaTelefono(telefono: Telefonos): Observable<SavedRow> {
+    if (telefono.idTelefono === 0) {
+      telefono.idTelefono = null;
+      return this.http.post<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/telefonos`, telefono);
+    } else {
+      const params = new HttpParams().set('idTelefono', telefono.idTelefono!);
+      return this.http.put<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/telefonos`, telefono, { params });
+    }
+  }
+
+  eliminaTelefono(idTelefono: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idTelefono', idTelefono!);
+      return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/telefonos`, { params });
+  }
 
 
 }

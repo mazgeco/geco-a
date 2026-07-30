@@ -31,6 +31,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { ListboxModule } from 'primeng/listbox';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToggleSwitch  } from 'primeng/toggleswitch'
 
 export const PRIMENG_MODULES = [
   ButtonModule,
@@ -67,5 +68,6 @@ export const PRIMENG_MODULES = [
   TieredMenuModule,
   ToastModule,
   TooltipModule,
-  Toolbar
+  Toolbar,
+  ToggleSwitch
 ];

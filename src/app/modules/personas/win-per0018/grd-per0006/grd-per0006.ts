@@ -1,42 +1,71 @@
 import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
-import { Combo, Direcciones } from '../../../../interfaces/personas.interfaces';
+import { ConfirmationService } from 'primeng/api';
+import { FormsModule } from '@angular/forms';
+import { Ciudades, Combo, Direcciones, TipoDirecciones } from '../../../../interfaces/personas.interfaces';
 import { FuntionsService } from '../../../../services/functions.service';
 import { PersonasService } from '../../../../services/personas.service';
-import { ConfirmationService } from 'primeng/api';
-import { ToastService } from '../../../../shared/toast.service';
-import { NgClass } from '@angular/common';
+import { ToastService } from '../../../../services/toast.service';
 
 @Component({
   selector: 'app-grd-per0006',
-  imports: [...PRIMENG_MODULES, NgClass],
+  imports: [...PRIMENG_MODULES, FormsModule],
   templateUrl: './grd-per0006.html',
   styleUrl: './grd-per0006.css',
 })
 export class GrdPer0006 implements OnInit {
+
+  //LLAMADA AL idPersona
   @Input()
   idPersona!: number;
 
-  funciones = inject(FuntionsService);
+  //IDENTIFICADORES PRINCIPALES
+  idContenedor = signal<string>("WinPer0018");
+  idObjeto = signal<string>("GrdPer0006");
+  idTabla = signal<string>("182");
+  permiso = signal<string>("w");
 
+  //INJECTIONS PÚBLICOS
+  funciones = inject(FuntionsService);
+  //INJECTIONS PRIVADOS
   private confirmationService = inject(ConfirmationService);
   private personasService = inject(PersonasService);
   private toastService = inject(ToastService);
 
+  //DECLARACIÓN DE VARIABLES
   selectedRows!: Direcciones[];
   metaKey: boolean = true;
-
-
   direcciones = signal<Direcciones[]>([]);
-  tiposDireccion = signal<Combo[]>([
-    { codigo: "D", etiqueta: "Domicilio" },
-    { codigo: "O", etiqueta: "Oficina" }
-  ]);
+  tiposDireccion = signal<TipoDirecciones[]>([]);
+  ciudades = signal<Ciudades[]>([]);
 
 
   ngOnInit(): void {
+    //CARGA COMBOS
+    this.cargaCombos();
     //CARGA LAS IDENTIFICACIONES DE LA PERSONA CONSULTADA
     this.cargaDirecciones();
+  }
+
+  //CARGA COMBOS
+  cargaCombos(): void {
+    this.personasService.listaTipoDirecciones().subscribe({
+      next: (resp) => {
+        this.tiposDireccion.set(resp.data);
+      },
+      error: (err) => {
+        this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
+      }
+    });
+
+    this.personasService.listaCiudades().subscribe({
+      next: (resp) => {
+        this.ciudades.set(resp.data);
+      },
+      error: (err) => {
+        this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
+      }
+    });
   }
 
   //INSERTA UNA FILA en el grid
@@ -44,6 +73,7 @@ export class GrdPer0006 implements OnInit {
     const nueva: Direcciones = {
       idDireccion: 0, // Id temporal nulo para crear espera que sea null
       idPersona: this.idPersona,
+      idCiudadDireccion: 0,
       idTipoDireccion: '',
       sector: '',
       callePrincipal: '',
@@ -74,9 +104,14 @@ export class GrdPer0006 implements OnInit {
 
   saveDireccion(direccion: Direcciones): void {
 
+    direccion.principalDireccion = direccion.preferida ? "S" : "N";
+    direccion.descripcionDireccion = (direccion.sector ?? '') + ' - ' + (direccion.callePrincipal ?? '') + ' ' +
+      (direccion.nroCasaOEdificio ?? '') + ' y ' + (direccion.calleSecundaria ?? '');
+
     if (direccion.principalDireccion === "S" && (this.direcciones().filter(item => item.principalDireccion === "S").length === 2)) {
-      this.toastService.showMessage("error", "Error", "No puede colocar otra identificación como principal si ya existe una");
+      this.toastService.showMessage("error", "Error", "No puede colocar otra direccion como principal si ya existe una");
       direccion.principalDireccion = "N";
+      direccion.preferida = false;
     }
 
     this.personasService.grabaDireccion(direccion).subscribe({
@@ -95,10 +130,13 @@ export class GrdPer0006 implements OnInit {
     this.personasService.listaDirecciones(this.idPersona).subscribe({
       next: (resp) => {
         let aux = resp.data;
-        for(let i=0; i<aux.length; i++){
-         aux[i].descripcionDireccion = (aux[i].callePrincipal ?? '') + ' ' + (aux[i].nroCasaOEdificio ?? '') + ' y ' +
-                                       (aux[i].calleSecundaria ?? ' ') + ' ';
-        }
+
+        aux.forEach(d => {
+          d.preferida = d.principalDireccion === 'S';
+          d.descripcionDireccion = (d.sector ?? '') + ' - ' + (d.callePrincipal ?? '') + ' ' + (d.nroCasaOEdificio ?? '') + ' y ' +
+            (d.calleSecundaria ?? '')
+        });
+
         this.direcciones.set(aux);
       },
       error: (err) => {
@@ -157,13 +195,6 @@ export class GrdPer0006 implements OnInit {
     }
   }
 
-  
-
-  //Función que muestra la información del objeto
-  muestraInfoObjeto(): void {
-    this.toastService.showMessage("info", "Información objeto", "Contenedor: WinPer0018 \n Objeto: GrdPer0006 \n Tabla: 182 \n Permiso: Escritura", 5000);
-  }
-
   //Función que muestra la auditoría del registro seleccionado
   muestraAuditoriaRegistro(): void {
     const selected = this.selectedRows || [];
@@ -173,4 +204,9 @@ export class GrdPer0006 implements OnInit {
       this.toastService.showMessage("error", "Error", "Seleccione un registro para ver la auditoría");
     }
   }
+
+  cancelarGrabado(rowData: Direcciones) {
+    this.cargaDirecciones();
+  }
+
 }
