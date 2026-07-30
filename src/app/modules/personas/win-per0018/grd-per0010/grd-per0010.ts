@@ -17,9 +17,15 @@ import { ToastService } from '../../../../services/toast.service';
 })
 export class GrdPer0010 implements OnInit {
 
-  //LLAMADA AL idPersona
+  /******************************************************************************************
+  * TOMA DEL PARÁMETRO ENVIADO EN LA LLAMADA DEL SELECTOR
+  *******************************************************************************************/
   @Input()
   idPersona!: number;
+
+  /******************************************************************************************
+  * DECLARACIÓN DE VARIABLES
+  *******************************************************************************************/
 
   //IDENTIFICADORES PRINCIPALES
   idContenedor = signal<string>("WinPer0018");
@@ -50,12 +56,17 @@ export class GrdPer0010 implements OnInit {
   ]);
 
 
+  /******************************************************************************************
+  * MÉTODOS QUE EJECUTAN LOS PROCESOS
+  *******************************************************************************************/
+
+  //MÉTODO QUE SE CARGA AL INICIALIZARCE EL OBJETO PRINCIPAL GrdPer0010
   ngOnInit(): void {
     //CARGA LAS IDENTIFICACIONES DE LA PERSONA CONSULTADA
     this.cargaIdentificaciones();
   }
 
-  //INSERTA UNA FILA en el grid
+  //MÉTODO QUE INSERTA UNA FILA EN EL GRID
   insertarIdentificacion(): void {
     const nueva: Identificaciones = {
       idIdentificacion: 0, // Id temporal nulo para crear espera que sea null
@@ -82,6 +93,7 @@ export class GrdPer0010 implements OnInit {
     }
   }
 
+  //MÉTODO QUE GRABA LA IDENTIFICACIÓN (FILA COMPLETA)
   saveIdentificacion(identificacion: Identificaciones): void {
 
     if (identificacion.principalIdentificacion === "S" && (this.identificaciones().filter(item => item.principalIdentificacion === "S").length === 2)) {
@@ -92,26 +104,50 @@ export class GrdPer0010 implements OnInit {
     this.personasService.grabaIdentificacion(identificacion).subscribe({
       next: (resp) => {
         identificacion.idIdentificacion = resp.idSecuencial;
-        this.cargaIdentificaciones();
+        //Envía un mensaje de grabación exitosa
+        this.messageService.mostrar(
+          this.statusMessages,
+          'msgGrdPer0010',
+          'success',
+          'Identificación grabada correctamente.'
+        );
+        //this.cargaIdentificaciones();
       },
       error: (err) => {
         this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
       }
     });
   }
-  //READ
+
+  //MÉTODO QUE CARGA TODAS LAS IDENTIFICACIONES EN EL GRID
   cargaIdentificaciones(): void {
     this.identificaciones.set([]);
     this.personasService.listaIdentificaciones(this.idPersona).subscribe({
       next: (resp) => {
+        //Coloca las identificaciones el la estructura
         this.identificaciones.set(resp.data);
+        //Envía un mensaje de carga exitosa
+        this.messageService.mostrar(
+          this.statusMessages,
+          'msgGrdPer0010',
+          'success',
+          'Identificaciones cargadas correctamente.'
+        );
       },
       error: (err) => {
         this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las identificaciones de la persona: " + err.error.message, err.error.status);
+        //Envía un mensaje de carga exitosa
+        this.messageService.mostrar(
+          this.statusMessages,
+          'msgGrdPer0010',
+          'error',
+          'Hubo un error al cargar las identificaciones.'
+        );
       }
     });
   }
-  //DELETE
+
+  //MÉTODO QUE ELIMINA UNA FILA DEL GRID
   eliminarIdentificacion(rowData: Identificaciones): void {
     if (rowData.idIdentificacion === 0) {
       this.identificaciones.set(this.identificaciones().filter(item => item.idIdentificacion != rowData.idIdentificacion));
@@ -125,9 +161,23 @@ export class GrdPer0010 implements OnInit {
           this.personasService.eliminaIdentificacion(rowData.idIdentificacion!).subscribe({
             next: (resp) => {
               this.identificaciones.set(this.identificaciones().filter(item => item.idIdentificacion != resp.idSecuencial));
+              //Envía un mensaje de carga exitosa
+              this.messageService.mostrar(
+                this.statusMessages,
+                'msgGrdPer0010',
+                'success',
+                'Identificación eliminada correctamente.'
+              );
             },
             error: (err) => {
               this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
+              //Envía un mensaje de carga exitosa
+              this.messageService.mostrar(
+                this.statusMessages,
+                'msgGrdPer0010',
+                'error',
+                'Hubo un error al eliminar la identificación.'
+              );
             }
           });
         }
@@ -135,6 +185,7 @@ export class GrdPer0010 implements OnInit {
     }
   }
 
+  //MÉTODO QUE ELIMINA VARIAS FILAS SELECCIONADAS DEL GRID
   eliminarVarias(): void {
     const selected = this.selectedRows;
     if (selected.length > 0) {
@@ -152,9 +203,24 @@ export class GrdPer0010 implements OnInit {
               },
               error: (err) => {
                 this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
+                //Envía un mensaje de carga exitosa
+                this.messageService.mostrar(
+                  this.statusMessages,
+                  'msgGrdPer0010',
+                  'error',
+                  'Hubo un error al eliminar una de las identificaciones.'
+                );
+                return;
               }
             });
           }
+          //Envía un mensaje de carga exitosa
+          this.messageService.mostrar(
+            this.statusMessages,
+            'msgGrdPer0010',
+            'success',
+            'Identificaciones eliminadas correctamente.'
+          );
         }
       });
     } else {
@@ -162,7 +228,7 @@ export class GrdPer0010 implements OnInit {
     }
   }
 
-  //Función que muestra la auditoría del registro seleccionado
+  //MÉTODO QUE MUESTRA LA AUDITORÍA DEL REGISTRO SELECCIONADO
   muestraAuditoriaRegistro(): void {
     const selected = this.selectedRows || [];
     if (selected.length === 1) {

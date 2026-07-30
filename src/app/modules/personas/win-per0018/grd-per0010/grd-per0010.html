@@ -1,7 +1,7 @@
 <div class="col-12">
   <p-toolbar>
     <ng-template #start>
-      <p-button id="btnGrdPer00101" icon="pi pi-plus" class="mr-1" label="Insertar" pTooltip="Activa a la persona"
+      <p-button id="btnGrdPer00101" icon="pi pi-plus" class="mr-1" label="Insertar" pTooltip="Inserta una fila"
         tooltipPosition="bottom" (onClick)="insertarIdentificacion()" />
       <p-button id="btnGrdPer00102" icon="pi pi-trash" class="mr-1" label="Eliminar"
         pTooltip="Elimina varias filas seleccionadas" tooltipPosition="bottom" (onClick)="eliminarVarias()" />
@@ -10,7 +10,8 @@
       <p-button id="btnGrdPer00104" icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual"
         tooltipPosition="bottom" (onClick)="muestraAuditoriaRegistro()" />
       <p-button id="btnGrdPer00105" icon="pi pi-info-circle" pTooltip="Información del objeto actual"
-        tooltipPosition="bottom" (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())" />
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())" />
     </ng-template>
 
     <ng-template #center>

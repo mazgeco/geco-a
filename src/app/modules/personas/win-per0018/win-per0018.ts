@@ -25,12 +25,15 @@ import { GrdPer0019 } from './grd-per0019/grd-per0019';
 })
 export class WinPer0018 implements OnInit {
 
+  /******************************************************************************************
+  * DECLARACIÓN DE VARIABLES
+  *******************************************************************************************/
+
   //IDENTIFICADORES PRINCIPALES
   idContenedor = signal<string>("WinPer0018");
   idObjeto = signal<string>("FrmPer0001");
   idTabla = signal<string>("189");
   permiso = signal<string>("w");
-
 
   //INJECTIONS PUBLICAS
   funciones = inject(FuntionsService);
@@ -116,7 +119,7 @@ export class WinPer0018 implements OnInit {
     }
   ]);
 
-  //FORMULARIO
+  //DECLARACIÓN DE LA VARIABLE PARA FORMULARIO
   public frmPer0001 = this.fb.group({
     idPersona: [0],
     idTipoEmpresa: [''],
@@ -148,6 +151,10 @@ export class WinPer0018 implements OnInit {
     updateOn: 'blur'
   });
 
+  /******************************************************************************************
+  * GETTERS
+  *******************************************************************************************/
+
   //GETTER PARA TRAER LOS DATOS ACTUALES DE LA PESONA
   get currentData(): Personas {
     const persona = this.frmPer0001.getRawValue() as Personas;
@@ -159,39 +166,39 @@ export class WinPer0018 implements OnInit {
     return this.frmPer0001.get('tipoPersona')?.value;
   }
 
-  //FUNCIÓN QUE SE CARGA EN EL EVENTO OnInit
+  /******************************************************************************************
+  * MÉTODOS QUE EJECUTAN LOS PROCESOS
+  *******************************************************************************************/
+
+  //MÉTODO QUE SE CARGA AL INICIALIZARCE EL OBJETO PRINCIPAL WinPer0018
   ngOnInit(): void {
-    //Revisa los cambios en el formulario para disparar el grabado en cada cambio
-    this.frmPer0001.valueChanges.subscribe(persona => {
-      if (this.loadingPersona()) {
-        return;
-      }
-      if (persona.tipoPersona === 'N') {
-        persona.razonSocial = persona.apellido1 + ' ' + (persona.apellido2 === null ? '' : persona.apellido2) + ' ' +
-          persona.nombre1 + ' ' + (persona.nombre2 === null ? '' : persona.nombre2);
-        this.razonSocialPersona.set(persona.razonSocial);
-      }
-
-      this.messageService.mostrar(
-        this.statusMessages,
-        'msgFrmPer0001',
-        'success',
-        'Dato grabado correctamente.'
-      );
-      this.saveForm(persona as Personas);
-    });
-
-    //Carga de datos
+    //Carga de datos de los combos
     this.cargaCombos();
     //Toma el dato enviado por el router para colocar en el id principal
     this.idPersona.set(Number(this.route.snapshot.paramMap.get('id')));
     //Carga los datos de la persona consultada
     this.cargaPersona(this.idPersona());
+
+    //Activa la revisión de cambios en el formulario para disparar el grabado en cada cambio
+    this.frmPer0001.valueChanges.subscribe(persona => {
+      //Si la persona se está cargando no ejecuta
+      if (this.loadingPersona()) {
+        return;
+      }
+      //Concatena los nombres para cargar la razón social antes de grabar
+      if (persona.tipoPersona === 'N') {
+        persona.razonSocial = persona.apellido1 + ' ' + (persona.apellido2 === null ? '' : persona.apellido2) + ' ' +
+          persona.nombre1 + ' ' + (persona.nombre2 === null ? '' : persona.nombre2);
+        this.razonSocialPersona.set(persona.razonSocial);
+      }
+      //Llamada al método para guardar personas cuando exista un cambio en algún campo del formulario
+      this.saveForm(persona as Personas);
+    });
   }
 
-  //FUNCIÓN QUE CARGA LOS DATOS PARA LOS COMBOS
+  //MÉTODO QUE CARGA LOS DATOS PARA LOS COMBOS
   cargaCombos(): void {
-    //CARGA DENOMINACIONES
+    //Carga las denominaciones
     this.personasService.listaDenominaciones()
       .subscribe({
         next: (resp) => {
@@ -202,7 +209,7 @@ export class WinPer0018 implements OnInit {
         }
       });
 
-    //CARGA NACIONALIDADES
+    //Carga las nacionalidades
     this.personasService.listaNacionalidades().subscribe({
       next: (resp) => {
         this.nacionalidades.set(resp.data);
@@ -212,7 +219,7 @@ export class WinPer0018 implements OnInit {
       }
     });
 
-    //CARGA PAÍSES
+    //Carga los paises
     this.personasService.listaPaises().subscribe({
       next: (resp) => {
         this.paises.set(resp.data);
@@ -222,7 +229,7 @@ export class WinPer0018 implements OnInit {
       }
     });
 
-    //CARGA TIPO EMPRESAS
+    //Carga los tipos de empresas
     this.personasService.listaTipoEmpresas().subscribe({
       next: (resp) => {
         this.tipoEmpresas.set(resp.data);
@@ -270,11 +277,17 @@ export class WinPer0018 implements OnInit {
     }
   }
 
-  //CREATE/UPDATE PERSONA
+  //MÉTODO QUE CREA Y ACTUALIZA A LA PERSONA
   saveForm(persona: Personas): void {
     this.personasService.grabaPersona(this.idPersona(), persona)?.subscribe({
       next: (resp) => {
         this.idPersona.set(resp.idSecuencial);
+        this.messageService.mostrar(
+          this.statusMessages,
+          'msgFrmPer0001',
+          'success',
+          'Dato grabado correctamente.'
+        );
       },
       error: (err) => {
         this.toastService.showMessage("err", "Error", 'Ha ocurrido un error al grabar: ' + err.error.message);
@@ -282,7 +295,7 @@ export class WinPer0018 implements OnInit {
     });
   }
 
-  //CAMBIA EL ESTADO DE LA PERSONA
+  //MÉTODO QUE CAMBIA EL ESTADO DE LA PERSONA
   cambiarEstado(estado: string): void {
     this.confirmationService.confirm({
       message: '¿Realmente desea cambiar el estado de esta persona?',
