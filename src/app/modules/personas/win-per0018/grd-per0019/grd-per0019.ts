@@ -17,7 +17,7 @@ import { ToastService } from '../../../../services/toast.service';
   styleUrl: './grd-per0019.css',
 })
 export class GrdPer0019 implements OnInit {
-  //LLAMADA AL idPersona
+  //LLAMADA AL ID Master
   @Input()
   idPersona!: number;
 

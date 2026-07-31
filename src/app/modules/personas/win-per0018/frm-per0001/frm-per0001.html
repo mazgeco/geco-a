@@ -1,0 +1,219 @@
+<p-toast />
+<p-confirmdialog />
+
+<div class="col-12">
+  <p-toolbar>
+    <ng-template #start>
+      @if(esActivo()){
+      <p-button icon="pi pi-check" class="mr-1" label="Inactivar" pTooltip="Inactiva a la persona"
+        tooltipPosition="bottom" (onClick)="cambiarEstado(EstadoPersona.I)" />
+      } @else {
+      <p-button icon="pi pi-check" class="mr-1" label="Activar" pTooltip="Activa a la persona" tooltipPosition="bottom"
+        (onClick)="cambiarEstado(EstadoPersona.A)" />
+      }
+      <p-button icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual" tooltipPosition="bottom"
+        (onClick)="funciones.muestraAuditoria(idPersona, idTabla(), currentData)" />
+      <p-button icon="pi pi-info-circle" pTooltip="Información del objeto actual" tooltipPosition="bottom"
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(),idObjeto(),idTabla(), permiso())" />
+    </ng-template>
+
+    <ng-template #center>
+      <span></span>
+    </ng-template>
+
+    <ng-template #end>
+      @if (personaMessage()?.visible) {
+      <div class="message-container">
+        <p-message [severity]="personaMessage()!.severity" [icon]="personaMessage()!.icon">
+          {{ personaMessage()!.text }}
+        </p-message>
+      </div>
+      }
+    </ng-template>
+
+  </p-toolbar>
+  <form id="frmPer0001" class="grid m-0" [formGroup]="frmPer0001">
+    <!-- ====================================================== -->
+    <!-- PANEL SUPERIOR -->
+    <!-- ====================================================== -->
+    <p-panel class="col-12">
+      <!-- Tipo Persona -->
+      <div class="field mb-2">
+        <div class="field mb-1">
+          <label for="tipoPersona">Tipo persona</label>
+          <p-select class="w-full" [options]="tipoPersona()" [disabled]="esActivo()" formControlName="tipoPersona"
+            optionLabel="etiqueta" optionValue="codigo"></p-select>
+        </div>
+      </div>
+      @if(tipoPersonaActual === "J"){
+      <!-- Razón Social -->
+      <div class="field mb-1">
+        <label for="razonSocial">
+          Razón social
+        </label>
+        <input id="razonSocial" type="text" pInputText class="w-full" [disabled]="esActivo()"
+          formControlName="razonSocial">
+      </div>
+      <!-- Nombre Comercial -->
+      <div class="field mb-1">
+        <label for="nombreComercial">
+          Nombre comercial
+        </label>
+        <input id="nombreComercial" type="text" pInputText class="w-full" formControlName="nombreComercial">
+      </div>
+      }
+    </p-panel>
+
+
+    <!-- ====================================================== -->
+    <!-- PANEL INFERIOR -->
+    <!-- ====================================================== -->
+    <p-panel class="col-12">
+
+      <div class="grid">
+
+        @if(tipoPersonaActual === "N"){
+        <!-- ======================= -->
+        <!-- FILA 1 -->
+        <!-- ======================= -->
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Nombre 1</label>
+            <input pInputText class="w-full" formControlName="nombre1" [readOnly]="esActivo()">
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Nombre 2</label>
+            <input pInputText class="w-full" formControlName="nombre2" [readOnly]="esActivo()">
+          </div>
+        </div>
+
+        <!-- ======================= -->
+        <!-- FILA 2 -->
+        <!-- ======================= -->
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Apellido 1</label>
+            <input pInputText class="w-full" formControlName="apellido1" [readOnly]="esActivo()">
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Apellido 2</label>
+            <input pInputText class="w-full" formControlName="apellido2" [readOnly]="esActivo()">
+          </div>
+        </div>
+        }
+
+        <!-- ======================= -->
+        <!-- FILA 3 -->
+        <!-- ======================= -->
+
+        @if(tipoPersonaActual === "J"){
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Tipo organización</label>
+            <p-select class="w-full" [options]="tipoEmpresas()" [filter]="true" [editable]="true"
+              formControlName="idTipoEmpresa" optionLabel="descripcionTipoEmpresa"
+              optionValue="idTipoEmpresa"></p-select>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Entidad financiera</label>
+            <p-select class="w-full" [options]="opcionSN()" formControlName="esEntidadFinanciera" optionLabel="etiqueta"
+              optionValue="codigo"></p-select>
+          </div>
+        </div>
+        }
+        @if(tipoPersonaActual === "N"){
+        <!-- ======================= -->
+        <!-- FILA 4 -->
+        <!-- ======================= -->
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Fecha nacimiento</label>
+            <p-datepicker class="w-full" dateFormat="yy-mm-dd" formControlName="fechaNacimiento"></p-datepicker>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Género</label>
+            <p-select class="w-full" [options]="generoLista()" formControlName="genero" optionLabel="etiqueta"
+              optionValue="codigo"></p-select>
+          </div>
+        </div>
+
+        <!-- ======================= -->
+        <!-- FILA 5 -->
+        <!-- ======================= -->
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Estado civil</label>
+            <p-select class="w-full" [options]="estadoCivil()" formControlName="estadoCivil" optionLabel="etiqueta"
+              optionValue="codigo"></p-select>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Denominación</label>
+            <p-select class="w-full" [options]="denominaciones()" [filter]="true" [editable]="true"
+              formControlName="idDenominacion" optionLabel="descripcionDenominacion"
+              optionValue="idDenominacion"></p-select>
+          </div>
+        </div>
+        }
+
+        <!-- ======================= -->
+        <!-- FILA 5 -->
+        <!-- ======================= -->
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Nacionalidad</label>
+            <p-select class="w-full" [options]="nacionalidades()" [filter]="true" formControlName="idNacionalidad"
+              optionLabel="descripcionNacionalidad" optionValue="idNacionalidad"></p-select>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>País residencia</label>
+            <p-select class="w-full" [options]="paises()" [filter]="true" formControlName="idPais"
+              optionLabel="descripcionPais" optionValue="idPais"></p-select>
+          </div>
+        </div>
+
+
+
+        <!-- ======================= -->
+        <!-- FILA 6 -->
+        <!-- ======================= -->
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>E-mail</label>
+            <input type="email" pInputText class="w-full" formControlName="correoElectronico">
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Página web</label>
+            <input pInputText class="w-full" formControlName="paginaWeb">
+          </div>
+        </div>
+      </div>
+    </p-panel>
+  </form>
+</div>
