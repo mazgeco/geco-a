@@ -18,3 +18,8 @@ export interface SavedRow {
   message: string;
   idSecuencial: number;
 }
+
+export interface Combo {
+  codigo: string;
+  etiqueta: string;
+}

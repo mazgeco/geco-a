@@ -2,7 +2,8 @@ import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
 import { ConfirmationService } from 'primeng/api';
 import { FormsModule } from '@angular/forms';
-import { Ciudades, Combo, Direcciones, TipoDirecciones } from '../../../../interfaces/personas.interfaces';
+import { Combo } from '../../../../interfaces/general.interface'
+import { Ciudades, Direcciones, TipoDirecciones } from '../../../../interfaces/personas.interfaces';
 import { FuntionsService } from '../../../../services/functions.service';
 import { PersonasService } from '../../../../services/personas.service';
 import { ToastService } from '../../../../services/toast.service';

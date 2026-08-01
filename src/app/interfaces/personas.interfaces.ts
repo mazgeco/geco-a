@@ -38,11 +38,6 @@ export enum EstadoPersona {
   I = "I",
 }
 
-export interface Combo {
-  codigo: string;
-  etiqueta: string;
-}
-
 export interface ListaPersonasResponse {
   status: string;
   message: string;

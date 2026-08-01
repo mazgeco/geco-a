@@ -2,7 +2,8 @@ import { Component, computed, inject, Input, OnInit, signal } from '@angular/cor
 import { NgClass } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
-import { Combo, Telefonos, TipoTelefonos } from '../../../../interfaces/personas.interfaces';
+import { Combo } from '../../../../interfaces/general.interface'
+import { Telefonos, TipoTelefonos } from '../../../../interfaces/personas.interfaces';
 import { FuntionsService } from '../../../../services/functions.service';
 import { PersonasService } from '../../../../services/personas.service';
 import { StatusMessage } from '../../../../interfaces/general.interface';

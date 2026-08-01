@@ -3,7 +3,8 @@ import { Component, computed, inject, Input, OnInit, signal } from '@angular/cor
 import { ConfirmationService } from 'primeng/api';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 //Imports generales
-import { Combo, Denominaciones, EstadoPersona, Nacionalidades, Paises, Personas, TipoEmpresas } from '../../../../interfaces/personas.interfaces';
+import { Combo } from '../../../../interfaces/general.interface'
+import { Denominaciones, EstadoPersona, Nacionalidades, Paises, Personas, TipoEmpresas } from '../../../../interfaces/personas.interfaces';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
 //Servicios propios
 import { ToastService } from '../../../../services/toast.service';
@@ -35,6 +36,7 @@ export class FrmPer0001 implements OnInit {
   idTabla = signal<string>("189");
   permiso = signal<string>("w");
 
+  //Declaración variable tipo EstadoPersona que es un enum para usar en el HTML
   readonly EstadoPersona = EstadoPersona;
 
   //INJECTIONS PUBLICAS
@@ -188,11 +190,11 @@ export class FrmPer0001 implements OnInit {
       if (persona.tipoPersona === 'N') {
         persona.razonSocial = persona.apellido1 + ' ' + (persona.apellido2 === null ? '' : persona.apellido2) + ' ' +
           persona.nombre1 + ' ' + (persona.nombre2 === null ? '' : persona.nombre2);
-        this.stateService.persona.update(p => ({
-          ...p!,
-          razonSocial: persona.razonSocial!
-        }));
       }
+      this.stateService.persona.update(p => ({
+        ...p!,
+        razonSocial: persona.razonSocial!
+      }));
       //Llamada al método para guardar personas cuando exista un cambio en algún campo del formulario
       this.saveForm(persona as Personas);
     });
