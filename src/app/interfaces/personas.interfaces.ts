@@ -235,3 +235,38 @@ export interface TipoTelefonos {
   idUsuarioModifica?: string | null;
   fechaModifica?: string | null;
 }
+
+//TIPOS DE CARACTERÍSTICAS
+export interface TipoCaracteristicasResponse {
+  status: string;
+  message: string;
+  data: TipoCaracteristicas[];
+}
+
+export interface TipoCaracteristicas {
+  idTipoCaracteristica: number;
+  descripcionTipoCaracteristica: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+
+//CARACTERÍSTICAS
+export interface CaracteristicasResponse {
+  status: string;
+  message: string;
+  data: Caracteristicas[];
+}
+
+export interface Caracteristicas {
+  idCaracteristica: number | null;
+  idPersona: number;
+  idTipoCaracteristica: number;
+  descripcionCaracteristica: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}

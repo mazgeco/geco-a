@@ -3,20 +3,29 @@ import { Component, computed, inject, Input, OnInit, signal } from '@angular/cor
 import { ConfirmationService } from 'primeng/api';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 //Imports generales
-import { Combo } from '../../../../interfaces/general.interface'
-import { Denominaciones, EstadoPersona, Nacionalidades, Paises, Personas, TipoEmpresas } from '../../../../interfaces/personas.interfaces';
+import { Combo } from '../../../../interfaces/general.interface';
+import {
+  Denominaciones,
+  EstadoPersona,
+  Nacionalidades,
+  Paises,
+  Personas,
+  TipoEmpresas,
+} from '../../../../interfaces/personas.interfaces';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
 //Servicios propios
 import { ToastService } from '../../../../services/toast.service';
-import { MessageService } from '../../../../services/message.service'
+import { MessageService } from '../../../../services/message.service';
 import { PersonasService } from '../../../../services/personas.service';
 import { FuntionsService } from '../../../../services/functions.service';
 import { StatusMessage } from '../../../../interfaces/general.interface';
 import { StateService } from '../state-service';
+import { CatalogService } from '../../../../services/catalog.service';
+import { CatalogDialogComponent } from '../../../../shared/catalog-dialog-component/catalog-dialog-component';
 
 @Component({
   selector: 'app-frm-per0001',
-  imports: [...PRIMENG_MODULES, ReactiveFormsModule],
+  imports: [...PRIMENG_MODULES, ReactiveFormsModule, CatalogDialogComponent],
   providers: [ConfirmationService],
   templateUrl: './frm-per0001.html',
   styleUrl: './frm-per0001.css',
@@ -27,14 +36,14 @@ export class FrmPer0001 implements OnInit {
   idPersona!: number;
 
   /******************************************************************************************
-  * DECLARACIÓN DE VARIABLES
-  *******************************************************************************************/
+   * DECLARACIÓN DE VARIABLES
+   *******************************************************************************************/
 
   //IDENTIFICADORES PRINCIPALES
-  idContenedor = signal<string>("WinPer0018");
-  idObjeto = signal<string>("FrmPer0001");
-  idTabla = signal<string>("189");
-  permiso = signal<string>("w");
+  idContenedor = signal<string>('WinPer0018');
+  idObjeto = signal<string>('FrmPer0001');
+  idTabla = signal<string>('189');
+  permiso = signal<string>('w');
 
   //Declaración variable tipo EstadoPersona que es un enum para usar en el HTML
   readonly EstadoPersona = EstadoPersona;
@@ -42,6 +51,7 @@ export class FrmPer0001 implements OnInit {
   //INJECTIONS PUBLICAS
   funciones = inject(FuntionsService);
   stateService = inject(StateService);
+  catalogService = inject(CatalogService);
   //INJECTIONS PRIVADAS
   private personasService = inject(PersonasService);
   private toastService = inject(ToastService);
@@ -52,13 +62,13 @@ export class FrmPer0001 implements OnInit {
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
   personaMessage = computed(() =>
-    this.messageService.obtener(this.statusMessages, 'msgFrmPer0001')
+    this.messageService.obtener(this.statusMessages, 'msgFrmPer0001'),
   );
 
   //DECLARACIÓN DE VARIABLES
   loadingPersona = signal(true);
   successfullySaved = signal(false);
-  estadoPersona = signal<string>("INACTIVO");
+  estadoPersona = signal<string>('INACTIVO');
   denominaciones = signal<Denominaciones[]>([]);
   nacionalidades = signal<Nacionalidades[]>([]);
   tipoEmpresas = signal<TipoEmpresas[]>([]);
@@ -66,96 +76,99 @@ export class FrmPer0001 implements OnInit {
   paises = signal<Paises[]>([]);
   opcionSN = signal<Combo[]>([
     {
-      codigo: "S",
-      etiqueta: "Si"
+      codigo: 'S',
+      etiqueta: 'Si',
     },
     {
-      codigo: "N",
-      etiqueta: "No"
-    }
+      codigo: 'N',
+      etiqueta: 'No',
+    },
   ]);
   tipoPersona = signal<Combo[]>([
     {
-      codigo: "N",
-      etiqueta: "Natural"
+      codigo: 'N',
+      etiqueta: 'Natural',
     },
     {
-      codigo: "J",
-      etiqueta: "Jurídico"
-    }
+      codigo: 'J',
+      etiqueta: 'Jurídico',
+    },
   ]);
   generoLista = signal<Combo[]>([
     {
-      codigo: "F",
-      etiqueta: "Femenino"
+      codigo: 'F',
+      etiqueta: 'Femenino',
     },
     {
-      codigo: "M",
-      etiqueta: "Masculino"
+      codigo: 'M',
+      etiqueta: 'Masculino',
     },
     {
-      codigo: "O",
-      etiqueta: "Otro"
-    }
+      codigo: 'O',
+      etiqueta: 'Otro',
+    },
   ]);
   estadoCivil = signal<Combo[]>([
     {
-      codigo: "S",
-      etiqueta: "Soltero"
+      codigo: 'S',
+      etiqueta: 'Soltero',
     },
     {
-      codigo: "C",
-      etiqueta: "Casado"
+      codigo: 'C',
+      etiqueta: 'Casado',
     },
     {
-      codigo: "D",
-      etiqueta: "Divorciado"
+      codigo: 'D',
+      etiqueta: 'Divorciado',
     },
     {
-      codigo: "V",
-      etiqueta: "Viudo"
+      codigo: 'V',
+      etiqueta: 'Viudo',
     },
     {
-      codigo: "U",
-      etiqueta: "Union Libre"
-    }
+      codigo: 'U',
+      etiqueta: 'Union Libre',
+    },
   ]);
 
   //DECLARACIÓN DE LA VARIABLE PARA FORMULARIO
-  public frmPer0001 = this.fb.group({
-    idPersona: [0],
-    idTipoEmpresa: [''],
-    idNacionalidad: [0],
-    idDenominacion: [''],
-    idPais: [0],
-    apellido1: [''],
-    apellido2: [''],
-    nombre1: [''],
-    nombre2: [''],
-    razonSocial: [''],
-    nombreComercial: [''],
-    fechaNacimiento: [null as Date | null],
-    correoElectronico: [''],
-    paginaWeb: [''],
-    estadoPersona: [''],
-    esEntidadFinanciera: [''],
-    genero: [''],
-    tipoPersona: [''],
-    estadoCivil: [''],
-    identificacion: [''],
-    telefono: [''],
-    nombreTipoPersona: [''],
-    idUsuarioCrea: [''],
-    fechaCrea: [''],
-    idUsuarioModifica: [''],
-    fechaModifica: ['']
-  }, {
-    updateOn: 'blur'
-  });
+  public frmPer0001 = this.fb.group(
+    {
+      idPersona: [0],
+      idTipoEmpresa: [''],
+      idNacionalidad: [0],
+      idDenominacion: [''],
+      idPais: [0],
+      apellido1: [''],
+      apellido2: [''],
+      nombre1: [''],
+      nombre2: [''],
+      razonSocial: [''],
+      nombreComercial: [''],
+      fechaNacimiento: [null as Date | null],
+      correoElectronico: [''],
+      paginaWeb: [''],
+      estadoPersona: [''],
+      esEntidadFinanciera: [''],
+      genero: [''],
+      tipoPersona: [''],
+      estadoCivil: [''],
+      identificacion: [''],
+      telefono: [''],
+      nombreTipoPersona: [''],
+      idUsuarioCrea: [''],
+      fechaCrea: [''],
+      idUsuarioModifica: [''],
+      fechaModifica: [''],
+    },
+    {
+      updateOn: 'blur',
+    },
+  );
 
   /******************************************************************************************
-  * GETTERS
-  *******************************************************************************************/
+   * GETTERS
+   *******************************************************************************************/
 
   //GETTER PARA TRAER LOS DATOS ACTUALES DE LA PESONA
   get currentData(): Personas {
@@ -169,8 +182,8 @@ export class FrmPer0001 implements OnInit {
   }
 
   /******************************************************************************************
-  * MÉTODOS QUE EJECUTAN LOS PROCESOS
-  *******************************************************************************************/
+   * MÉTODOS QUE EJECUTAN LOS PROCESOS
+   *******************************************************************************************/
 
   //MÉTODO QUE SE CARGA AL INICIALIZARCE EL OBJETO PRINCIPAL WinPer0018
   ngOnInit(): void {
@@ -181,19 +194,25 @@ export class FrmPer0001 implements OnInit {
     this.cargaPersona(this.idPersona);
 
     //Activa la revisión de cambios en el formulario para disparar el grabado en cada cambio
-    this.frmPer0001.valueChanges.subscribe(persona => {
+    this.frmPer0001.valueChanges.subscribe((persona) => {
       //Si la persona se está cargando no ejecuta
       if (this.loadingPersona()) {
         return;
       }
       //Concatena los nombres para cargar la razón social antes de grabar
       if (persona.tipoPersona === 'N') {
-        persona.razonSocial = persona.apellido1 + ' ' + (persona.apellido2 === null ? '' : persona.apellido2) + ' ' +
-          persona.nombre1 + ' ' + (persona.nombre2 === null ? '' : persona.nombre2);
+        persona.razonSocial =
+          persona.apellido1 +
+          ' ' +
+          (persona.apellido2 === null ? '' : persona.apellido2) +
+          ' ' +
+          persona.nombre1 +
+          ' ' +
+          (persona.nombre2 === null ? '' : persona.nombre2);
       }
-      this.stateService.persona.update(p => ({
+      this.stateService.persona.update((p) => ({
         ...p!,
-        razonSocial: persona.razonSocial!
+        razonSocial: persona.razonSocial!,
       }));
       //Llamada al método para guardar personas cuando exista un cambio en algún campo del formulario
       this.saveForm(persona as Personas);
@@ -203,15 +222,19 @@ export class FrmPer0001 implements OnInit {
   //MÉTODO QUE CARGA LOS DATOS PARA LOS COMBOS
   cargaCombos(): void {
     //Carga las denominaciones
-    this.personasService.listaDenominaciones()
-      .subscribe({
-        next: (resp) => {
-          this.denominaciones.set(resp.data);
-        },
-        error: (err) => {
-          this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las denominaciones: " + err.error.message, err.error.status);
-        }
-      });
+    this.personasService.listaDenominaciones().subscribe({
+      next: (resp) => {
+        this.denominaciones.set(resp.data);
+      },
+      error: (err) => {
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar las denominaciones: ' + err.error.message,
+          err.error.status,
+        );
+      },
+    });
 
     //Carga las nacionalidades
     this.personasService.listaNacionalidades().subscribe({
@@ -219,8 +242,13 @@ export class FrmPer0001 implements OnInit {
         this.nacionalidades.set(resp.data);
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las nacionalidades: " + err.error.message, err.error.status);
-      }
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar las nacionalidades: ' + err.error.message,
+          err.error.status,
+        );
+      },
     });
 
     //Carga los paises
@@ -229,8 +257,13 @@ export class FrmPer0001 implements OnInit {
         this.paises.set(resp.data);
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las países: " + err.error.message, err.error.status);
-      }
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar las países: ' + err.error.message,
+          err.error.status,
+        );
+      },
     });
 
     //Carga los tipos de empresas
@@ -239,8 +272,13 @@ export class FrmPer0001 implements OnInit {
         this.tipoEmpresas.set(resp.data);
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las tipos de empresas: " + err.error.message, err.error.status);
-      }
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar las tipos de empresas: ' + err.error.message,
+          err.error.status,
+        );
+      },
     });
   }
 
@@ -251,11 +289,11 @@ export class FrmPer0001 implements OnInit {
       this.personasService.personaPorId(idPersona).subscribe({
         next: (resp) => {
           //ESTADO
-          this.esActivo.set(resp.data.estadoPersona === "A" ? true : false);
-          this.estadoPersona.set(resp.data.estadoPersona === "A" ? "ACTIVO" : "INACTIVO");
-          this.stateService.persona.update(p => ({
+          this.esActivo.set(resp.data.estadoPersona === 'A' ? true : false);
+          this.estadoPersona.set(resp.data.estadoPersona === 'A' ? 'ACTIVO' : 'INACTIVO');
+          this.stateService.persona.update((p) => ({
             ...p!,
-            razonSocial: resp.data.razonSocial!
+            razonSocial: resp.data.razonSocial!,
           }));
           resp.data.fechaNacimiento = this.funciones.convertirAFecha(resp.data.fechaNacimiento);
           //PEGA LOS DATOS EN EL FORMULARIO
@@ -267,7 +305,7 @@ export class FrmPer0001 implements OnInit {
             this.statusMessages,
             'msgFrmPer0001',
             'success',
-            'Persona cargada correctamente.'
+            'Persona cargada correctamente.',
           );
         },
         error: (err) => {
@@ -277,10 +315,15 @@ export class FrmPer0001 implements OnInit {
             this.statusMessages,
             'msgFrmPer0001',
             'error',
-            'La persona no se cargó correctamente.'
+            'La persona no se cargó correctamente.',
           );
-          this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar los datos de la persona: " + err.error.message, err.error.status);
-        }
+          this.toastService.showMessage(
+            'error',
+            'Error',
+            'Ha ocurrido un error al cargar los datos de la persona: ' + err.error.message,
+            err.error.status,
+          );
+        },
       });
     }
   }
@@ -294,12 +337,16 @@ export class FrmPer0001 implements OnInit {
           this.statusMessages,
           'msgFrmPer0001',
           'success',
-          'Dato grabado correctamente.'
+          'Dato grabado correctamente.',
         );
       },
       error: (err) => {
-        this.toastService.showMessage("err", "Error", 'Ha ocurrido un error al grabar: ' + err.error.message);
-      }
+        this.toastService.showMessage(
+          'err',
+          'Error',
+          'Ha ocurrido un error al grabar: ' + err.error.message,
+        );
+      },
     });
   }
 
@@ -311,16 +358,34 @@ export class FrmPer0001 implements OnInit {
       acceptLabel: 'Aceptar',
       rejectLabel: 'Cancelar',
       accept: () => {
-        this.esActivo.set(estado === "A" ? true : false);
-        this.estadoPersona.set(estado === "A" ? "ACTIVO" : "INACTIVO");
+        this.esActivo.set(estado === 'A' ? true : false);
+        this.estadoPersona.set(estado === 'A' ? 'ACTIVO' : 'INACTIVO');
         this.frmPer0001.patchValue({
-          estadoPersona: estado
+          estadoPersona: estado,
         });
-        this.stateService.persona.update(p => ({
+        this.stateService.persona.update((p) => ({
           ...p!,
-          estadoPersona: estado
+          estadoPersona: estado,
         }));
-      }
+      },
     });
+  }
+
+  abrirNuevo(tipo: string) {
+    const catalogos = {
+      NAC: {
+        codigo: 'NAC',
+        titulo: 'Nueva Nacionalidad',
+        campoDescripcion: 'Descripción',
+      },
+
+      PAI: {
+        codigo: 'PAI',
+        titulo: 'Nuevo País',
+        campoDescripcion: 'Descripción',
+      },
+    };
+
+    this.catalogService.abrir(catalogos[tipo as keyof typeof catalogos]);
   }
 }

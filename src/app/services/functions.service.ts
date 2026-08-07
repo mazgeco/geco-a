@@ -63,6 +63,8 @@ export class FuntionsService {
     switch(tipo){
       case 'tipoTelefono':
         return tipos.find(item => item.idTipoTelefono === codigo)?.descripcionTipoTelefono ?? '';
+      case 'tipoCaracteristica':
+        return tipos.find(item => item.idTipoCaracteristica === codigo)?.descripcionTipoCaracteristica ?? '';
       default:
         return tipos.find(item => item.codigo === codigo)?.etiqueta ?? '';
     }

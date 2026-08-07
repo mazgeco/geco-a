@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { CiudadesResponse, Direcciones, DireccionesResponse, GraficosResponse, Identificaciones, IdentificacionesResponse, ListaDenominacionesResponse, ListaNacionalidadesResponse, ListaPaisesResponse, ListaPersonasResponse, ListaTipoEmpresasResponse, PersonaResponse, Personas, Telefonos, TelefonosResponse, TipoDireccionesResponse, TipoTelefonosResponse } from '../interfaces/personas.interfaces';
+import { Caracteristicas, CaracteristicasResponse, CiudadesResponse, Direcciones, DireccionesResponse, GraficosResponse, Identificaciones, IdentificacionesResponse, ListaDenominacionesResponse, ListaNacionalidadesResponse, ListaPaisesResponse, ListaPersonasResponse, ListaTipoEmpresasResponse, PersonaResponse, Personas, Telefonos, TelefonosResponse, TipoCaracteristicasResponse, TipoDireccionesResponse, TipoTelefonosResponse } from '../interfaces/personas.interfaces';
 import { SavedRow } from '../interfaces/general.interface'
 
 @Injectable({
@@ -147,6 +147,27 @@ export class PersonasService {
     const params = new HttpParams().set('idTelefono', idTelefono!);
       return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/telefonos`, { params });
   }
+  
+  listaTiposCaracteristicas(): Observable<TipoCaracteristicasResponse> {
+    return this.http.get<TipoCaracteristicasResponse>(`${this.apiUrl}personas/tipocaracteristicas`);
+  }
 
+  listaCaracteristicas(idPersona: number): Observable<CaracteristicasResponse> {
+    return this.http.get<CaracteristicasResponse>(`${this.apiUrl}personas/${idPersona}/caracteristicas`);
+  }
 
+  grabaCaracteritica(caracteristica: Caracteristicas): Observable<SavedRow> {
+    if (caracteristica.idCaracteristica === 0) {
+      caracteristica.idCaracteristica = null;
+      return this.http.post<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/caracteristicas`, caracteristica);
+    } else {
+      const params = new HttpParams().set('idCaracteristica', caracteristica.idCaracteristica!);
+      return this.http.put<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/caracteristicas`, caracteristica, { params });
+    }
+  }
+
+  eliminaCaracteristica(idCaracteristica: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idCaracteristica', idCaracteristica!);
+      return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/caracteristicas`, { params });
+  }
 }

@@ -2,7 +2,6 @@ import { Component, computed, inject, Input, OnInit, signal } from '@angular/cor
 import { NgClass } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
-import { Combo } from '../../../../interfaces/general.interface'
 import { Telefonos, TipoTelefonos } from '../../../../interfaces/personas.interfaces';
 import { FuntionsService } from '../../../../services/functions.service';
 import { PersonasService } from '../../../../services/personas.service';
@@ -79,6 +78,19 @@ export class GrdPer0019 implements OnInit {
     }
   }
 
+  //READ TIPOS
+  cartaTipoTelefonos(): void {
+    this.personasService.listaTiposTelefonos().subscribe({
+      next: (resp) => {
+        this.tipoTelefonos.set(resp.data);
+      },
+      error: (err) => {
+        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar los tipos de teléfonos: " + err.error.message, err.error.status);
+      }
+    });
+  }
+
+  //CREATE/UPDATE
   saveTelefono(telefono: Telefonos): void {
     if (telefono.principalTelefono === "S" && (this.telefonos().filter(item => item.principalTelefono === "S").length === 2)) {
       this.toastService.showMessage("error", "Error", "No puede colocar otro teléfono como principal si ya existe uno");
@@ -95,6 +107,7 @@ export class GrdPer0019 implements OnInit {
       }
     });
   }
+
   //READ
   cargaTelefonos(): void {
     this.telefonos.set([]);
@@ -107,17 +120,7 @@ export class GrdPer0019 implements OnInit {
       }
     });
   }
-  //Carga tipos de teléfonos
-  cartaTipoTelefonos(): void {
-    this.personasService.listaTiposTelefonos().subscribe({
-      next: (resp) => {
-        this.tipoTelefonos.set(resp.data);
-      },
-      error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las telefonos de la persona: " + err.error.message, err.error.status);
-      }
-    });
-  }
+
   //DELETE
   eliminarTelefono(rowData: Telefonos): void {
     if (rowData.idTelefono === 0) {
@@ -142,6 +145,7 @@ export class GrdPer0019 implements OnInit {
     }
   }
 
+  //DELETE varias
   eliminarVarias(): void {
     const selected = this.selectedRows;
     if (selected.length > 0) {
@@ -169,7 +173,7 @@ export class GrdPer0019 implements OnInit {
     }
   }
 
-  //Función que muestra la auditoría del registro seleccionado
+  //AUDITORÍA DEL REGISTRO
   muestraAuditoriaRegistro(): void {
     const selected = this.selectedRows || [];
     if (selected.length === 1) {
