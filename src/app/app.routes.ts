@@ -20,6 +20,7 @@ export const routes: Routes = [
       { path: 'dash', component: Personas.DshPer0001 },
       { path: 'search', component: Personas.BsqPer0001 },
       { path: 'persona/:id', component: Personas.WinPer0018 },
+      { path: 'tipo-telefono', component: Personas.WinPer0001 },
       { path: '', redirectTo: 'dash', pathMatch: 'full' }
     ]
   },  

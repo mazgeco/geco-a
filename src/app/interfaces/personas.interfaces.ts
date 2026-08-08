@@ -29,13 +29,13 @@ export interface Personas {
 }
 
 export enum Opcion {
-  N = "N",
-  S = "S",
+  N = 'N',
+  S = 'S',
 }
 
 export enum EstadoPersona {
-  A = "A",
-  I = "I",
+  A = 'A',
+  I = 'I',
 }
 
 export interface ListaPersonasResponse {
@@ -102,7 +102,6 @@ export interface Paises {
   codigoParaisoFiscal?: string | null;
   tipoRegimenFiscal?: string | null;
 }
-
 
 //IDENTIFICACIONES
 export interface Identificaciones {
@@ -227,7 +226,7 @@ export interface TipoTelefonosResponse {
 }
 
 export interface TipoTelefonos {
-  idTipoTelefono: string;
+  idTipoTelefono: string | null;
   descripcionTipoTelefono: string;
   principalTipoTelefono: string;
   idUsuarioCrea?: string | null;
@@ -251,7 +250,6 @@ export interface TipoCaracteristicas {
   idUsuarioModifica?: string | null;
   fechaModifica?: string | null;
 }
-
 
 //CARACTERÍSTICAS
 export interface CaracteristicasResponse {

@@ -2,7 +2,7 @@ import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
 import { ConfirmationService } from 'primeng/api';
 import { FormsModule } from '@angular/forms';
-import { Combo } from '../../../../interfaces/general.interface'
+import { Combo } from '../../../../interfaces/general.interface';
 import { Ciudades, Direcciones, TipoDirecciones } from '../../../../interfaces/personas.interfaces';
 import { FuntionsService } from '../../../../services/functions.service';
 import { PersonasService } from '../../../../services/personas.service';
@@ -15,16 +15,15 @@ import { ToastService } from '../../../../services/toast.service';
   styleUrl: './grd-per0006.css',
 })
 export class GrdPer0006 implements OnInit {
-
   //LLAMADA AL idPersona
   @Input()
   idPersona!: number;
 
   //IDENTIFICADORES PRINCIPALES
-  idContenedor = signal<string>("WinPer0018");
-  idObjeto = signal<string>("GrdPer0006");
-  idTabla = signal<string>("182");
-  permiso = signal<string>("w");
+  idContenedor = signal<string>('WinPer0018');
+  idObjeto = signal<string>('GrdPer0006');
+  idTabla = signal<string>('182');
+  permiso = signal<string>('w');
 
   //INJECTIONS PÚBLICOS
   funciones = inject(FuntionsService);
@@ -40,7 +39,6 @@ export class GrdPer0006 implements OnInit {
   tiposDireccion = signal<TipoDirecciones[]>([]);
   ciudades = signal<Ciudades[]>([]);
 
-
   ngOnInit(): void {
     //CARGA COMBOS
     this.cargaCombos();
@@ -55,8 +53,13 @@ export class GrdPer0006 implements OnInit {
         this.tiposDireccion.set(resp.data);
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
-      }
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error: ' + err.error.message,
+          err.error.status,
+        );
+      },
     });
 
     this.personasService.listaCiudades().subscribe({
@@ -64,8 +67,13 @@ export class GrdPer0006 implements OnInit {
         this.ciudades.set(resp.data);
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
-      }
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error: ' + err.error.message,
+          err.error.status,
+        );
+      },
     });
   }
 
@@ -88,7 +96,7 @@ export class GrdPer0006 implements OnInit {
       idUsuarioCrea: '',
       fechaCrea: '',
       idUsuarioModifica: '',
-      fechaModifica: ''
+      fechaModifica: '',
     };
 
     let mensaje = this.funciones.insertRow(
@@ -96,33 +104,50 @@ export class GrdPer0006 implements OnInit {
       nueva,
       'idDireccion',
       this.idPersona !== 0,
-      'btnGrdPer001050'
+      'btnGrdPer001050',
     );
     if (mensaje !== '') {
-      this.toastService.showMessage("error", "Error", mensaje);
+      this.toastService.showMessage('error', 'Error', mensaje);
     }
   }
 
   saveDireccion(direccion: Direcciones): void {
+    direccion.principalDireccion = direccion.preferida ? 'S' : 'N';
+    direccion.descripcionDireccion =
+      (direccion.sector ?? '') +
+      ' - ' +
+      (direccion.callePrincipal ?? '') +
+      ' ' +
+      (direccion.nroCasaOEdificio ?? '') +
+      ' y ' +
+      (direccion.calleSecundaria ?? '');
 
-    direccion.principalDireccion = direccion.preferida ? "S" : "N";
-    direccion.descripcionDireccion = (direccion.sector ?? '') + ' - ' + (direccion.callePrincipal ?? '') + ' ' +
-      (direccion.nroCasaOEdificio ?? '') + ' y ' + (direccion.calleSecundaria ?? '');
-
-    if (direccion.principalDireccion === "S" && (this.direcciones().filter(item => item.principalDireccion === "S").length === 2)) {
-      this.toastService.showMessage("error", "Error", "No puede colocar otra direccion como principal si ya existe una");
-      direccion.principalDireccion = "N";
+    if (
+      direccion.principalDireccion === 'S' &&
+      this.direcciones().filter((item) => item.principalDireccion === 'S').length === 2
+    ) {
+      this.toastService.showMessage(
+        'error',
+        'Error',
+        'No puede colocar otra direccion como principal si ya existe una',
+      );
+      direccion.principalDireccion = 'N';
       direccion.preferida = false;
     }
 
     this.personasService.grabaDireccion(direccion).subscribe({
       next: (resp) => {
-        direccion.idDireccion = resp.idSecuencial;
+        direccion.idDireccion = resp.idSecuencial!;
         this.cargaDirecciones();
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
-      }
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error: ' + err.error.message,
+          err.error.status,
+        );
+      },
     });
   }
   //READ
@@ -132,23 +157,36 @@ export class GrdPer0006 implements OnInit {
       next: (resp) => {
         let aux = resp.data;
 
-        aux.forEach(d => {
+        aux.forEach((d) => {
           d.preferida = d.principalDireccion === 'S';
-          d.descripcionDireccion = (d.sector ?? '') + ' - ' + (d.callePrincipal ?? '') + ' ' + (d.nroCasaOEdificio ?? '') + ' y ' +
-            (d.calleSecundaria ?? '')
+          d.descripcionDireccion =
+            (d.sector ?? '') +
+            ' - ' +
+            (d.callePrincipal ?? '') +
+            ' ' +
+            (d.nroCasaOEdificio ?? '') +
+            ' y ' +
+            (d.calleSecundaria ?? '');
         });
 
         this.direcciones.set(aux);
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las direcciones de la persona: " + err.error.message, err.error.status);
-      }
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar las direcciones de la persona: ' + err.error.message,
+          err.error.status,
+        );
+      },
     });
   }
   //DELETE
   eliminarDireccion(rowData: Direcciones): void {
     if (rowData.idDireccion === 0) {
-      this.direcciones.set(this.direcciones().filter(item => item.idDireccion != rowData.idDireccion));
+      this.direcciones.set(
+        this.direcciones().filter((item) => item.idDireccion != rowData.idDireccion),
+      );
     } else {
       this.confirmationService.confirm({
         message: '¿Desea eliminar la identificación?',
@@ -158,13 +196,20 @@ export class GrdPer0006 implements OnInit {
         accept: () => {
           this.personasService.eliminaDireccion(rowData.idDireccion!).subscribe({
             next: (resp) => {
-              this.direcciones.set(this.direcciones().filter(item => item.idDireccion != resp.idSecuencial));
+              this.direcciones.set(
+                this.direcciones().filter((item) => item.idDireccion != resp.idSecuencial),
+              );
             },
             error: (err) => {
-              this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
-            }
+              this.toastService.showMessage(
+                'error',
+                'Error',
+                'Ha ocurrido un error: ' + err.error.message,
+                err.error.status,
+              );
+            },
           });
-        }
+        },
       });
     }
   }
@@ -182,17 +227,24 @@ export class GrdPer0006 implements OnInit {
             let idDireccion = selected[i].idDireccion;
             this.personasService.eliminaDireccion(idDireccion!).subscribe({
               next: (resp) => {
-                this.direcciones.set(this.direcciones().filter(item => item.idDireccion != resp.idSecuencial));
+                this.direcciones.set(
+                  this.direcciones().filter((item) => item.idDireccion != resp.idSecuencial),
+                );
               },
               error: (err) => {
-                this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
-              }
+                this.toastService.showMessage(
+                  'error',
+                  'Error',
+                  'Ha ocurrido un error: ' + err.error.message,
+                  err.error.status,
+                );
+              },
             });
           }
-        }
+        },
       });
     } else {
-      this.toastService.showMessage("error", "Error", "Seleccione varias filas");
+      this.toastService.showMessage('error', 'Error', 'Seleccione varias filas');
     }
   }
 
@@ -200,14 +252,17 @@ export class GrdPer0006 implements OnInit {
   muestraAuditoriaRegistro(): void {
     const selected = this.selectedRows || [];
     if (selected.length === 1) {
-      this.funciones.muestraAuditoria(selected[0].idDireccion, "182", selected[0])
+      this.funciones.muestraAuditoria(selected[0].idDireccion, this.idTabla(), selected[0]);
     } else {
-      this.toastService.showMessage("error", "Error", "Seleccione un registro para ver la auditoría");
+      this.toastService.showMessage(
+        'error',
+        'Error',
+        'Seleccione un registro para ver la auditoría',
+      );
     }
   }
 
   cancelarGrabado(rowData: Direcciones) {
     this.cargaDirecciones();
   }
-
 }

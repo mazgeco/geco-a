@@ -16,7 +16,8 @@ export interface StatusMessage {
 export interface SavedRow {
   status: string;
   message: string;
-  idSecuencial: number;
+  idSecuencial?: number;
+  idNoSecuencial?: string;
 }
 
 export interface Combo {

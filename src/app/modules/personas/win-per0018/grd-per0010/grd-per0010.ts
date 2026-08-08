@@ -2,12 +2,12 @@ import { Component, computed, inject, Input, OnInit, signal } from '@angular/cor
 import { DatePipe, NgClass } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
-import { Combo } from '../../../../interfaces/general.interface'
+import { Combo } from '../../../../interfaces/general.interface';
 import { Identificaciones } from '../../../../interfaces/personas.interfaces';
 import { FuntionsService } from '../../../../services/functions.service';
 import { PersonasService } from '../../../../services/personas.service';
 import { StatusMessage } from '../../../../interfaces/general.interface';
-import { MessageService } from '../../../../services/message.service'
+import { MessageService } from '../../../../services/message.service';
 import { ToastService } from '../../../../services/toast.service';
 
 @Component({
@@ -17,22 +17,21 @@ import { ToastService } from '../../../../services/toast.service';
   styleUrl: './grd-per0010.css',
 })
 export class GrdPer0010 implements OnInit {
-
   /******************************************************************************************
-  * TOMA DEL PARÁMETRO ENVIADO EN LA LLAMADA DEL SELECTOR
-  *******************************************************************************************/
+   * TOMA DEL PARÁMETRO ENVIADO EN LA LLAMADA DEL SELECTOR
+   *******************************************************************************************/
   @Input()
   idPersona!: number;
 
   /******************************************************************************************
-  * DECLARACIÓN DE VARIABLES
-  *******************************************************************************************/
+   * DECLARACIÓN DE VARIABLES
+   *******************************************************************************************/
 
   //IDENTIFICADORES PRINCIPALES
-  idContenedor = signal<string>("WinPer0018");
-  idObjeto = signal<string>("GrdPer0010");
-  idTabla = signal<string>("185");
-  permiso = signal<string>("w");
+  idContenedor = signal<string>('WinPer0018');
+  idObjeto = signal<string>('GrdPer0010');
+  idTabla = signal<string>('185');
+  permiso = signal<string>('w');
 
   //INJECTIONS PÚBLICAS
   funciones = inject(FuntionsService);
@@ -44,22 +43,21 @@ export class GrdPer0010 implements OnInit {
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
   identificacionMessage = computed(() =>
-    this.messageService.obtener(this.statusMessages, 'msgGrdPer0010')
+    this.messageService.obtener(this.statusMessages, 'msgGrdPer0010'),
   );
   //Declaración de variables
   selectedRows!: Identificaciones[];
   metaKey: boolean = true;
   identificaciones = signal<Identificaciones[]>([]);
   tiposIdentificacion = signal<Combo[]>([
-    { codigo: "C", etiqueta: "Cédula" },
-    { codigo: "R", etiqueta: "RUC" },
-    { codigo: "P", etiqueta: "Pasaporte" },
+    { codigo: 'C', etiqueta: 'Cédula' },
+    { codigo: 'R', etiqueta: 'RUC' },
+    { codigo: 'P', etiqueta: 'Pasaporte' },
   ]);
 
-
   /******************************************************************************************
-  * MÉTODOS QUE EJECUTAN LOS PROCESOS
-  *******************************************************************************************/
+   * MÉTODOS QUE EJECUTAN LOS PROCESOS
+   *******************************************************************************************/
 
   //MÉTODO QUE SE CARGA AL INICIALIZARCE EL OBJETO PRINCIPAL GrdPer0010
   ngOnInit(): void {
@@ -79,7 +77,7 @@ export class GrdPer0010 implements OnInit {
       idUsuarioCrea: '',
       fechaCrea: '',
       idUsuarioModifica: '',
-      fechaModifica: ''
+      fechaModifica: '',
     };
 
     let mensaje = this.funciones.insertRow(
@@ -87,36 +85,47 @@ export class GrdPer0010 implements OnInit {
       nueva,
       'idIdentificacion',
       this.idPersona !== 0,
-      'btnGrdPer001050'
+      'btnGrdPer00105',
     );
     if (mensaje !== '') {
-      this.toastService.showMessage("error", "Error", mensaje);
+      this.toastService.showMessage('error', 'Error', mensaje);
     }
   }
 
   //MÉTODO QUE GRABA LA IDENTIFICACIÓN (FILA COMPLETA)
   saveIdentificacion(identificacion: Identificaciones): void {
-
-    if (identificacion.principalIdentificacion === "S" && (this.identificaciones().filter(item => item.principalIdentificacion === "S").length === 2)) {
-      this.toastService.showMessage("error", "Error", "No puede colocar otra identificación como principal si ya existe una");
-      identificacion.principalIdentificacion = "N";
+    if (
+      identificacion.principalIdentificacion === 'S' &&
+      this.identificaciones().filter((item) => item.principalIdentificacion === 'S').length === 2
+    ) {
+      this.toastService.showMessage(
+        'error',
+        'Error',
+        'No puede colocar otra identificación como principal si ya existe una',
+      );
+      identificacion.principalIdentificacion = 'N';
     }
 
     this.personasService.grabaIdentificacion(identificacion).subscribe({
       next: (resp) => {
-        identificacion.idIdentificacion = resp.idSecuencial;
+        identificacion.idIdentificacion = resp.idSecuencial!;
         //Envía un mensaje de grabación exitosa
         this.messageService.mostrar(
           this.statusMessages,
           'msgGrdPer0010',
           'success',
-          'Identificación grabada correctamente.'
+          'Identificación grabada correctamente.',
         );
         //this.cargaIdentificaciones();
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
-      }
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error: ' + err.error.message,
+          err.error.status,
+        );
+      },
     });
   }
 
@@ -132,26 +141,33 @@ export class GrdPer0010 implements OnInit {
           this.statusMessages,
           'msgGrdPer0010',
           'success',
-          'Identificaciones cargadas correctamente.'
+          'Identificaciones cargadas correctamente.',
         );
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las identificaciones de la persona: " + err.error.message, err.error.status);
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar las identificaciones de la persona: ' + err.error.message,
+          err.error.status,
+        );
         //Envía un mensaje de carga exitosa
         this.messageService.mostrar(
           this.statusMessages,
           'msgGrdPer0010',
           'error',
-          'Hubo un error al cargar las identificaciones.'
+          'Hubo un error al cargar las identificaciones.',
         );
-      }
+      },
     });
   }
 
   //MÉTODO QUE ELIMINA UNA FILA DEL GRID
   eliminarIdentificacion(rowData: Identificaciones): void {
     if (rowData.idIdentificacion === 0) {
-      this.identificaciones.set(this.identificaciones().filter(item => item.idIdentificacion != rowData.idIdentificacion));
+      this.identificaciones.set(
+        this.identificaciones().filter((item) => item.idIdentificacion != rowData.idIdentificacion),
+      );
     } else {
       this.confirmationService.confirm({
         message: '¿Desea eliminar la identificación?',
@@ -161,27 +177,36 @@ export class GrdPer0010 implements OnInit {
         accept: () => {
           this.personasService.eliminaIdentificacion(rowData.idIdentificacion!).subscribe({
             next: (resp) => {
-              this.identificaciones.set(this.identificaciones().filter(item => item.idIdentificacion != resp.idSecuencial));
+              this.identificaciones.set(
+                this.identificaciones().filter(
+                  (item) => item.idIdentificacion != resp.idSecuencial,
+                ),
+              );
               //Envía un mensaje de carga exitosa
               this.messageService.mostrar(
                 this.statusMessages,
                 'msgGrdPer0010',
                 'success',
-                'Identificación eliminada correctamente.'
+                'Identificación eliminada correctamente.',
               );
             },
             error: (err) => {
-              this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
+              this.toastService.showMessage(
+                'error',
+                'Error',
+                'Ha ocurrido un error: ' + err.error.message,
+                err.error.status,
+              );
               //Envía un mensaje de carga exitosa
               this.messageService.mostrar(
                 this.statusMessages,
                 'msgGrdPer0010',
                 'error',
-                'Hubo un error al eliminar la identificación.'
+                'Hubo un error al eliminar la identificación.',
               );
-            }
+            },
           });
-        }
+        },
       });
     }
   }
@@ -200,19 +225,28 @@ export class GrdPer0010 implements OnInit {
             let idIdentificacion = selected[i].idIdentificacion;
             this.personasService.eliminaIdentificacion(idIdentificacion!).subscribe({
               next: (resp) => {
-                this.identificaciones.set(this.identificaciones().filter(item => item.idIdentificacion != resp.idSecuencial));
+                this.identificaciones.set(
+                  this.identificaciones().filter(
+                    (item) => item.idIdentificacion != resp.idSecuencial,
+                  ),
+                );
               },
               error: (err) => {
-                this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
+                this.toastService.showMessage(
+                  'error',
+                  'Error',
+                  'Ha ocurrido un error: ' + err.error.message,
+                  err.error.status,
+                );
                 //Envía un mensaje de carga exitosa
                 this.messageService.mostrar(
                   this.statusMessages,
                   'msgGrdPer0010',
                   'error',
-                  'Hubo un error al eliminar una de las identificaciones.'
+                  'Hubo un error al eliminar una de las identificaciones.',
                 );
                 return;
-              }
+              },
             });
           }
           //Envía un mensaje de carga exitosa
@@ -220,12 +254,12 @@ export class GrdPer0010 implements OnInit {
             this.statusMessages,
             'msgGrdPer0010',
             'success',
-            'Identificaciones eliminadas correctamente.'
+            'Identificaciones eliminadas correctamente.',
           );
-        }
+        },
       });
     } else {
-      this.toastService.showMessage("error", "Error", "Seleccione varias filas");
+      this.toastService.showMessage('error', 'Error', 'Seleccione varias filas');
     }
   }
 
@@ -233,10 +267,13 @@ export class GrdPer0010 implements OnInit {
   muestraAuditoriaRegistro(): void {
     const selected = this.selectedRows || [];
     if (selected.length === 1) {
-      this.funciones.muestraAuditoria(selected[0].idIdentificacion, "185", selected[0])
+      this.funciones.muestraAuditoria(selected[0].idIdentificacion, this.idTabla(), selected[0]);
     } else {
-      this.toastService.showMessage("error", "Error", "Seleccione un registro para ver la auditoría");
+      this.toastService.showMessage(
+        'error',
+        'Error',
+        'Seleccione un registro para ver la auditoría',
+      );
     }
   }
-
 }

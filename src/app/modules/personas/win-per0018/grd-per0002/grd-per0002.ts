@@ -2,11 +2,16 @@ import { Component, computed, inject, Input, OnInit, signal } from '@angular/cor
 import { NgClass } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
-import { Caracteristicas, Telefonos, TipoCaracteristicas, TipoTelefonos } from '../../../../interfaces/personas.interfaces';
+import {
+  Caracteristicas,
+  Telefonos,
+  TipoCaracteristicas,
+  TipoTelefonos,
+} from '../../../../interfaces/personas.interfaces';
 import { FuntionsService } from '../../../../services/functions.service';
 import { PersonasService } from '../../../../services/personas.service';
 import { StatusMessage } from '../../../../interfaces/general.interface';
-import { MessageService } from '../../../../services/message.service'
+import { MessageService } from '../../../../services/message.service';
 import { ToastService } from '../../../../services/toast.service';
 
 @Component({
@@ -21,11 +26,10 @@ export class GrdPer0002 implements OnInit {
   idPersona!: number;
 
   //IDENTIFICADORES PRINCIPALES
-  idContenedor = signal<string>("WinPer0018");
-  idObjeto = signal<string>("GrdPer0019");
-  idTabla = signal<string>("194");
-  permiso = signal<string>("w");
-
+  idContenedor = signal<string>('WinPer0018');
+  idObjeto = signal<string>('GrdPer0019');
+  idTabla = signal<string>('194');
+  permiso = signal<string>('w');
 
   //INJECTIONS PÚBLICAS
   funciones = inject(FuntionsService);
@@ -37,7 +41,7 @@ export class GrdPer0002 implements OnInit {
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
   caracteristicaMessage = computed(() =>
-    this.messageService.obtener(this.statusMessages, 'msgGrdPer0002')
+    this.messageService.obtener(this.statusMessages, 'msgGrdPer0002'),
   );
 
   //Declaración de variables
@@ -61,7 +65,7 @@ export class GrdPer0002 implements OnInit {
       idUsuarioCrea: '',
       fechaCrea: '',
       idUsuarioModifica: '',
-      fechaModifica: ''
+      fechaModifica: '',
     };
 
     let mensaje = this.funciones.insertRow(
@@ -69,10 +73,10 @@ export class GrdPer0002 implements OnInit {
       nueva,
       'idCaracteristica',
       this.idPersona !== 0,
-      'btnGrdPer000250'
+      'btnGrdPer000250',
     );
     if (mensaje !== '') {
-      this.toastService.showMessage("error", "Error", mensaje);
+      this.toastService.showMessage('error', 'Error', mensaje);
     }
   }
 
@@ -83,8 +87,13 @@ export class GrdPer0002 implements OnInit {
         this.tipoCaracteristicas.set(resp.data);
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar los tipos de características: " + err.error.message, err.error.status);
-      }
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar los tipos de características: ' + err.error.message,
+          err.error.status,
+        );
+      },
     });
   }
 
@@ -92,12 +101,17 @@ export class GrdPer0002 implements OnInit {
   saveCaracteristica(caracteristica: Caracteristicas): void {
     this.personasService.grabaCaracteritica(caracteristica).subscribe({
       next: (resp) => {
-        caracteristica.idCaracteristica = resp.idSecuencial;
+        caracteristica.idCaracteristica = resp.idSecuencial!;
         this.cargaCaracteristicas();
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
-      }
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error: ' + err.error.message,
+          err.error.status,
+        );
+      },
     });
   }
 
@@ -109,15 +123,22 @@ export class GrdPer0002 implements OnInit {
         this.caracteristicas.set(resp.data);
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las telefonos de la persona: " + err.error.message, err.error.status);
-      }
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar las telefonos de la persona: ' + err.error.message,
+          err.error.status,
+        );
+      },
     });
   }
 
   //DELETE
   eliminarCaracteristica(rowData: Caracteristicas): void {
     if (rowData.idCaracteristica === 0) {
-      this.caracteristicas.set(this.caracteristicas().filter(item => item.idCaracteristica != rowData.idCaracteristica));
+      this.caracteristicas.set(
+        this.caracteristicas().filter((item) => item.idCaracteristica != rowData.idCaracteristica),
+      );
     } else {
       this.confirmationService.confirm({
         message: '¿Desea eliminar esta característica?',
@@ -127,13 +148,20 @@ export class GrdPer0002 implements OnInit {
         accept: () => {
           this.personasService.eliminaCaracteristica(rowData.idCaracteristica!).subscribe({
             next: (resp) => {
-              this.caracteristicas.set(this.caracteristicas().filter(item => item.idCaracteristica != resp.idSecuencial));
+              this.caracteristicas.set(
+                this.caracteristicas().filter((item) => item.idCaracteristica != resp.idSecuencial),
+              );
             },
             error: (err) => {
-              this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
-            }
+              this.toastService.showMessage(
+                'error',
+                'Error',
+                'Ha ocurrido un error: ' + err.error.message,
+                err.error.status,
+              );
+            },
           });
-        }
+        },
       });
     }
   }
@@ -152,17 +180,26 @@ export class GrdPer0002 implements OnInit {
             let idCaracteristica = selected[i].idCaracteristica;
             this.personasService.eliminaCaracteristica(idCaracteristica!).subscribe({
               next: (resp) => {
-                this.caracteristicas.set(this.caracteristicas().filter(item => item.idCaracteristica != resp.idSecuencial));
+                this.caracteristicas.set(
+                  this.caracteristicas().filter(
+                    (item) => item.idCaracteristica != resp.idSecuencial,
+                  ),
+                );
               },
               error: (err) => {
-                this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
-              }
+                this.toastService.showMessage(
+                  'error',
+                  'Error',
+                  'Ha ocurrido un error: ' + err.error.message,
+                  err.error.status,
+                );
+              },
             });
           }
-        }
+        },
       });
     } else {
-      this.toastService.showMessage("error", "Error", "Seleccione varias filas");
+      this.toastService.showMessage('error', 'Error', 'Seleccione varias filas');
     }
   }
 
@@ -170,10 +207,13 @@ export class GrdPer0002 implements OnInit {
   muestraAuditoriaRegistro(): void {
     const selected = this.selectedRows || [];
     if (selected.length === 1) {
-      this.funciones.muestraAuditoria(selected[0].idCaracteristica, "179", selected[0])
+      this.funciones.muestraAuditoria(selected[0].idCaracteristica, this.idTabla(), selected[0]);
     } else {
-      this.toastService.showMessage("error", "Error", "Seleccione un registro para ver la auditoría");
+      this.toastService.showMessage(
+        'error',
+        'Error',
+        'Seleccione un registro para ver la auditoría',
+      );
     }
   }
-
 }

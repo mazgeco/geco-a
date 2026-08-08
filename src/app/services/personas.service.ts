@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Caracteristicas, CaracteristicasResponse, CiudadesResponse, Direcciones, DireccionesResponse, GraficosResponse, Identificaciones, IdentificacionesResponse, ListaDenominacionesResponse, ListaNacionalidadesResponse, ListaPaisesResponse, ListaPersonasResponse, ListaTipoEmpresasResponse, PersonaResponse, Personas, Telefonos, TelefonosResponse, TipoCaracteristicasResponse, TipoDireccionesResponse, TipoTelefonosResponse } from '../interfaces/personas.interfaces';
+import { Caracteristicas, CaracteristicasResponse, CiudadesResponse, Direcciones, DireccionesResponse, GraficosResponse, Identificaciones, IdentificacionesResponse, ListaDenominacionesResponse, ListaNacionalidadesResponse, ListaPaisesResponse, ListaPersonasResponse, ListaTipoEmpresasResponse, PersonaResponse, Personas, Telefonos, TelefonosResponse, TipoCaracteristicasResponse, TipoDireccionesResponse, TipoTelefonos, TipoTelefonosResponse } from '../interfaces/personas.interfaces';
 import { SavedRow } from '../interfaces/general.interface'
 
 @Injectable({
@@ -127,6 +127,21 @@ export class PersonasService {
   
   listaTiposTelefonos(): Observable<TipoTelefonosResponse> {
     return this.http.get<TipoTelefonosResponse>(`${this.apiUrl}personas/tipotelefonos`);
+  }
+
+  grabaTipoTelefono(tipoTelefono: TipoTelefonos): Observable<SavedRow> {
+    if (tipoTelefono.idTipoTelefono === '') {
+      tipoTelefono.idTipoTelefono = null;
+      return this.http.post<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/tipotelefonos`, tipoTelefono);
+    } else {
+      const params = new HttpParams().set('idTipoTelefono', tipoTelefono.idTipoTelefono!);
+      return this.http.put<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/tipotelefonos`, tipoTelefono, { params });
+    }
+  }
+
+  eliminaTipoTelefono(idTipoTelefono: string): Observable<SavedRow> {
+    const params = new HttpParams().set('idTipoTelefono', idTipoTelefono!);
+      return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/tipotelefonos`, { params });
   }
 
   listaTelefonos(idPersona: number): Observable<TelefonosResponse> {

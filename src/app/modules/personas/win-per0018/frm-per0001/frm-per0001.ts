@@ -332,7 +332,7 @@ export class FrmPer0001 implements OnInit {
   saveForm(persona: Personas): void {
     this.personasService.grabaPersona(this.idPersona, persona)?.subscribe({
       next: (resp) => {
-        this.idPersona = resp.idSecuencial;
+        this.idPersona = resp.idSecuencial!;
         this.messageService.mostrar(
           this.statusMessages,
           'msgFrmPer0001',

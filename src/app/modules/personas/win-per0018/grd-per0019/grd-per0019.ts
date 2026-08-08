@@ -6,9 +6,8 @@ import { Telefonos, TipoTelefonos } from '../../../../interfaces/personas.interf
 import { FuntionsService } from '../../../../services/functions.service';
 import { PersonasService } from '../../../../services/personas.service';
 import { StatusMessage } from '../../../../interfaces/general.interface';
-import { MessageService } from '../../../../services/message.service'
+import { MessageService } from '../../../../services/message.service';
 import { ToastService } from '../../../../services/toast.service';
-
 
 @Component({
   selector: 'app-grd-per0019',
@@ -22,11 +21,10 @@ export class GrdPer0019 implements OnInit {
   idPersona!: number;
 
   //IDENTIFICADORES PRINCIPALES
-  idContenedor = signal<string>("WinPer0018");
-  idObjeto = signal<string>("GrdPer0019");
-  idTabla = signal<string>("194");
-  permiso = signal<string>("w");
-
+  idContenedor = signal<string>('WinPer0018');
+  idObjeto = signal<string>('GrdPer0019');
+  idTabla = signal<string>('194');
+  permiso = signal<string>('w');
 
   //INJECTIONS PÚBLICAS
   funciones = inject(FuntionsService);
@@ -38,7 +36,7 @@ export class GrdPer0019 implements OnInit {
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
   telefonoMessage = computed(() =>
-    this.messageService.obtener(this.statusMessages, 'msgGrdPer0019')
+    this.messageService.obtener(this.statusMessages, 'msgGrdPer0019'),
   );
   //Declaración de variables
   selectedRows!: Telefonos[];
@@ -63,7 +61,7 @@ export class GrdPer0019 implements OnInit {
       idUsuarioCrea: '',
       fechaCrea: '',
       idUsuarioModifica: '',
-      fechaModifica: ''
+      fechaModifica: '',
     };
 
     let mensaje = this.funciones.insertRow(
@@ -71,10 +69,10 @@ export class GrdPer0019 implements OnInit {
       nueva,
       'idTelefono',
       this.idPersona !== 0,
-      'btnGrdPer001950'
+      'btnGrdPer001950',
     );
     if (mensaje !== '') {
-      this.toastService.showMessage("error", "Error", mensaje);
+      this.toastService.showMessage('error', 'Error', mensaje);
     }
   }
 
@@ -85,26 +83,43 @@ export class GrdPer0019 implements OnInit {
         this.tipoTelefonos.set(resp.data);
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar los tipos de teléfonos: " + err.error.message, err.error.status);
-      }
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar los tipos de teléfonos: ' + err.error.message,
+          err.error.status,
+        );
+      },
     });
   }
 
   //CREATE/UPDATE
   saveTelefono(telefono: Telefonos): void {
-    if (telefono.principalTelefono === "S" && (this.telefonos().filter(item => item.principalTelefono === "S").length === 2)) {
-      this.toastService.showMessage("error", "Error", "No puede colocar otro teléfono como principal si ya existe uno");
-      telefono.principalTelefono = "N";
+    if (
+      telefono.principalTelefono === 'S' &&
+      this.telefonos().filter((item) => item.principalTelefono === 'S').length === 2
+    ) {
+      this.toastService.showMessage(
+        'error',
+        'Error',
+        'No puede colocar otro teléfono como principal si ya existe uno',
+      );
+      telefono.principalTelefono = 'N';
     }
 
     this.personasService.grabaTelefono(telefono).subscribe({
       next: (resp) => {
-        telefono.idTelefono = resp.idSecuencial;
+        telefono.idTelefono = resp.idSecuencial!;
         this.cargaTelefonos();
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
-      }
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error: ' + err.error.message,
+          err.error.status,
+        );
+      },
     });
   }
 
@@ -116,15 +131,20 @@ export class GrdPer0019 implements OnInit {
         this.telefonos.set(resp.data);
       },
       error: (err) => {
-        this.toastService.showMessage("error", "Error", "Ha ocurrido un error al cargar las telefonos de la persona: " + err.error.message, err.error.status);
-      }
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar las telefonos de la persona: ' + err.error.message,
+          err.error.status,
+        );
+      },
     });
   }
 
   //DELETE
   eliminarTelefono(rowData: Telefonos): void {
     if (rowData.idTelefono === 0) {
-      this.telefonos.set(this.telefonos().filter(item => item.idTelefono != rowData.idTelefono));
+      this.telefonos.set(this.telefonos().filter((item) => item.idTelefono != rowData.idTelefono));
     } else {
       this.confirmationService.confirm({
         message: '¿Desea eliminar el telefono?',
@@ -134,13 +154,20 @@ export class GrdPer0019 implements OnInit {
         accept: () => {
           this.personasService.eliminaTelefono(rowData.idTelefono!).subscribe({
             next: (resp) => {
-              this.telefonos.set(this.telefonos().filter(item => item.idTelefono != resp.idSecuencial));
+              this.telefonos.set(
+                this.telefonos().filter((item) => item.idTelefono != resp.idSecuencial),
+              );
             },
             error: (err) => {
-              this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
-            }
+              this.toastService.showMessage(
+                'error',
+                'Error',
+                'Ha ocurrido un error: ' + err.error.message,
+                err.error.status,
+              );
+            },
           });
-        }
+        },
       });
     }
   }
@@ -159,17 +186,24 @@ export class GrdPer0019 implements OnInit {
             let idTelefono = selected[i].idTelefono;
             this.personasService.eliminaTelefono(idTelefono!).subscribe({
               next: (resp) => {
-                this.telefonos.set(this.telefonos().filter(item => item.idTelefono != resp.idSecuencial));
+                this.telefonos.set(
+                  this.telefonos().filter((item) => item.idTelefono != resp.idSecuencial),
+                );
               },
               error: (err) => {
-                this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message, err.error.status);
-              }
+                this.toastService.showMessage(
+                  'error',
+                  'Error',
+                  'Ha ocurrido un error: ' + err.error.message,
+                  err.error.status,
+                );
+              },
             });
           }
-        }
+        },
       });
     } else {
-      this.toastService.showMessage("error", "Error", "Seleccione varias filas");
+      this.toastService.showMessage('error', 'Error', 'Seleccione varias filas');
     }
   }
 
@@ -177,10 +211,13 @@ export class GrdPer0019 implements OnInit {
   muestraAuditoriaRegistro(): void {
     const selected = this.selectedRows || [];
     if (selected.length === 1) {
-      this.funciones.muestraAuditoria(selected[0].idTelefono, "185", selected[0])
+      this.funciones.muestraAuditoria(selected[0].idTelefono, this.idTabla(), selected[0]);
     } else {
-      this.toastService.showMessage("error", "Error", "Seleccione un registro para ver la auditoría");
+      this.toastService.showMessage(
+        'error',
+        'Error',
+        'Seleccione un registro para ver la auditoría',
+      );
     }
   }
-
 }
