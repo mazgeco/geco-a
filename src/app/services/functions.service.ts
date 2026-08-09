@@ -30,7 +30,7 @@ export class FuntionsService {
   ): string {
 
     const existeFilaNueva = datos()
-      .some(item => item[campoId] === 0);
+      .some(item => (item[campoId] === 0 || item[campoId] === '0'));
 
     if (existeFilaNueva) {
       return "No puede insertar una nueva fila sin llenar la actual";

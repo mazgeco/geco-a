@@ -22,11 +22,21 @@ export class GrdPer0025 implements OnInit {
    * DECLARACIÓN DE VARIABLES
    *******************************************************************************************/
 
-  //IDENTIFICADORES PRINCIPALES
-  idContenedor = signal<string>('WinPer0018');
-  idObjeto = signal<string>('GrdPer0010');
-  idTabla = signal<string>('185');
+  //DEFINICIONES PRINCIPALES
+  idContenedor = signal<string>('WinPer0001');
+  idObjeto = signal<string>('GrdPer0025');
+  idTabla = signal<string>('326');
   permiso = signal<string>('w');
+  campoId: keyof TipoTelefonos = 'idTipoTelefono';
+  nuevaFila: TipoTelefonos = {
+    idTipoTelefono: '0',
+    descripcionTipoTelefono: '',
+    principalTipoTelefono: 'N',
+    idUsuarioCrea: '',
+    fechaCrea: '',
+    idUsuarioModifica: '',
+    fechaModifica: '',
+  };
 
   //INJECTIONS PÚBLICAS
   funciones = inject(FuntionsService);
@@ -38,7 +48,7 @@ export class GrdPer0025 implements OnInit {
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
   barraMessage = computed(() =>
-    this.messageService.obtener(this.statusMessages, 'msgGrdPer0025'),
+    this.messageService.obtener(this.statusMessages, 'msg' + this.idObjeto()),
   );
   //Declaración de variables
   selectedRows!: TipoTelefonos[];
@@ -58,23 +68,13 @@ export class GrdPer0025 implements OnInit {
   }
 
   //MÉTODO QUE INSERTA UNA FILA EN EL GRID
-  insertarFila(): void {
-    const nueva: TipoTelefonos = {
-      idTipoTelefono: '',
-      descripcionTipoTelefono: '',
-      principalTipoTelefono: 'N',
-      idUsuarioCrea: '',
-      fechaCrea: '',
-      idUsuarioModifica: '',
-      fechaModifica: '',
-    };
-
+  insertarFila(nuevaFila: any): void {
     let mensaje = this.funciones.insertRow(
       this.filas,
-      nueva,
-      'idTipoTelefono',
+      nuevaFila,
+      this.campoId,
       true,
-      'btnGrdPer00255',
+      'btn' + this.idObjeto() + '60',
     );
     if (mensaje !== '') {
       this.toastService.showMessage('error', 'Error', mensaje);
@@ -97,11 +97,11 @@ export class GrdPer0025 implements OnInit {
 
     this.personasService.grabaTipoTelefono(fila).subscribe({
       next: (resp) => {
-        fila.idTipoTelefono = resp.idNoSecuencial!;
+        fila[this.campoId] = resp.idNoSecuencial!;
         //Envía un mensaje de grabación exitosa
         this.messageService.mostrar(
           this.statusMessages,
-          'msgGrdPer0025',
+          'msg' + this.idObjeto(),
           'success',
           'Fila grabada correctamente.',
         );
@@ -128,7 +128,7 @@ export class GrdPer0025 implements OnInit {
         //Envía un mensaje de carga exitosa
         this.messageService.mostrar(
           this.statusMessages,
-          'msgGrdPer0025',
+          'msg' + this.idObjeto(),
           'success',
           'Datos cargados correctamente.',
         );
@@ -143,7 +143,7 @@ export class GrdPer0025 implements OnInit {
         //Envía un mensaje de carga exitosa
         this.messageService.mostrar(
           this.statusMessages,
-          'msgGrdPer0010',
+          'msg' + this.idObjeto(),
           'error',
           'Hubo un error al cargar los datos.',
         );
@@ -153,10 +153,8 @@ export class GrdPer0025 implements OnInit {
 
   //MÉTODO QUE ELIMINA UNA FILA DEL GRID
   eliminarFila(rowData: TipoTelefonos): void {
-    if (rowData.idTipoTelefono === '') {
-      this.filas.set(
-        this.filas().filter((item) => item.idTipoTelefono != rowData.idTipoTelefono),
-      );
+    if (rowData[this.campoId] === '0') {
+      this.filas.set(this.filas().filter((item) => item[this.campoId] != rowData[this.campoId]));
     } else {
       this.confirmationService.confirm({
         message: '¿Desea eliminar la fila?',
@@ -164,17 +162,15 @@ export class GrdPer0025 implements OnInit {
         acceptLabel: 'Aceptar',
         rejectLabel: 'Cancelar',
         accept: () => {
-          this.personasService.eliminaTipoTelefono(rowData.idTipoTelefono!).subscribe({
+          this.personasService.eliminaTipoTelefono(rowData[this.campoId]!).subscribe({
             next: (resp) => {
               this.filas.set(
-                this.filas().filter(
-                  (item) => item.idTipoTelefono != resp.idNoSecuencial,
-                ),
+                this.filas().filter((item) => item[this.campoId] != resp.idNoSecuencial),
               );
               //Envía un mensaje de carga exitosa
               this.messageService.mostrar(
                 this.statusMessages,
-                'msgGrdPer0010',
+                'msg' + this.idObjeto(),
                 'success',
                 'Fila eliminada correctamente.',
               );
@@ -189,7 +185,7 @@ export class GrdPer0025 implements OnInit {
               //Envía un mensaje de carga exitosa
               this.messageService.mostrar(
                 this.statusMessages,
-                'msgGrdPer0025',
+                'msg' + this.idObjeto(),
                 'error',
                 'Hubo un error al eliminar la fila.',
               );
@@ -201,13 +197,60 @@ export class GrdPer0025 implements OnInit {
   }
 
   //MÉTODO QUE ELIMINA VARIAS FILAS SELECCIONADAS DEL GRID
-  eliminarVariasFilas(): void {}
+  eliminarVariasFilas(): void {
+    const selected = this.selectedRows;
+    if (selected.length > 0) {
+      this.confirmationService.confirm({
+        message: '¿Desea eliminar todas las filas seleccionadas?',
+        header: 'Eliminar',
+        acceptLabel: 'Aceptar',
+        rejectLabel: 'Cancelar',
+        accept: () => {
+          for (let i = 0; i < selected.length; i++) {
+            let idFila = selected[i][this.campoId];
+            this.personasService.eliminaTipoTelefono(idFila!).subscribe({
+              next: (resp) => {
+                this.filas.set(
+                  this.filas().filter((item) => item[this.campoId] != resp.idNoSecuencial),
+                );
+              },
+              error: (err) => {
+                this.toastService.showMessage(
+                  'error',
+                  'Error',
+                  'Ha ocurrido un error: ' + err.error.message,
+                  err.error.status,
+                );
+                //Envía un mensaje de carga exitosa
+                this.messageService.mostrar(
+                  this.statusMessages,
+                  'msg' + this.idObjeto(),
+                  'error',
+                  'Hubo un error al eliminar una fila.',
+                );
+                return;
+              },
+            });
+          }
+          //Envía un mensaje de carga exitosa
+          this.messageService.mostrar(
+            this.statusMessages,
+            'msg' + this.idObjeto(),
+            'success',
+            'Filas eliminadas correctamente.',
+          );
+        },
+      });
+    } else {
+      this.toastService.showMessage('error', 'Error', 'Seleccione varias filas');
+    }
+  }
 
   //MÉTODO QUE MUESTRA LA AUDITORÍA DEL REGISTRO SELECCIONADO
   muestraAuditoriaRegistro(): void {
     const selected = this.selectedRows || [];
     if (selected.length === 1) {
-      this.funciones.muestraAuditoria(selected[0].idTipoTelefono, this.idTabla(), selected[0]);
+      this.funciones.muestraAuditoria(selected[0][this.campoId], this.idTabla(), selected[0]);
     } else {
       this.toastService.showMessage(
         'error',

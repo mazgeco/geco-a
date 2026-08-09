@@ -130,7 +130,7 @@ export class PersonasService {
   }
 
   grabaTipoTelefono(tipoTelefono: TipoTelefonos): Observable<SavedRow> {
-    if (tipoTelefono.idTipoTelefono === '') {
+    if (tipoTelefono.idTipoTelefono === '0') {
       tipoTelefono.idTipoTelefono = null;
       return this.http.post<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/tipotelefonos`, tipoTelefono);
     } else {

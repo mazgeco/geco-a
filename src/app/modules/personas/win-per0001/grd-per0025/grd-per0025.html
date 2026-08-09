@@ -10,7 +10,7 @@
         label="Insertar"
         pTooltip="Inserta una fila"
         tooltipPosition="bottom"
-        (onClick)="insertarFila()"
+        (onClick)="insertarFila(nuevaFila)"
       />
       <p-button
         id="btnGrdPer00252"
@@ -155,7 +155,7 @@
           @if (!editing) {
             <button
               pButton
-              [id]="'btnGrdPer00255' + rowData.idTelefono"
+              [id]="'btnGrdPer00256' + rowData.idTipoTelefono"
               pInitEditableRow
               icon="pi pi-pencil"
               text
@@ -164,7 +164,7 @@
             ></button>
             <button
               pButton
-              [id]="'btnGrdPer00256' + rowData.idTelefono"
+              [id]="'btnGrdPer00257' + rowData.idTipoTelefono"
               icon="pi pi-trash"
               text
               rounded
@@ -176,7 +176,7 @@
           @if (editing) {
             <button
               pButton
-              [id]="'btnGrdPer00257' + rowData.idTelefono"
+              [id]="'btnGrdPer00258' + rowData.idTipoTelefono"
               pSaveEditableRow
               icon="pi pi-check"
               text
@@ -187,7 +187,7 @@
             ></button>
             <button
               pButton
-              [id]="'btnGrdPer00258' + rowData.idTelefono"
+              [id]="'btnGrdPer00259' + rowData.idTipoTelefono"
               pCancelEditableRow
               icon="pi pi-times"
               text

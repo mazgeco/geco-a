@@ -102,16 +102,16 @@
         <td class="text-center">
           <!-- EDITAR -->
           @if (!editing) {
-          <button pButton [id]="'btnGrdPer00105' + rowData.idIdentificacion" pInitEditableRow icon="pi pi-pencil" text
+          <button pButton [id]="'btnGrdPer00106' + rowData.idIdentificacion" pInitEditableRow icon="pi pi-pencil" text
             rounded severity="primary"></button>
-          <button pButton [id]="'btnGrdPer00106' + rowData.idIdentificacion" icon="pi pi-trash" text rounded
+          <button pButton [id]="'btnGrdPer00107' + rowData.idIdentificacion" icon="pi pi-trash" text rounded
             severity="danger" (click)="eliminarIdentificacion(rowData)"></button>
           }
           <!-- GUARDAR / CANCELAR -->
           @if (editing) {
-          <button pButton [id]="'btnGrdPer00107' + rowData.idIdentificacion" pSaveEditableRow icon="pi pi-check" text
+          <button pButton [id]="'btnGrdPer00108' + rowData.idIdentificacion" pSaveEditableRow icon="pi pi-check" text
             rounded severity="success" class="mr-1" (click)="saveIdentificacion(rowData)"></button>
-          <button pButton [id]="'btnGrdPer00108' + rowData.idIdentificacion" pCancelEditableRow icon="pi pi-times" text
+          <button pButton [id]="'btnGrdPer00109' + rowData.idIdentificacion" pCancelEditableRow icon="pi pi-times" text
             rounded severity="danger"></button>
           }
         </td>

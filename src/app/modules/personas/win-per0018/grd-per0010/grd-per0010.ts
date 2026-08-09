@@ -85,7 +85,7 @@ export class GrdPer0010 implements OnInit {
       nueva,
       'idIdentificacion',
       this.idPersona !== 0,
-      'btnGrdPer00105',
+      'btnGrdPer001060',
     );
     if (mensaje !== '') {
       this.toastService.showMessage('error', 'Error', mensaje);
