@@ -1,10 +1,10 @@
 //PERSONAS
 export interface Personas {
-  idPersona: number;
-  idTipoEmpresa?: string | null;
-  idNacionalidad?: number | null;
-  idDenominacion?: string | null;
-  idPais?: number | null;
+  idPersona: number | null | undefined;
+  idTipoEmpresa?: string | null | undefined;
+  idNacionalidad?: number | null | undefined;
+  idDenominacion?: string | null | undefined;
+  idPais?: number | null | undefined;
   apellido1?: string | null;
   apellido2?: string | null;
   nombre1?: string | null;

@@ -126,19 +126,21 @@ export class GrdPer0019 implements OnInit {
   //READ
   cargaTelefonos(): void {
     this.telefonos.set([]);
-    this.personasService.listaTelefonos(this.idPersona).subscribe({
-      next: (resp) => {
-        this.telefonos.set(resp.data);
-      },
-      error: (err) => {
-        this.toastService.showMessage(
-          'error',
-          'Error',
-          'Ha ocurrido un error al cargar las telefonos de la persona: ' + err.error.message,
-          err.error.status,
-        );
-      },
-    });
+    if (this.idPersona !== 0) {
+      this.personasService.listaTelefonos(this.idPersona).subscribe({
+        next: (resp) => {
+          this.telefonos.set(resp.data);
+        },
+        error: (err) => {
+          this.toastService.showMessage(
+            'error',
+            'Error',
+            'Ha ocurrido un error al cargar las telefonos de la persona: ' + err.error.message,
+            err.error.status,
+          );
+        },
+      });
+    }
   }
 
   //DELETE

@@ -27,9 +27,10 @@ export class GrdPer0025 implements OnInit {
   idObjeto = signal<string>('GrdPer0025');
   idTabla = signal<string>('326');
   permiso = signal<string>('w');
+  newRow: boolean = false;
   campoId: keyof TipoTelefonos = 'idTipoTelefono';
   nuevaFila: TipoTelefonos = {
-    idTipoTelefono: '0',
+    idTipoTelefono: '',
     descripcionTipoTelefono: '',
     principalTipoTelefono: 'N',
     idUsuarioCrea: '',
@@ -78,6 +79,8 @@ export class GrdPer0025 implements OnInit {
     );
     if (mensaje !== '') {
       this.toastService.showMessage('error', 'Error', mensaje);
+    } else {
+      this.newRow = true;
     }
   }
 
@@ -95,7 +98,7 @@ export class GrdPer0025 implements OnInit {
       fila.principalTipoTelefono = 'N';
     }
 
-    this.personasService.grabaTipoTelefono(fila).subscribe({
+    this.personasService.grabaTipoTelefono(fila, this.newRow).subscribe({
       next: (resp) => {
         fila[this.campoId] = resp.idNoSecuencial!;
         //Envía un mensaje de grabación exitosa
@@ -105,6 +108,7 @@ export class GrdPer0025 implements OnInit {
           'success',
           'Fila grabada correctamente.',
         );
+        this.newRow = false;
         this.cargaDatos();
       },
       error: (err) => {

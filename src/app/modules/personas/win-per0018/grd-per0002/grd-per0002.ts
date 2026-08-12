@@ -118,19 +118,21 @@ export class GrdPer0002 implements OnInit {
   //READ
   cargaCaracteristicas(): void {
     this.caracteristicas.set([]);
-    this.personasService.listaCaracteristicas(this.idPersona).subscribe({
-      next: (resp) => {
-        this.caracteristicas.set(resp.data);
-      },
-      error: (err) => {
-        this.toastService.showMessage(
-          'error',
-          'Error',
-          'Ha ocurrido un error al cargar las telefonos de la persona: ' + err.error.message,
-          err.error.status,
-        );
-      },
-    });
+    if (this.idPersona !== 0) {
+      this.personasService.listaCaracteristicas(this.idPersona).subscribe({
+        next: (resp) => {
+          this.caracteristicas.set(resp.data);
+        },
+        error: (err) => {
+          this.toastService.showMessage(
+            'error',
+            'Error',
+            'Ha ocurrido un error al cargar las telefonos de la persona: ' + err.error.message,
+            err.error.status,
+          );
+        },
+      });
+    }
   }
 
   //DELETE

@@ -153,33 +153,35 @@ export class GrdPer0006 implements OnInit {
   //READ
   cargaDirecciones(): void {
     this.direcciones.set([]);
-    this.personasService.listaDirecciones(this.idPersona).subscribe({
-      next: (resp) => {
-        let aux = resp.data;
+    if (this.idPersona !== 0) {
+      this.personasService.listaDirecciones(this.idPersona).subscribe({
+        next: (resp) => {
+          let aux = resp.data;
 
-        aux.forEach((d) => {
-          d.preferida = d.principalDireccion === 'S';
-          d.descripcionDireccion =
-            (d.sector ?? '') +
-            ' - ' +
-            (d.callePrincipal ?? '') +
-            ' ' +
-            (d.nroCasaOEdificio ?? '') +
-            ' y ' +
-            (d.calleSecundaria ?? '');
-        });
+          aux.forEach((d) => {
+            d.preferida = d.principalDireccion === 'S';
+            d.descripcionDireccion =
+              (d.sector ?? '') +
+              ' - ' +
+              (d.callePrincipal ?? '') +
+              ' ' +
+              (d.nroCasaOEdificio ?? '') +
+              ' y ' +
+              (d.calleSecundaria ?? '');
+          });
 
-        this.direcciones.set(aux);
-      },
-      error: (err) => {
-        this.toastService.showMessage(
-          'error',
-          'Error',
-          'Ha ocurrido un error al cargar las direcciones de la persona: ' + err.error.message,
-          err.error.status,
-        );
-      },
-    });
+          this.direcciones.set(aux);
+        },
+        error: (err) => {
+          this.toastService.showMessage(
+            'error',
+            'Error',
+            'Ha ocurrido un error al cargar las direcciones de la persona: ' + err.error.message,
+            err.error.status,
+          );
+        },
+      });
+    }
   }
   //DELETE
   eliminarDireccion(rowData: Direcciones): void {

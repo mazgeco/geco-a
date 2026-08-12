@@ -132,34 +132,37 @@ export class GrdPer0010 implements OnInit {
   //MÉTODO QUE CARGA TODAS LAS IDENTIFICACIONES EN EL GRID
   cargaIdentificaciones(): void {
     this.identificaciones.set([]);
-    this.personasService.listaIdentificaciones(this.idPersona).subscribe({
-      next: (resp) => {
-        //Coloca las identificaciones el la estructura
-        this.identificaciones.set(resp.data);
-        //Envía un mensaje de carga exitosa
-        this.messageService.mostrar(
-          this.statusMessages,
-          'msgGrdPer0010',
-          'success',
-          'Identificaciones cargadas correctamente.',
-        );
-      },
-      error: (err) => {
-        this.toastService.showMessage(
-          'error',
-          'Error',
-          'Ha ocurrido un error al cargar las identificaciones de la persona: ' + err.error.message,
-          err.error.status,
-        );
-        //Envía un mensaje de carga exitosa
-        this.messageService.mostrar(
-          this.statusMessages,
-          'msgGrdPer0010',
-          'error',
-          'Hubo un error al cargar las identificaciones.',
-        );
-      },
-    });
+    if (this.idPersona !== 0) {
+      this.personasService.listaIdentificaciones(this.idPersona).subscribe({
+        next: (resp) => {
+          //Coloca las identificaciones el la estructura
+          this.identificaciones.set(resp.data);
+          //Envía un mensaje de carga exitosa
+          this.messageService.mostrar(
+            this.statusMessages,
+            'msgGrdPer0010',
+            'success',
+            'Identificaciones cargadas correctamente.',
+          );
+        },
+        error: (err) => {
+          this.toastService.showMessage(
+            'error',
+            'Error',
+            'Ha ocurrido un error al cargar las identificaciones de la persona: ' +
+              err.error.message,
+            err.error.status,
+          );
+          //Envía un mensaje de carga exitosa
+          this.messageService.mostrar(
+            this.statusMessages,
+            'msgGrdPer0010',
+            'error',
+            'Hubo un error al cargar las identificaciones.',
+          );
+        },
+      });
+    }
   }
 
   //MÉTODO QUE ELIMINA UNA FILA DEL GRID

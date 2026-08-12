@@ -83,6 +83,7 @@
     <!-- HEADER -->
     <ng-template pTemplate="header">
       <tr>
+        <th style="width: 5%">#Fila</th>
         <th style="width: 25%">Código</th>
         <th style="width: 30%">Tipo de teléfono</th>
         <th style="width: 10%">Preferido</th>
@@ -92,6 +93,10 @@
     <!-- BODY -->
     <ng-template pTemplate="body" let-rowData let-editing="editing" let-rowIndex="rowIndex">
       <tr [pEditableRow]="rowData" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+        <!-- #FILA -->
+         <td>
+          {{ rowIndex }}
+         </td>
         <!-- CODIGO -->
         <td>
           <p-cellEditor>
@@ -155,7 +160,7 @@
           @if (!editing) {
             <button
               pButton
-              [id]="'btnGrdPer00256' + rowData.idTipoTelefono"
+              [id]="'btnGrdPer00256' + rowIndex"
               pInitEditableRow
               icon="pi pi-pencil"
               text
@@ -164,7 +169,7 @@
             ></button>
             <button
               pButton
-              [id]="'btnGrdPer00257' + rowData.idTipoTelefono"
+              [id]="'btnGrdPer00257' + rowIndex"
               icon="pi pi-trash"
               text
               rounded
@@ -176,7 +181,7 @@
           @if (editing) {
             <button
               pButton
-              [id]="'btnGrdPer00258' + rowData.idTipoTelefono"
+              [id]="'btnGrdPer00258' + rowIndex"
               pSaveEditableRow
               icon="pi pi-check"
               text
@@ -187,7 +192,7 @@
             ></button>
             <button
               pButton
-              [id]="'btnGrdPer00259' + rowData.idTipoTelefono"
+              [id]="'btnGrdPer00259' + rowIndex"
               pCancelEditableRow
               icon="pi pi-times"
               text

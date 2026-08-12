@@ -49,6 +49,35 @@ export class FuntionsService {
     return "";
   }
 
+  //Función que inserta una fila en cualquier p-table
+  insertRowA<T>(
+    datos: WritableSignal<T[]>,
+    nuevaFila: T,
+    campoId: keyof T,
+    idPadreValido: boolean,
+    botonId: string
+  ): string {
+
+    const existeFilaNueva = datos()
+      .some(item => (item[campoId] === 0 || item[campoId] === '0'));
+
+    if (existeFilaNueva) {
+      return "No puede insertar una nueva fila sin llenar la actual";
+    }
+
+    if (!idPadreValido) {
+      return "Primero ingrese la información del registro master";
+    }
+
+    datos.update(lista => [nuevaFila, ...lista]);
+
+    setTimeout(() => {
+      const boton = document.getElementById(botonId) as HTMLButtonElement;
+      boton?.click();
+    });
+    return "";
+  }
+
   //Funcion que le quita la T a la fecha que viene del frontend
   formateaFecha(fecha: string | null): string {
     if (fecha === null || fecha === '') {

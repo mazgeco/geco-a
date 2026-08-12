@@ -22,6 +22,7 @@ import { StatusMessage } from '../../../../interfaces/general.interface';
 import { StateService } from '../state-service';
 import { CatalogService } from '../../../../services/catalog.service';
 import { CatalogDialogComponent } from '../../../../shared/catalog-dialog-component/catalog-dialog-component';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-frm-per0001',
@@ -66,7 +67,7 @@ export class FrmPer0001 implements OnInit {
   );
 
   //DECLARACIÓN DE VARIABLES
-  loadingPersona = signal(true);
+  loadingPersona = signal(false);
   successfullySaved = signal(false);
   estadoPersona = signal<string>('INACTIVO');
   denominaciones = signal<Denominaciones[]>([]);
@@ -135,10 +136,10 @@ export class FrmPer0001 implements OnInit {
   public frmPer0001 = this.fb.group(
     {
       idPersona: [0],
-      idTipoEmpresa: [''],
-      idNacionalidad: [0],
-      idDenominacion: [''],
-      idPais: [0],
+      idTipoEmpresa: [null as string | null],
+      idNacionalidad: [null as number | null],
+      idDenominacion: [null as string | null],
+      idPais: [null as number | null],
       apellido1: [''],
       apellido2: [''],
       nombre1: [''],
@@ -148,8 +149,8 @@ export class FrmPer0001 implements OnInit {
       fechaNacimiento: [null as Date | null],
       correoElectronico: [''],
       paginaWeb: [''],
-      estadoPersona: [''],
-      esEntidadFinanciera: [''],
+      estadoPersona: ['I'],
+      esEntidadFinanciera: ['N'],
       genero: [''],
       tipoPersona: [''],
       estadoCivil: [''],
@@ -194,7 +195,7 @@ export class FrmPer0001 implements OnInit {
     this.cargaPersona(this.idPersona);
 
     //Activa la revisión de cambios en el formulario para disparar el grabado en cada cambio
-    this.frmPer0001.valueChanges.subscribe((persona) => {
+    this.frmPer0001.valueChanges.pipe(debounceTime(300)).subscribe((persona) => {
       //Si la persona se está cargando no ejecuta
       if (this.loadingPersona()) {
         return;
@@ -284,8 +285,8 @@ export class FrmPer0001 implements OnInit {
 
   //FUNCIÓN QUE CARGA LOS DATOS DE LA PERSONA CONSULTADA
   cargaPersona(idPersona: number): void {
-    this.loadingPersona.set(true);
-    if (idPersona !== 0) {
+    if (idPersona !== 0 && idPersona !== null) {
+      this.loadingPersona.set(true);
       this.personasService.personaPorId(idPersona).subscribe({
         next: (resp) => {
           //ESTADO
@@ -325,6 +326,13 @@ export class FrmPer0001 implements OnInit {
           );
         },
       });
+    } else {
+      this.stateService.persona.update((actual) => ({
+        ...actual!,
+        idPersona: 0,
+        razonSocial: '',
+        estadoPersona: this.EstadoPersona.I,
+      }));
     }
   }
 
@@ -333,6 +341,9 @@ export class FrmPer0001 implements OnInit {
     this.personasService.grabaPersona(this.idPersona, persona)?.subscribe({
       next: (resp) => {
         this.idPersona = resp.idSecuencial!;
+        this.frmPer0001.patchValue({ idPersona: resp.idSecuencial }, { emitEvent: false });
+        persona.idPersona = resp.idSecuencial;
+        this.stateService.persona.set(persona);
         this.messageService.mostrar(
           this.statusMessages,
           'msgFrmPer0001',
@@ -342,7 +353,7 @@ export class FrmPer0001 implements OnInit {
       },
       error: (err) => {
         this.toastService.showMessage(
-          'err',
+          'error',
           'Error',
           'Ha ocurrido un error al grabar: ' + err.error.message,
         );
@@ -358,15 +369,26 @@ export class FrmPer0001 implements OnInit {
       acceptLabel: 'Aceptar',
       rejectLabel: 'Cancelar',
       accept: () => {
-        this.esActivo.set(estado === 'A' ? true : false);
-        this.estadoPersona.set(estado === 'A' ? 'ACTIVO' : 'INACTIVO');
-        this.frmPer0001.patchValue({
-          estadoPersona: estado,
+        this.personasService.actualizaEstadoPersona(this.idPersona, estado).subscribe({
+          next: (resp) => {
+            this.esActivo.set(estado === 'A' ? true : false);
+            this.estadoPersona.set(estado === 'A' ? 'ACTIVO' : 'INACTIVO');
+            this.frmPer0001.patchValue({
+              estadoPersona: estado,
+            });
+            this.stateService.persona.update((p) => ({
+              ...p!,
+              estadoPersona: estado,
+            }));
+          },
+          error: (err) => {
+            this.toastService.showMessage(
+              'error',
+              'Error',
+              'Ha ocurrido un error al grabar: ' + err.error.message,
+            );
+          },
         });
-        this.stateService.persona.update((p) => ({
-          ...p!,
-          estadoPersona: estado,
-        }));
       },
     });
   }
