@@ -21,6 +21,8 @@ export const routes: Routes = [
       { path: 'search', component: Personas.BsqPer0001 },
       { path: 'persona/:id', component: Personas.WinPer0018 },
       { path: 'tipo-telefono', component: Personas.WinPer0001 },
+      { path: 'tipo-direccion', component: Personas.WinPer0008 },
+      { path: 'tipo-empresa', component: Personas.WinPer0002 },
       { path: '', redirectTo: 'dash', pathMatch: 'full' }
     ]
   },  

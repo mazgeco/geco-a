@@ -37,11 +37,11 @@ export class PersonasLayout implements OnInit {
               },
               {
                 label: 'Tipos de direcciones',
-                routerLink: '/personas/duplicates/',
+                routerLink: '/personas/tipo-direccion/',
               },
               {
                 label: 'Tipos de empresas',
-                routerLink: '/personas/duplicates/',
+                routerLink: '/personas/tipo-empresa/',
               },
               {
                 label: 'Tipos de denominación',

@@ -1,3 +1,5 @@
+import { EstadoFila } from "./general.interface";
+
 //PERSONAS
 export interface Personas {
   idPersona: number | null | undefined;
@@ -67,6 +69,10 @@ export interface TipoEmpresas {
   idTipoEmpresa: string;
   descripcionTipoEmpresa: string;
   tipoEmpresaInterno?: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
 }
 
 export interface ListaTipoEmpresasResponse {
@@ -176,10 +182,10 @@ export interface TipoDirecciones {
   idTipoDireccion: string;
   descripcionTipoDireccion: string;
   principalTipoDireccion: string;
-  idUsuarioCrea: null;
-  fechaCrea: null;
-  idUsuarioModifica: null;
-  fechaModifica: null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
 }
 
 //CIUDADES

@@ -21,7 +21,9 @@ import {
   Telefonos,
   TelefonosResponse,
   TipoCaracteristicasResponse,
+  TipoDirecciones,
   TipoDireccionesResponse,
+  TipoEmpresas,
   TipoTelefonos,
   TipoTelefonosResponse,
 } from '../interfaces/personas.interfaces';
@@ -57,6 +59,29 @@ export class PersonasService {
 
   listaTipoEmpresas(): Observable<ListaTipoEmpresasResponse> {
     return this.http.get<ListaTipoEmpresasResponse>(`${this.apiUrl}personas/tipoempresas`);
+  }
+
+  grabaTipoEmpresa(tipoEmpresa: TipoEmpresas, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/tipoempresas`,
+        tipoEmpresa,
+      );
+    } else {
+      const params = new HttpParams().set('idTipoEmpresa', tipoEmpresa.idTipoEmpresa!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/tipoempresas`,
+        tipoEmpresa,
+        { params },
+      );
+    }
+  }
+
+  eliminaTipoEmpresa(idTipoEmpresa: string): Observable<SavedRow> {
+    const params = new HttpParams().set('idTipoEmpresa', idTipoEmpresa!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/tipoempresas`, {
+      params,
+    });
   }
 
   graficoNacionalidades(): Observable<GraficosResponse> {
@@ -132,6 +157,29 @@ export class PersonasService {
 
   listaTipoDirecciones(): Observable<TipoDireccionesResponse> {
     return this.http.get<TipoDireccionesResponse>(`${this.apiUrl}personas/tipodirecciones`);
+  }
+
+  grabaTipoDireccion(tipoDireccion: TipoDirecciones, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/tipodirecciones`,
+        tipoDireccion,
+      );
+    } else {
+      const params = new HttpParams().set('idTipoDireccion', tipoDireccion.idTipoDireccion!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/tipodirecciones`,
+        tipoDireccion,
+        { params },
+      );
+    }
+  }
+
+  eliminaTipoDireccion(idTipoDireccion: string): Observable<SavedRow> {
+    const params = new HttpParams().set('idTipoDireccion', idTipoDireccion!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/tipodirecciones`, {
+      params,
+    });
   }
 
   listaCiudades(): Observable<CiudadesResponse> {

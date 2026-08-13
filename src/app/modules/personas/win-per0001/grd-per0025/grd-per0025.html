@@ -10,7 +10,7 @@
         label="Insertar"
         pTooltip="Inserta una fila"
         tooltipPosition="bottom"
-        (onClick)="insertarFila(nuevaFila)"
+        (onClick)="insertarFila()"
       />
       <p-button
         id="btnGrdPer00252"
@@ -73,7 +73,7 @@
     selectionMode="multiple"
     [(selection)]="selectedRows"
     [metaKeySelection]="metaKey"
-    dataKey="idTipoTelefono"
+    dataKey="_rowId"
     class="p-datatable-sm"
     [paginator]="true"
     [rows]="10"
@@ -83,7 +83,6 @@
     <!-- HEADER -->
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 5%">#Fila</th>
         <th style="width: 25%">Código</th>
         <th style="width: 30%">Tipo de teléfono</th>
         <th style="width: 10%">Preferido</th>
@@ -93,10 +92,6 @@
     <!-- BODY -->
     <ng-template pTemplate="body" let-rowData let-editing="editing" let-rowIndex="rowIndex">
       <tr [pEditableRow]="rowData" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-        <!-- #FILA -->
-         <td>
-          {{ rowIndex }}
-         </td>
         <!-- CODIGO -->
         <td>
           <p-cellEditor>

@@ -1,17 +1,17 @@
 import { inject, Injectable, WritableSignal } from '@angular/core';
 import { ToastService } from './toast.service';
+import { FilaTabla } from './../interfaces/general.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FuntionsService {
-
   toastService = inject(ToastService);
 
   //Función para convertir YYYY-MM-DD a Date sin errores de zona horaria
   convertirAFecha(fechaStr: any): Date | null | any {
     if (!fechaStr) return null;
-    if (typeof fechaStr === "string") {
+    if (typeof fechaStr === 'string') {
       const partes = fechaStr.split('-').map(Number); // [1978, 3, 2]
       // Nota: el mes en JS va de 0 a 11, por eso restamos 1
       return new Date(partes[0], partes[1] - 1, partes[2]);
@@ -26,56 +26,62 @@ export class FuntionsService {
     nuevaFila: T,
     campoId: keyof T,
     idPadreValido: boolean,
-    botonId: string
+    botonId: string,
   ): string {
-
-    const existeFilaNueva = datos()
-      .some(item => (item[campoId] === 0 || item[campoId] === '0'));
+    const existeFilaNueva = datos().some((item) => item[campoId] === 0 || item[campoId] === '0');
 
     if (existeFilaNueva) {
-      return "No puede insertar una nueva fila sin llenar la actual";
+      return 'No puede insertar una nueva fila sin llenar la actual';
     }
 
     if (!idPadreValido) {
-      return "Primero ingrese la información del registro master";
+      return 'Primero ingrese la información del registro master';
     }
 
-    datos.update(lista => [nuevaFila, ...lista]);
+    datos.update((lista) => [nuevaFila, ...lista]);
 
     setTimeout(() => {
       const boton = document.getElementById(botonId) as HTMLButtonElement;
       boton?.click();
     });
-    return "";
+    return '';
   }
 
   //Función que inserta una fila en cualquier p-table
   insertRowA<T>(
-    datos: WritableSignal<T[]>,
-    nuevaFila: T,
-    campoId: keyof T,
+    datos: WritableSignal<FilaTabla<T>[]>,
+    nuevaFila: FilaTabla<T>,
     idPadreValido: boolean,
-    botonId: string
+    botonId: string,
   ): string {
-
-    const existeFilaNueva = datos()
-      .some(item => (item[campoId] === 0 || item[campoId] === '0'));
+    // Verificar si ya existe una fila nueva pendiente
+    const existeFilaNueva = datos().some((item) => item._estadoFila === 'NUEVA');
 
     if (existeFilaNueva) {
-      return "No puede insertar una nueva fila sin llenar la actual";
+      return 'No puede insertar una nueva fila sin llenar la actual';
     }
 
+    // Verificar que el registro master exista
     if (!idPadreValido) {
-      return "Primero ingrese la información del registro master";
+      return 'Primero ingrese la información del registro master';
     }
 
-    datos.update(lista => [nuevaFila, ...lista]);
+    // Insertar nueva fila
+    datos.update((lista) => [
+      {
+        ...nuevaFila,
+        _estadoFila: 'NUEVA',
+      },
+      ...lista,
+    ]);
 
+    // Activar edición de la fila
     setTimeout(() => {
       const boton = document.getElementById(botonId) as HTMLButtonElement;
       boton?.click();
     });
-    return "";
+
+    return '';
   }
 
   //Funcion que le quita la T a la fecha que viene del frontend
@@ -89,34 +95,64 @@ export class FuntionsService {
 
   //Obtiene la etiqueta para un combo
   obtenerEtiqueta(tipos: any[], codigo: string, tipo = 'combo'): string {
-    switch(tipo){
+    switch (tipo) {
       case 'tipoTelefono':
-        return tipos.find(item => item.idTipoTelefono === codigo)?.descripcionTipoTelefono ?? '';
+        return tipos.find((item) => item.idTipoTelefono === codigo)?.descripcionTipoTelefono ?? '';
       case 'tipoCaracteristica':
-        return tipos.find(item => item.idTipoCaracteristica === codigo)?.descripcionTipoCaracteristica ?? '';
+        return (
+          tipos.find((item) => item.idTipoCaracteristica === codigo)
+            ?.descripcionTipoCaracteristica ?? ''
+        );
       default:
-        return tipos.find(item => item.codigo === codigo)?.etiqueta ?? '';
+        return tipos.find((item) => item.codigo === codigo)?.etiqueta ?? '';
     }
-
   }
 
   //Funcion que muestra la auditoria de un registro
   muestraAuditoria(id: any, idTabla: string, info: any): void {
-    let informacion = "Tabla auditada: " + idTabla + "\n" +
-      "Código: " + id + "\n" +
-      "Usuario creación: " + info.idUsuarioCrea + "\n" +
-      "Fecha creación: " + this.formateaFecha(info.fechaCrea!) + "\n" +
-      "Usuario modificación: " + info.idUsuarioModifica + "\n" +
-      "Fecha modificación: " + this.formateaFecha(info.fechaModifica!);
-    this.toastService.showMessage("info", "Información auditoría", informacion, "", 5000);
+    let informacion =
+      'Tabla auditada: ' +
+      idTabla +
+      '\n' +
+      'Código: ' +
+      id +
+      '\n' +
+      'Usuario creación: ' +
+      info.idUsuarioCrea +
+      '\n' +
+      'Fecha creación: ' +
+      this.formateaFecha(info.fechaCrea!) +
+      '\n' +
+      'Usuario modificación: ' +
+      info.idUsuarioModifica +
+      '\n' +
+      'Fecha modificación: ' +
+      this.formateaFecha(info.fechaModifica!);
+    this.toastService.showMessage('info', 'Información auditoría', informacion, '', 5000);
   }
 
-  muestraInfoObjeto(idContenedor: string, idObjeto: string, idTabla: string, permiso: string, pausa = 5000): void {
+  muestraInfoObjeto(
+    idContenedor: string,
+    idObjeto: string,
+    idTabla: string,
+    permiso: string,
+    pausa = 5000,
+  ): void {
+    permiso = permiso === 'w' ? 'Escritura' : 'Lectura';
 
-    permiso = permiso === "w" ? "Escritura" : "Lectura";
-
-    this.toastService.showMessage("info", "Información objeto", "Contenedor: " + idContenedor +
-      " \n Objeto: " + idObjeto + " \n Tabla: " + idTabla + " \n Permiso: " + permiso, "", pausa);
+    this.toastService.showMessage(
+      'info',
+      'Información objeto',
+      'Contenedor: ' +
+        idContenedor +
+        ' \n Objeto: ' +
+        idObjeto +
+        ' \n Tabla: ' +
+        idTabla +
+        ' \n Permiso: ' +
+        permiso,
+      '',
+      pausa,
+    );
   }
-
 }

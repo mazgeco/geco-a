@@ -1,4 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ConfirmationService } from 'primeng/api';
 import { NgClass } from '@angular/common';
 
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
@@ -6,23 +7,25 @@ import { FuntionsService } from '../../../../services/functions.service';
 import { PersonasService } from '../../../../services/personas.service';
 import { ToastService } from '../../../../services/toast.service';
 import { MessageService } from '../../../../services/message.service';
-import { Combo, StatusMessage } from '../../../../interfaces/general.interface';
+import {
+  Combo,
+  FilaTabla,
+  StatusMessage,
+} from '../../../../interfaces/general.interface';
 import { TipoTelefonos } from '../../../../interfaces/personas.interfaces';
-import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-grd-per0025',
   imports: [...PRIMENG_MODULES, NgClass],
   providers: [ConfirmationService],
-  templateUrl: './grd-per0025.html',
-  styleUrl: './grd-per0025.css',
+  templateUrl: './grd-per0025.html'
 })
 export class GrdPer0025 implements OnInit {
   /******************************************************************************************
    * DECLARACIÓN DE VARIABLES
    *******************************************************************************************/
 
-  //DEFINICIONES PRINCIPALES
+  //DEFINICIONES PRINCIPALES PROPIAS DEL OBJETO
   idContenedor = signal<string>('WinPer0001');
   idObjeto = signal<string>('GrdPer0025');
   idTabla = signal<string>('326');
@@ -30,14 +33,14 @@ export class GrdPer0025 implements OnInit {
   newRow: boolean = false;
   campoId: keyof TipoTelefonos = 'idTipoTelefono';
   nuevaFila: TipoTelefonos = {
-    idTipoTelefono: '',
-    descripcionTipoTelefono: '',
-    principalTipoTelefono: 'N',
-    idUsuarioCrea: '',
-    fechaCrea: '',
-    idUsuarioModifica: '',
-    fechaModifica: '',
-  };
+      idTipoTelefono: '',
+      descripcionTipoTelefono: '',
+      principalTipoTelefono: 'N',
+      idUsuarioCrea: '',
+      fechaCrea: '',
+      idUsuarioModifica: '',
+      fechaModifica: '',
+    };
 
   //INJECTIONS PÚBLICAS
   funciones = inject(FuntionsService);
@@ -54,7 +57,7 @@ export class GrdPer0025 implements OnInit {
   //Declaración de variables
   selectedRows!: TipoTelefonos[];
   metaKey: boolean = true;
-  filas = signal<TipoTelefonos[]>([]);
+  filas = signal<FilaTabla<TipoTelefonos>[]>([]);
   opcion = signal<Combo[]>([
     { codigo: 'S', etiqueta: 'Si' },
     { codigo: 'N', etiqueta: 'No' },
@@ -69,11 +72,10 @@ export class GrdPer0025 implements OnInit {
   }
 
   //MÉTODO QUE INSERTA UNA FILA EN EL GRID
-  insertarFila(nuevaFila: any): void {
-    let mensaje = this.funciones.insertRow(
+  insertarFila(): void {
+    const mensaje = this.funciones.insertRowA(
       this.filas,
-      nuevaFila,
-      this.campoId,
+      this.nuevaFila,
       true,
       'btn' + this.idObjeto() + '60',
     );
@@ -128,7 +130,13 @@ export class GrdPer0025 implements OnInit {
     this.personasService.listaTiposTelefonos().subscribe({
       next: (resp) => {
         //Coloca las filas en la estructura
-        this.filas.set(resp.data);
+        this.filas.set(
+          resp.data.map((item) => ({
+            ...item,
+            _rowId: crypto.randomUUID(),
+            _estadoFila: 'NORMAL',
+          })),
+        );
         //Envía un mensaje de carga exitosa
         this.messageService.mostrar(
           this.statusMessages,

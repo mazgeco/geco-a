@@ -4,7 +4,7 @@ export interface Modulo {
   ruta: string;
   icono: string;
   color: string;
-};
+}
 
 export interface StatusMessage {
   severity: 'success' | 'info' | 'warn' | 'error' | 'secondary' | 'contrast';
@@ -23,4 +23,11 @@ export interface SavedRow {
 export interface Combo {
   codigo: string;
   etiqueta: string;
+}
+
+export type EstadoFila = 'NUEVA' | 'NORMAL';
+
+
+export type FilaTabla<T> = T & {
+  _estadoFila?: EstadoFila;
 }
