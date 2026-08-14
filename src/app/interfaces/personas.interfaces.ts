@@ -56,6 +56,10 @@ export interface PersonaResponse {
 export interface Denominaciones {
   idDenominacion: string;
   descripcionDenominacion: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
 }
 
 export interface ListaDenominacionesResponse {
@@ -249,7 +253,7 @@ export interface TipoCaracteristicasResponse {
 }
 
 export interface TipoCaracteristicas {
-  idTipoCaracteristica: number;
+  idTipoCaracteristica: number | null;
   descripcionTipoCaracteristica: string;
   idUsuarioCrea?: string | null;
   fechaCrea?: string | null;
@@ -269,6 +273,22 @@ export interface Caracteristicas {
   idPersona: number;
   idTipoCaracteristica: number;
   descripcionCaracteristica: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+//TIPO DE IDENTIFICACIÓN
+export interface TipoIdentificacionesResponse {
+  status: string;
+  message: string;
+  data: TipoIdentificaciones[];
+}
+
+export interface TipoIdentificaciones {
+  idTipoIdentificacion: string | null;
+  descripcionTipoIdentificacion: string;
   idUsuarioCrea?: string | null;
   fechaCrea?: string | null;
   idUsuarioModifica?: string | null;

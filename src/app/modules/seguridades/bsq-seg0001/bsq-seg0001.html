@@ -1,0 +1,37 @@
+<p-toolbar>
+  <ng-template #start>
+    <p-button label="Nuevo" (onClick)="openUsuario()"></p-button>
+  </ng-template>
+  <ng-template #center>
+    <p-iconfield iconPosition="left">
+      <p-inputicon class="pi pi-search" />
+      <input type="text" pInputText placeholder="Search" />
+    </p-iconfield>
+  </ng-template>
+  <ng-template #end>
+    <span></span>
+  </ng-template>
+</p-toolbar>
+
+<div class="grid m-3">
+  @for (usuario of usuarios(); track usuario.idUsuario) {
+  <div class="col-12 md:col-6 lg:col-4 xl:col-3">
+    <p-card class="resultado-card h-full cursor-pointer" (click)="seleccionarUsuario(usuario)">
+      <ng-template #title>
+        <div class="font-semibold text-sm">
+          {{ usuario.nombrePersona }}
+        </div>
+      </ng-template>
+      <div class="text-sm">
+        <div>
+          <span class="font-semibold">Código:</span>
+          {{ usuario.idUsuario }}
+        </div>
+        <div>
+          {{ usuario.estadoUsuario === "A" ? "Activo" : "Inactivo" }}
+        </div>
+      </div>
+    </p-card>
+  </div>
+  }
+</div>

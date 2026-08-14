@@ -6,6 +6,7 @@ import {
   Caracteristicas,
   CaracteristicasResponse,
   CiudadesResponse,
+  Denominaciones,
   Direcciones,
   DireccionesResponse,
   GraficosResponse,
@@ -20,10 +21,13 @@ import {
   Personas,
   Telefonos,
   TelefonosResponse,
+  TipoCaracteristicas,
   TipoCaracteristicasResponse,
   TipoDirecciones,
   TipoDireccionesResponse,
   TipoEmpresas,
+  TipoIdentificaciones,
+  TipoIdentificacionesResponse,
   TipoTelefonos,
   TipoTelefonosResponse,
 } from '../interfaces/personas.interfaces';
@@ -47,6 +51,56 @@ export class PersonasService {
 
   listaDenominaciones(): Observable<ListaDenominacionesResponse> {
     return this.http.get<ListaDenominacionesResponse>(`${this.apiUrl}personas/denominaciones`);
+  }
+
+  grabaDenominacion(denominacion: Denominaciones, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/denominaciones`,
+        denominacion,
+      );
+    } else {
+      const params = new HttpParams().set('idDenominacion', denominacion.idDenominacion!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/denominaciones`,
+        denominacion,
+        { params },
+      );
+    }
+  }
+
+  eliminaDenominacion(idDenominacion: string): Observable<SavedRow> {
+    const params = new HttpParams().set('idDenominacion', idDenominacion!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/denominaciones`, {
+      params,
+    });
+  }
+
+  listaTiposIdentificacion(): Observable<TipoIdentificacionesResponse> {
+    return this.http.get<TipoIdentificacionesResponse>(`${this.apiUrl}personas/tipoidentificaciones`);
+  }
+
+  grabaTipoIdentificacion(tipoIdentificacion: TipoIdentificaciones, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/tipoidentificaciones`,
+        tipoIdentificacion,
+      );
+    } else {
+      const params = new HttpParams().set('idTipoIdentificacion', tipoIdentificacion.idTipoIdentificacion!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/tipoidentificaciones`,
+        tipoIdentificacion,
+        { params },
+      );
+    }
+  }
+
+  eliminaTipoIdentificacion(idTipoIdentificacion: string): Observable<SavedRow> {
+    const params = new HttpParams().set('idTipoIdentificacion', idTipoIdentificacion!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/tipoidentificaciones`, {
+      params,
+    });
   }
 
   listaNacionalidades(): Observable<ListaNacionalidadesResponse> {
@@ -279,6 +333,31 @@ export class PersonasService {
   listaTiposCaracteristicas(): Observable<TipoCaracteristicasResponse> {
     return this.http.get<TipoCaracteristicasResponse>(`${this.apiUrl}personas/tipocaracteristicas`);
   }
+
+  grabaTipoCaracteristica(tipoCaracteristica: TipoCaracteristicas): Observable<SavedRow> {
+    if (tipoCaracteristica.idTipoCaracteristica === 0) {
+      tipoCaracteristica.idTipoCaracteristica = null;
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/tipocaracteristicas`,
+        tipoCaracteristica,
+      );
+    } else {
+      const params = new HttpParams().set('idTipoCaracteristica', tipoCaracteristica.idTipoCaracteristica!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/tipocaracteristicas`,
+        tipoCaracteristica,
+        { params },
+      );
+    }
+  }
+
+  eliminaTipoCaracteristica(idTipoCaracteristica: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idTipoCaracteristica', idTipoCaracteristica!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/tipocaracteristicas`, {
+      params,
+    });
+  }
+
 
   listaCaracteristicas(idPersona: number): Observable<CaracteristicasResponse> {
     return this.http.get<CaracteristicasResponse>(

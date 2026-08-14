@@ -45,15 +45,15 @@ export class PersonasLayout implements OnInit {
               },
               {
                 label: 'Tipos de denominación',
-                routerLink: '/personas/duplicates/',
+                routerLink: '/personas/tipo-denominacion/',
               },
               {
                 label: 'Tipos de identificación',
-                routerLink: '/personas/search/',
+                routerLink: '/personas/tipo-identificacion/',
               },
               {
                 label: 'Tipos de características',
-                routerLink: '/personas/duplicates/',
+                routerLink: '/personas/tipo-caracteristicas/',
               },
               {
                 label: 'Tipos de ficha médica',

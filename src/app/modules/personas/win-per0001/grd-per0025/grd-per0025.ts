@@ -8,7 +8,6 @@ import { PersonasService } from '../../../../services/personas.service';
 import { ToastService } from '../../../../services/toast.service';
 import { MessageService } from '../../../../services/message.service';
 import {
-  Combo,
   FilaTabla,
   StatusMessage,
 } from '../../../../interfaces/general.interface';
@@ -58,10 +57,6 @@ export class GrdPer0025 implements OnInit {
   selectedRows!: TipoTelefonos[];
   metaKey: boolean = true;
   filas = signal<FilaTabla<TipoTelefonos>[]>([]);
-  opcion = signal<Combo[]>([
-    { codigo: 'S', etiqueta: 'Si' },
-    { codigo: 'N', etiqueta: 'No' },
-  ]);
 
   /******************************************************************************************
    * MÉTODOS QUE EJECUTAN LOS PROCESOS
