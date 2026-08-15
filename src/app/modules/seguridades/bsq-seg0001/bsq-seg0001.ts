@@ -27,7 +27,7 @@ export class BsqSeg0001 {
   busquedaMessage = computed(() =>
     this.messageService.obtener(this.statusMessages, 'msgBsqSeg0001'),
   );
-
+  
   buscarUsuario(nombre: string): void {
     this.loading.set(true),
       this.seguridadesService.buscaUsuario(nombre).subscribe({
@@ -36,7 +36,7 @@ export class BsqSeg0001 {
           this.usuarios.set(resp.data);
           this.messageService.mostrar(
             this.statusMessages,
-            'msgBsqPer0001',
+            'msgBsqSeg0001',
             'success',
             `${resp.data.length} registros encontrados`
           );
