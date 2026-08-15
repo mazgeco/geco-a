@@ -12,7 +12,7 @@ import { Denominaciones } from '../../../../interfaces/personas.interfaces';
 
 @Component({
   selector: 'app-grd-per0005',
-  imports: [...PRIMENG_MODULES, NgClass],
+  imports: [...PRIMENG_MODULES],
   providers: [ConfirmationService],
   templateUrl: './grd-per0005.html',
 })
