@@ -1,1 +1,37 @@
-<p>win-prd0006 works!</p>
+<p-toast />
+<p-confirmdialog />
+
+<p-toolbar>
+  <ng-template #start>
+    <label class="font-bold">
+      COD. {{ idProducto() }}
+    </label>
+  </ng-template>
+  <ng-template #center>
+    <label class="font-bold">
+      {{ stateService.nombre() }}
+    </label>
+  </ng-template>
+  <ng-template #end>
+    <label class="font-bold" [style.color]="stateService.estado() ? '#4caf50' : '#f44336'">
+      {{ stateService.estadoNombre() }}
+    </label>
+  </ng-template>
+</p-toolbar>
+
+<p-tabs value="0">
+  <p-tablist>
+    <p-tab value="0">Datos generales</p-tab>
+    <p-tab value="1">Itinerario e insumos</p-tab>
+    <!-- <p-tab value="2">Tarifas y precios</p-tab>
+    <p-tab value="3">Impuestos</p-tab> -->
+  </p-tablist>
+  <p-tabpanels>
+    <p-tabpanel value="0">
+      <app-frm-prd0006 [idProducto]="idProducto()" />
+    </p-tabpanel>
+    <p-tabpanel value="1">
+      <app-frm-prd0004 [idProducto]="idProducto()" />
+    </p-tabpanel>
+  </p-tabpanels>
+</p-tabs>

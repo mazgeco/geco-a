@@ -8,11 +8,12 @@ export interface Productos {
     capacidadMaxima?:     number | null;
     estadoProducto:      EstadoProducto;
     tipoPrecio:          TipoPrecio;
+    idCuenta?:              string | null;
     precioSinUtilidad?:   number | null;
     porcentajeUtilidad?:  number | null;
     individualGeneral:   IndividualGeneral;
     seReserva:           Opcion;
-    medidaCalculoPrecio?: MedidaCalculoPrecio;
+    medidaCalculoPrecio?: MedidaCalculoPrecio | null;
     cantidadInicial?:     number | null;
     totalInicial?:        number | null;
     bloqueaHorario:      Opcion;
@@ -60,3 +61,47 @@ export enum MedidaCalculoPrecio {
     N = "N",
     U = "U",
 }
+
+
+
+
+export interface ListaProductosResponse {
+  status: string;
+  message: string;
+  data: Productos[];
+}
+
+export interface ProductoResponse {
+  status: string;
+  message: string;
+  data: Productos;
+}
+
+//TIPO PRODUCTOS
+export interface ListaTipoProductoResponse {
+  status: string;
+  message: string;
+  data: NombreTipoProducto[];
+}
+
+export interface NombreTipoProducto {
+  idTipoProducto: number;
+ descripcionTipoProducto: string;
+}
+
+//COMPONENTES INSUMOS
+export interface ComponenteInsumo {
+  idComponente?: string; // O number, según tu base de datos
+  tipoInsumo: string;
+  idTipoInsumo?: string; // Para guardar el código real si usas catálogos
+  insumo: string;
+  idInsumo?: string;
+  horaEjecucion: string;
+  proveedor: string;
+  idProveedor?: string;
+  darAnticipo: boolean;
+  observaciones: string;
+  centroCostos: string;
+}
+
+

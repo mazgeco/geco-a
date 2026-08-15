@@ -1,0 +1,143 @@
+
+<p-toast />
+<p-confirmdialog />
+
+<div class="col-12">
+<form id="frmPrd0004" class="grid m-0" [formGroup]="frmPrd0004">
+    
+    <!-- CONTENEDOR PRINCIPAL ESTÁNDAR -->
+    <p-panel class="col-12">
+        
+        <!-- ========================================== -->
+        <!-- CABECERA DE LA PESTAÑA                     -->
+        <!-- ========================================== -->
+        <div class="flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="m-0">Itinerario Secuencial y Recursos Operativos</h3>
+                <p class="text-color-secondary text-sm m-0 mt-1">Planificación de jornadas, comidas incluidas e insumos.</p>
+            </div>
+            <p-button icon="pi pi-plus" class="mr-1" label="Agregar Día" pTooltip="Agregar Día Secuencial al itinerario" tooltipPosition="bottom" (click)="agregarDiaSecuencial()"></p-button>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- CARRUSEL DE DÍAS (Tarjetas Cuadradas)      -->
+        <!-- ========================================== -->
+        <div class="flex align-items-center gap-3 mb-5 overflow-x-auto p-3 border-1 surface-border border-round surface-ground">
+            
+            @for (dia of dias(); track dia; let last = $last) {
+                <!-- Tarjeta de Día (Ahora cuadrada: 80x80) -->
+                <div (click)="cambiarDia(dia)" 
+                     class="flex flex-column align-items-center justify-content-center border-round cursor-pointer transition-colors transition-duration-150 flex-shrink-0"
+                     [class.bg-primary]="diaActivo() === dia"
+                     [class.border-1]="diaActivo() !== dia"
+                     [class.surface-border]="diaActivo() !== dia"
+                     [class.surface-card]="diaActivo() !== dia"
+                     [class.hover:surface-100]="diaActivo() !== dia"
+                     style="width: 80px; height: 80px;">
+                    
+                    <span class="text-xs font-bold mb-1" 
+                          [class.text-white]="diaActivo() === dia" 
+                          [class.text-500]="diaActivo() !== dia">DÍA</span>
+                    <span class="text-3xl font-bold" 
+                          [class.text-white]="diaActivo() === dia" 
+                          [class.text-900]="diaActivo() !== dia">{{ dia }}</span>
+                </div>
+                
+                <!-- Flecha Separadora -->
+                @if (!last) {
+                    <i class="pi pi-angle-right text-400 text-xl font-bold flex-shrink-0"></i>
+                }
+            }
+
+        </div>
+
+        <!-- ========================================== -->
+        <!-- CONTENEDOR DE DOS COLUMNAS                 -->
+        <!-- ========================================== -->
+        <div class="grid">
+            
+            <!-- COLUMNA IZQUIERDA: Ficha Operativa -->
+            <div class="col-12 md:col-5">
+                <div class="border-1 surface-border border-round p-3 h-full surface-card">
+                    
+                    <!-- Título y Botón Eliminar -->
+                    <div class="flex justify-content-between align-items-center mb-4 border-bottom-1 surface-border pb-2">
+                        <h4 class="m-0 text-primary">Ficha Operativa - Día {{ diaActivo() }}</h4>
+                        <p-button icon="pi pi-trash" class="mr-1" label="Eliminar Día" pTooltip="Eliminar día del itinerario" tooltipPosition="bottom"  ></p-button>
+                    </div>
+
+                    <!-- Formulario Ficha -->
+                    <div class="grid formgrid">
+                        <div class="col-12 mb-3">
+                            <label class="font-medium text-700 block mb-2">Descripción</label>
+                            <input pInputText class="w-full" formControlName="descripcion" />
+                        </div>
+                        <div class="col-12 md:col-6 mb-3">
+                            <label class="font-medium text-700 block mb-2">Origen</label>
+                            <input pInputText class="w-full" formControlName="origen" />
+                        </div>
+                        <div class="col-12 md:col-6 mb-3">
+                            <label class="font-medium text-700 block mb-2">Destino</label>
+                            <input pInputText class="w-full" formControlName="destino" />
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="font-medium text-700 block mb-2">Actividad</label>
+                            <textarea pInputTextarea rows="3" class="w-full" formControlName="actividad"></textarea>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="font-medium text-700 block mb-2">Observación</label>
+                            <textarea pInputTextarea rows="3" class="w-full" formControlName="observacion"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="font-medium text-700 block mb-3">Comidas Incluidas</label>
+                            <div class="flex flex-wrap gap-4">
+                                <div class="flex align-items-center">
+                                    <p-checkbox value="Desayuno" inputId="c-des" formControlName="comidasIncluidas"></p-checkbox>
+                                    <label for="c-des" class="ml-2">Desayuno</label>
+                                </div>
+                                <div class="flex align-items-center">
+                                    <p-checkbox value="Almuerzo" inputId="c-alm" formControlName="comidasIncluidas"></p-checkbox>
+                                    <label for="c-alm" class="ml-2">Almuerzo</label>
+                                </div>
+                                <div class="flex align-items-center">
+                                    <p-checkbox value="Cena" inputId="c-cen" formControlName="comidasIncluidas"></p-checkbox>
+                                    <label for="c-cen" class="ml-2">Cena</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: Insumos -->
+            <div class="col-12 md:col-7">
+                <div class="border-1 surface-border border-round p-3 h-full surface-card">
+                    <div class="flex justify-content-between align-items-center mb-4 border-bottom-1 surface-border pb-2">
+                        <div>
+                        <h4 class="m-0 text-primary mb-1">Insumos y Servicios Operativos</h4>
+                        <span class="text-sm text-500">Recursos requeridos para la ejecución del día</span>
+                        </div>
+                    </div>
+                     <app-grd-prd0006></app-grd-prd0006>
+
+             <!-- Tabla de PrimeNG (Modo Edición en Línea) -->
+  
+
+  
+
+    </div>
+</div>
+
+        </div>
+
+    </p-panel>
+</form>
+
+
+
+
+</div>
+
+
+

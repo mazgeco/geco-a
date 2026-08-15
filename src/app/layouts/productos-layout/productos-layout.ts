@@ -26,6 +26,32 @@ export class ProductosLayout implements OnInit {
         icon: 'pi pi-chart-bar',
         routerLink: '/productos/dash'
       },
+            {
+        label: 'Parametrización',
+        icon: 'pi pi-cog',
+        items: [
+          {
+            label: 'Operación',
+            routerLink: '/productos/parametrizacion/operacion'
+          },
+          {
+            label: 'UEN',
+            routerLink: '/productos/parametrizacion/uens',
+          },
+           {
+            label: 'Temporadas',
+            routerLink: '/productos/parametrizacion/temporadas',
+          },
+           {
+            label: 'Impuestos',
+            routerLink: '/productos/parametrizacion/impuestos',
+          },
+           {
+            label: 'Tipo de comida incluida',
+            routerLink: '/productos/parametrizacion/tipos-comida',
+          }
+        ],
+      },
       {
         label: 'Productos',
         icon: 'pi pi-users',
