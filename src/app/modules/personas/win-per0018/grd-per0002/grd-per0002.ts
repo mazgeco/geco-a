@@ -1,12 +1,9 @@
 import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
-import { NgClass } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
 import {
   Caracteristicas,
-  Telefonos,
-  TipoCaracteristicas,
-  TipoTelefonos,
+  TipoCaracteristicas
 } from '../../../../interfaces/personas.interfaces';
 import { FuntionsService } from '../../../../services/functions.service';
 import { PersonasService } from '../../../../services/personas.service';
@@ -27,8 +24,8 @@ export class GrdPer0002 implements OnInit {
 
   //IDENTIFICADORES PRINCIPALES
   idContenedor = signal<string>('WinPer0018');
-  idObjeto = signal<string>('GrdPer0019');
-  idTabla = signal<string>('194');
+  idObjeto = signal<string>('GrdPer0002');
+  idTabla = signal<string>('179');
   permiso = signal<string>('w');
 
   //INJECTIONS PÚBLICAS
@@ -40,23 +37,23 @@ export class GrdPer0002 implements OnInit {
   //VARIABLES PARA EL MANEJO DE LOS MENSAJES
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
-  caracteristicaMessage = computed(() =>
+  barraMessage = computed(() =>
     this.messageService.obtener(this.statusMessages, 'msgGrdPer0002'),
   );
 
   //Declaración de variables
   selectedRows!: Caracteristicas[];
   metaKey: boolean = true;
-  caracteristicas = signal<Caracteristicas[]>([]);
-  tipoCaracteristicas = signal<TipoCaracteristicas[]>([]);
+  fila = signal<Caracteristicas[]>([]);
+  tipos = signal<TipoCaracteristicas[]>([]);
 
   ngOnInit(): void {
-    this.cargaTipoCaracteristicas();
-    this.cargaCaracteristicas();
+    this.cargaTipos();
+    this.cargaDatos();
   }
 
   //INSERTA UNA FILA en el grid
-  insertarCaracteristica(): void {
+  insertarFila(): void {
     const nueva: Caracteristicas = {
       idCaracteristica: 0, // Id temporal nulo para crear espera que sea null
       idPersona: this.idPersona,
@@ -69,7 +66,7 @@ export class GrdPer0002 implements OnInit {
     };
 
     let mensaje = this.funciones.insertRow(
-      this.caracteristicas,
+      this.fila,
       nueva,
       'idCaracteristica',
       this.idPersona !== 0,
@@ -81,10 +78,10 @@ export class GrdPer0002 implements OnInit {
   }
 
   //READ TIPOS
-  cargaTipoCaracteristicas(): void {
+  cargaTipos(): void {
     this.personasService.listaTiposCaracteristicas().subscribe({
       next: (resp) => {
-        this.tipoCaracteristicas.set(resp.data);
+        this.tipos.set(resp.data);
       },
       error: (err) => {
         this.toastService.showMessage(
@@ -98,11 +95,11 @@ export class GrdPer0002 implements OnInit {
   }
 
   //CREATE/UPDATE
-  saveCaracteristica(caracteristica: Caracteristicas): void {
-    this.personasService.grabaCaracteritica(caracteristica).subscribe({
+  saveData(caracteristica: Caracteristicas): void {
+    this.personasService.grabaCaracteristica(caracteristica).subscribe({
       next: (resp) => {
         caracteristica.idCaracteristica = resp.idSecuencial!;
-        this.cargaCaracteristicas();
+        this.cargaDatos();
       },
       error: (err) => {
         this.toastService.showMessage(
@@ -116,12 +113,12 @@ export class GrdPer0002 implements OnInit {
   }
 
   //READ
-  cargaCaracteristicas(): void {
-    this.caracteristicas.set([]);
+  cargaDatos(): void {
+    this.fila.set([]);
     if (this.idPersona !== 0) {
       this.personasService.listaCaracteristicas(this.idPersona).subscribe({
         next: (resp) => {
-          this.caracteristicas.set(resp.data);
+          this.fila.set(resp.data);
         },
         error: (err) => {
           this.toastService.showMessage(
@@ -136,10 +133,10 @@ export class GrdPer0002 implements OnInit {
   }
 
   //DELETE
-  eliminarCaracteristica(rowData: Caracteristicas): void {
+  eliminarFila(rowData: Caracteristicas): void {
     if (rowData.idCaracteristica === 0) {
-      this.caracteristicas.set(
-        this.caracteristicas().filter((item) => item.idCaracteristica != rowData.idCaracteristica),
+      this.fila.set(
+        this.fila().filter((item) => item.idCaracteristica != rowData.idCaracteristica),
       );
     } else {
       this.confirmationService.confirm({
@@ -150,8 +147,8 @@ export class GrdPer0002 implements OnInit {
         accept: () => {
           this.personasService.eliminaCaracteristica(rowData.idCaracteristica!).subscribe({
             next: (resp) => {
-              this.caracteristicas.set(
-                this.caracteristicas().filter((item) => item.idCaracteristica != resp.idSecuencial),
+              this.fila.set(
+                this.fila().filter((item) => item.idCaracteristica != resp.idSecuencial),
               );
             },
             error: (err) => {
@@ -182,8 +179,8 @@ export class GrdPer0002 implements OnInit {
             let idCaracteristica = selected[i].idCaracteristica;
             this.personasService.eliminaCaracteristica(idCaracteristica!).subscribe({
               next: (resp) => {
-                this.caracteristicas.set(
-                  this.caracteristicas().filter(
+                this.fila.set(
+                  this.fila().filter(
                     (item) => item.idCaracteristica != resp.idSecuencial,
                   ),
                 );

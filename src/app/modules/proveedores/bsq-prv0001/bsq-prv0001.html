@@ -5,33 +5,54 @@
   <ng-template #center>
     <p-iconfield iconPosition="left">
       <p-inputicon class="pi pi-search" />
-      <input type="text" pInputText placeholder="Search" />
+      <input
+        type="text"
+        pInputText
+        placeholder="Search"
+        #searchInput
+        (change)="buscarProveedor(searchInput.value)"
+      />
     </p-iconfield>
   </ng-template>
   <ng-template #end>
-    <span></span>
+    @if (busquedaMessage()?.visible) {
+      <div class="message-container">
+        <p-message [severity]="busquedaMessage()!.severity" [icon]="busquedaMessage()!.icon">
+          {{ busquedaMessage()!.text }}
+        </p-message>
+      </div>
+    }
   </ng-template>
 </p-toolbar>
 
-<div class="grid m-3">
-  @for (proveedor of proveedores(); track proveedor.idProveedor) {
-  <div class="col-12 md:col-6 lg:col-4 xl:col-3">
-    <p-card class="resultado-card h-full cursor-pointer" (click)="seleccionarProveedor(proveedor)">
-      <ng-template #title>
-        <div class="font-semibold text-sm">
-          {{ proveedor.nombreProveedor }}
-        </div>
-      </ng-template>
-      <div class="text-sm">
-        <div>
-          <span class="font-semibold">Código:</span>
-          {{ proveedor.idProveedor }}
-        </div>
-        <div>
-          {{ proveedor.estadoProveedor }}
-        </div>
-      </div>
-    </p-card>
+@if (loading()) {
+  <div class="flex justify-center">
+    <p-progress-spinner ariaLabel="loading" />
   </div>
-  }
-</div>
+} @else {
+  <div class="grid m-3">
+    @for (proveedor of proveedores(); track proveedor.idProveedor) {
+      <div class="col-12 md:col-6 lg:col-4 xl:col-3">
+        <p-card
+          class="resultado-card h-full cursor-pointer"
+          (click)="seleccionarProveedor(proveedor)"
+        >
+          <ng-template #title>
+            <div class="font-semibold text-sm">
+              {{ proveedor.nombrePersona }}
+            </div>
+          </ng-template>
+          <div class="text-sm">
+            <div>
+              <span class="font-semibold">Código:</span>
+              {{ proveedor.idProveedor }}
+            </div>
+            <div>
+              {{ proveedor.estadoProveedor === 'A' ? 'ACTIVO' : 'INACTIVO' }}
+            </div>
+          </div>
+        </p-card>
+      </div>
+    }
+  </div>
+}

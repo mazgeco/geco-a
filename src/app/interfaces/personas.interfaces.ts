@@ -294,3 +294,37 @@ export interface TipoIdentificaciones {
   idUsuarioModifica?: string | null;
   fechaModifica?: string | null;
 }
+
+//TIPO DE FICHA MÉDICA
+export interface TipoFichasMedicasResponse {
+  status: string;
+  message: string;
+  data: TipoFichasMedicas[];
+}
+
+export interface TipoFichasMedicas {
+  idTipoFichaMedica: string | null;
+  descripcionTipoFichaMedica: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+//FICHA MÉDICA
+export interface FichasMedicasResponse {
+  status: string;
+  message: string;
+  data: FichasMedicas[];
+}
+
+export interface FichasMedicas {
+  idFichaMedica: number | null;
+  idPersona: number | null;
+  idTipoFichaMedica: string | null;
+  descripcionFichaMedica: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}

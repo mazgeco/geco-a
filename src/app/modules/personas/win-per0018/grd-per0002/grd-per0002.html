@@ -2,11 +2,11 @@
   <p-toolbar>
     <ng-template #start>
       <p-button id="btnGrdPer00191" icon="pi pi-plus" class="mr-1" label="Insertar" pTooltip="Activa a la persona"
-        tooltipPosition="bottom" (onClick)="insertarCaracteristica()" />
+        tooltipPosition="bottom" (onClick)="insertarFila()" />
       <p-button id="btnGrdPer00192" icon="pi pi-trash" class="mr-1" label="Eliminar"
         pTooltip="Elimina varias filas seleccionadas" tooltipPosition="bottom" (onClick)="eliminarVarias()" />
       <p-button id="btnGrdPer00193" icon="pi pi-refresh" class="mr-1" pTooltip="Refresca los datos del grid"
-        tooltipPosition="bottom" (onClick)="cargaCaracteristicas()" />
+        tooltipPosition="bottom" (onClick)="cargaDatos()" />
       <p-button id="btnGrdPer00194" icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual"
         tooltipPosition="bottom" (onClick)="muestraAuditoriaRegistro()" />
       <p-button id="btnGrdPer00195" icon="pi pi-info-circle" pTooltip="Información del objeto actual"
@@ -19,10 +19,10 @@
     </ng-template>
 
     <ng-template #end>
-      @if (caracteristicaMessage()?.visible) {
+      @if (barraMessage()?.visible) {
       <div class="message-container">
-        <p-message [severity]="caracteristicaMessage()!.severity" [icon]="caracteristicaMessage()!.icon">
-          {{ caracteristicaMessage()!.text }}
+        <p-message [severity]="barraMessage()!.severity" [icon]="barraMessage()!.icon">
+          {{ barraMessage()!.text }}
         </p-message>
       </div>
       }
@@ -32,7 +32,7 @@
   <!-- ===================================== -->
   <!-- LISTADO IDENTIFICACIONES -->
   <!-- ===================================== -->
-  <p-table id="GrdPer0019" [value]="caracteristicas()" editMode="row" selectionMode="multiple"
+  <p-table id="GrdPer0019" [value]="fila()" editMode="row" selectionMode="multiple"
     [(selection)]="selectedRows" [metaKeySelection]="metaKey" dataKey="idCaracteristica" class="p-datatable-sm"
     [paginator]="true" [rows]="10" showGridlines [size]="'small'">
     <!-- HEADER -->
@@ -51,13 +51,13 @@
           <p-cellEditor>
             <!-- INPUT -->
             <ng-template pTemplate="input">
-              <p-select [options]="tipoCaracteristicas()" optionLabel="descripcionTipoCaracteristica"
+              <p-select [options]="tipos()" optionLabel="descripcionTipoCaracteristica"
                 optionValue="idTipoCaracteristica" [filter]="true" [(ngModel)]="rowData.idTipoCaracteristica"
                 placeholder="Seleccione" class="w-full" appendTo="body" />
             </ng-template>
             <!-- OUTPUT -->
             <ng-template pTemplate="output">
-              {{ funciones.obtenerEtiqueta(tipoCaracteristicas(), rowData.idTipoCaracteristica, 'tipoCaracteristica') }}
+              {{ funciones.obtenerEtiqueta(tipos(), rowData.idTipoCaracteristica, 'tipoCaracteristica') }}
             </ng-template>
           </p-cellEditor>
         </td>
@@ -79,12 +79,12 @@
           <button pButton [id]="'btnGrdPer00195' + rowData.idCaracteristica" pInitEditableRow icon="pi pi-pencil" text
             rounded severity="primary"></button>
           <button pButton [id]="'btnGrdPer00196' + rowData.idCaracteristica" icon="pi pi-trash" text rounded
-            severity="danger" (click)="eliminarCaracteristica(rowData)"></button>
+            severity="danger" (click)="eliminarFila(rowData)"></button>
           }
           <!-- GUARDAR / CANCELAR -->
           @if (editing) {
           <button pButton [id]="'btnGrdPer00197' + rowData.idCaracteristica" pSaveEditableRow icon="pi pi-check" text
-            rounded severity="success" class="mr-1" (click)="saveCaracteristica(rowData)"></button>
+            rounded severity="success" class="mr-1" (click)="saveData(rowData)"></button>
           <button pButton [id]="'btnGrdPer00198' + rowData.idCaracteristica" pCancelEditableRow icon="pi pi-times" text
             rounded severity="danger"></button>
           }

@@ -5,66 +5,74 @@
   <ng-template #center>
     <p-iconfield iconPosition="left">
       <p-inputicon class="pi pi-search" />
-      <input type="text" pInputText placeholder="Search" #searchInput (change)="buscarPersona(searchInput.value)" />
+      <input
+        type="text"
+        pInputText
+        placeholder="Search"
+        #searchInput
+        (change)="buscarPersona(searchInput.value)"
+      />
     </p-iconfield>
   </ng-template>
   <ng-template #end>
     @if (busquedaMessage()?.visible) {
-    <div class="message-container">
-      <p-message [severity]="busquedaMessage()!.severity" [icon]="busquedaMessage()!.icon">
-        {{ busquedaMessage()!.text }}
-      </p-message>
-    </div>
+      <div class="message-container">
+        <p-message [severity]="busquedaMessage()!.severity" [icon]="busquedaMessage()!.icon">
+          {{ busquedaMessage()!.text }}
+        </p-message>
+      </div>
     }
   </ng-template>
 </p-toolbar>
 <p-toast></p-toast>
 
-@if(loading()){
-<div class="flex justify-center">
-  <p-progress-spinner ariaLabel="loading" />
-</div>
-} @else {
-<div class="grid m-3">
-
-  @for (persona of personas(); track persona.idPersona) {
-  <div class="col-12 md:col-6 lg:col-4 xl:col-3">
-    <p-card class="resultado-card h-full cursor-pointer" (click)="seleccionarPersona(persona)">
-      <ng-template #title>
-        <div class="font-semibold text-sm">
-          {{ persona.razonSocial }}
-        </div>
-      </ng-template>
-      <div class="text-sm">
-        <div>
-          <span class="font-semibold">Código:</span>
-          {{ persona.idPersona }}
-        </div>
-        <div>
-          <span class="font-semibold">Estado:</span>
-          <span class="font-semibold" [style.color]="persona.estadoPersona === 'A' ? '#4caf50' : '#f44336'">
-            {{ persona.estadoPersona === 'A' ? 'ACTIVO' : 'INACTIVO' }}
-          </span>
-        </div>
-        <div>
-          <span class="font-semibold">Nombre comercial:</span>
-          {{ persona.nombreComercial }}
-        </div>
-        <div>
-          <span class="font-semibold">Tipo de persona:</span>
-          {{ persona.nombreTipoPersona }}
-        </div>
-        <div>
-          <span class="font-semibold">Identificación:</span>
-          {{ persona.identificacion }}
-        </div>
-        <div>
-          <span class="font-semibold">Telf.:</span>
-          {{ persona.telefono }}
-        </div>
-      </div>
-    </p-card>
+@if (loading()) {
+  <div class="flex justify-center">
+    <p-progress-spinner ariaLabel="loading" />
   </div>
-  }
-</div>
+} @else {
+  <div class="grid m-3">
+    @for (persona of personas(); track persona.idPersona) {
+      <div class="col-12 md:col-6 lg:col-4 xl:col-3">
+        <p-card class="resultado-card h-full cursor-pointer" (click)="seleccionarPersona(persona)">
+          <ng-template #title>
+            <div class="font-semibold text-sm">
+              {{ persona.razonSocial }}
+            </div>
+          </ng-template>
+          <div class="text-sm">
+            <div>
+              <span class="font-semibold">Código:</span>
+              {{ persona.idPersona }}
+            </div>
+            <div>
+              <span class="font-semibold">Estado:</span>
+              <span
+                class="font-semibold"
+                [style.color]="persona.estadoPersona === 'A' ? '#4caf50' : '#f44336'"
+              >
+                {{ persona.estadoPersona === 'A' ? 'ACTIVO' : 'INACTIVO' }}
+              </span>
+            </div>
+            <div>
+              <span class="font-semibold">Nombre comercial:</span>
+              {{ persona.nombreComercial }}
+            </div>
+            <div>
+              <span class="font-semibold">Tipo de persona:</span>
+              {{ persona.nombreTipoPersona }}
+            </div>
+            <div>
+              <span class="font-semibold">Identificación:</span>
+              {{ persona.identificacion }}
+            </div>
+            <div>
+              <span class="font-semibold">Telf.:</span>
+              {{ persona.telefono }}
+            </div>
+          </div>
+        </p-card>
+      </div>
+    }
+  </div>
 }

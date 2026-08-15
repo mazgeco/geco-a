@@ -1,13 +1,19 @@
+export interface ProveedoresResponse {
+  status: string;
+  message: string;
+  data: Proveedores[];
+}
+
 export interface Proveedores {
   idProveedor: number;
   idOperacion?: number;
   idPersona: number;
-  nombreProveedor: string;
+  nombrePersona: string;
   idTipoRetencionIr?: number;
   idTipoRetencionIva?: number;
   idConceptoRetencion?: number;
-  estadoProveedor: EstadoProveedor;
-  esInterno: Opcion;
+  estadoProveedor: string;
+  esInterno?: string;
   tipoIdentificacionAts?: string;
   diasFechaMax?: number;
   diasTimeLimit?: number;
@@ -15,14 +21,4 @@ export interface Proveedores {
   fechaCrea: string;
   idUsuarioModifica?: string;
   fechaModifica?: string;
-}
-
-export enum Opcion {
-  N = "N",
-  S = "S",
-}
-
-export enum EstadoProveedor {
-  A = "A",
-  I = "I",
 }

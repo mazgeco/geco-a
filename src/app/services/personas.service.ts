@@ -9,6 +9,8 @@ import {
   Denominaciones,
   Direcciones,
   DireccionesResponse,
+  FichasMedicas,
+  FichasMedicasResponse,
   GraficosResponse,
   Identificaciones,
   IdentificacionesResponse,
@@ -26,6 +28,8 @@ import {
   TipoDirecciones,
   TipoDireccionesResponse,
   TipoEmpresas,
+  TipoFichasMedicas,
+  TipoFichasMedicasResponse,
   TipoIdentificaciones,
   TipoIdentificacionesResponse,
   TipoTelefonos,
@@ -334,8 +338,8 @@ export class PersonasService {
     return this.http.get<TipoCaracteristicasResponse>(`${this.apiUrl}personas/tipocaracteristicas`);
   }
 
-  grabaTipoCaracteristica(tipoCaracteristica: TipoCaracteristicas): Observable<SavedRow> {
-    if (tipoCaracteristica.idTipoCaracteristica === 0) {
+  grabaTipoCaracteristica(tipoCaracteristica: TipoCaracteristicas, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
       tipoCaracteristica.idTipoCaracteristica = null;
       return this.http.post<SavedRow>(
         `${this.apiUrl}personas/${this.idUsuario}/tipocaracteristicas`,
@@ -358,14 +362,13 @@ export class PersonasService {
     });
   }
 
-
   listaCaracteristicas(idPersona: number): Observable<CaracteristicasResponse> {
     return this.http.get<CaracteristicasResponse>(
       `${this.apiUrl}personas/${idPersona}/caracteristicas`,
     );
   }
 
-  grabaCaracteritica(caracteristica: Caracteristicas): Observable<SavedRow> {
+  grabaCaracteristica(caracteristica: Caracteristicas): Observable<SavedRow> {
     if (caracteristica.idCaracteristica === 0) {
       caracteristica.idCaracteristica = null;
       return this.http.post<SavedRow>(
@@ -388,4 +391,62 @@ export class PersonasService {
       params,
     });
   }
+
+  listaTiposFichasMedicas(): Observable<TipoFichasMedicasResponse> {
+    return this.http.get<TipoFichasMedicasResponse>(`${this.apiUrl}personas/tipofichasmedicas`);
+  }
+
+  grabaTipoFichaMedica(tipoFichaMedica: TipoFichasMedicas, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/tipofichasmedicas`,
+        tipoFichaMedica,
+      );
+    } else {
+      const params = new HttpParams().set('idTipoFichaMedica', tipoFichaMedica.idTipoFichaMedica!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/tipofichasmedicas`,
+        tipoFichaMedica,
+        { params },
+      );
+    }
+  }
+
+  eliminaTipoFichaMedica(idTipoFichaMedica: string): Observable<SavedRow> {
+    const params = new HttpParams().set('idTipoFichaMedica', idTipoFichaMedica!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/tipofichasmedicas`, {
+      params,
+    });
+  }
+
+  listaFichasMedicas(idPersona: number): Observable<FichasMedicasResponse> {
+    return this.http.get<FichasMedicasResponse>(
+      `${this.apiUrl}personas/${idPersona}/fichasmedicas`,
+    );
+  }
+
+  grabaFichaMedica(fichaMedica: FichasMedicas): Observable<SavedRow> {
+    if (fichaMedica.idFichaMedica === 0) {
+      fichaMedica.idFichaMedica = null;
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/fichasmedicas`,
+        fichaMedica,
+      );
+    } else {
+      const params = new HttpParams().set('idFichaMedica', fichaMedica.idFichaMedica!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/fichasmedicas`,
+        fichaMedica,
+        { params },
+      );
+    }
+  }
+
+  eliminaFichaMedica(idFichaMedica: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idFichaMedica', idFichaMedica!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/fichasmedicas`, {
+      params,
+    });
+  }
+
 }

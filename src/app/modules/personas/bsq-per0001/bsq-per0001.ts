@@ -14,13 +14,13 @@ import { StatusMessage } from '../../../interfaces/general.interface';
   styleUrl: './bsq-per0001.css',
 })
 export class BsqPer0001 {
-
   router = inject(Router);
-  personasService = inject(PersonasService)
   toastService = inject(ToastService);
-  personas = signal<Personas[]>([]);
   loading = signal<boolean>(false);
   notificacion = signal<string>("");
+  
+  personasService = inject(PersonasService);
+  personas = signal<Personas[]>([]);
 
   //Variables para manejo de mensajes
   messageService = inject(MessageService);
@@ -66,6 +66,4 @@ export class BsqPer0001 {
     this.messageService.clearAllTimers();
     this.router.navigate(['/personas/persona/', persona.idPersona]);
   }
-
-
 }
