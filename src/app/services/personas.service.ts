@@ -196,8 +196,8 @@ export class PersonasService {
     );
   }
 
-  grabaIdentificacion(identificacion: Identificaciones): Observable<SavedRow> {
-    if (identificacion.idIdentificacion === 0) {
+  grabaIdentificacion(identificacion: Identificaciones, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
       identificacion.idIdentificacion = null;
       return this.http.post<SavedRow>(
         `${this.apiUrl}personas/${this.idUsuario}/identificaciones`,

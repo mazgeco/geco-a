@@ -12,8 +12,7 @@ import { ToastService } from '../../../../services/toast.service';
 @Component({
   selector: 'app-grd-per0019',
   imports: [...PRIMENG_MODULES, NgClass],
-  templateUrl: './grd-per0019.html',
-  styleUrl: './grd-per0019.css',
+  templateUrl: './grd-per0019.html'
 })
 export class GrdPer0019 implements OnInit {
   //LLAMADA AL ID Master

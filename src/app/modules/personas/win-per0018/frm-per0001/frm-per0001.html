@@ -61,12 +61,14 @@
       <!-- Tipo Persona -->
       <div class="field mb-2">
         <div class="field mb-1">
-          <label for="tipoPersona">Tipo persona</label>
+          <label for="tipoPersona">Tipo persona <span class="asterisco">*</span></label>
           <p-select
             class="w-full"
             [options]="tipoPersona()"
             [disabled]="esActivo()"
             formControlName="tipoPersona"
+            pTooltip="Indica si es una persona natural o jurídica"
+            tooltipPosition="bottom"
             optionLabel="etiqueta"
             optionValue="codigo"
           ></p-select>
@@ -75,7 +77,7 @@
       @if (tipoPersonaActual === 'J') {
         <!-- Razón Social -->
         <div class="field mb-1">
-          <label for="razonSocial"> Razón social </label>
+          <label for="razonSocial"> Razón social <span class="asterisco">*</span></label>
           <input
             id="razonSocial"
             type="text"
@@ -111,7 +113,7 @@
 
           <div class="col-12 md:col-6">
             <div class="field mb-1">
-              <label>Nombre 1</label>
+              <label>Nombre 1 <span class="asterisco">*</span></label>
               <input pInputText class="w-full" formControlName="nombre1" [readOnly]="esActivo()" />
             </div>
           </div>
@@ -129,7 +131,7 @@
 
           <div class="col-12 md:col-6">
             <div class="field mb-1">
-              <label>Apellido 1</label>
+              <label>Apellido 1 <span class="asterisco">*</span></label>
               <input
                 pInputText
                 class="w-full"

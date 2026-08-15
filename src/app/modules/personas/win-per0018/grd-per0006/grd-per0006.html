@@ -73,7 +73,7 @@
                 <!-- ======================= -->
                 <div class="col-12 md:col-6">
                   <div class="field mb-1">
-                    <label>Tipo de dirección</label>
+                    <label>Tipo de dirección <span class="asterisco">*</span></label>
                     <p-select
                       [options]="tiposDireccion()"
                       optionLabel="descripcionTipoDireccion"
@@ -98,7 +98,7 @@
                 <!-- ======================= -->
                 <div class="col-12 md:col-6">
                   <div class="field mb-1">
-                    <label>Ciudad</label>
+                    <label>Ciudad <span class="asterisco">*</span></label>
                     <p-select
                       [options]="ciudades()"
                       optionLabel="descripcionCiudad"
@@ -112,7 +112,7 @@
                 </div>
                 <div class="col-12 md:col-6">
                   <div class="field mb-1">
-                    <label>Sector</label>
+                    <label>Sector <span class="asterisco">*</span></label>
                     <input pInputText class="w-full" [(ngModel)]="rowData.sector" name="sector{{rowData.idDireccion}}">
                   </div>
                 </div>
@@ -121,7 +121,7 @@
                 <!-- ======================= -->
                 <div class="col-12 md:col-6">
                   <div class="field mb-1">
-                    <label>Código alfanumérico</label>
+                    <label>Código alfanumérico <span class="asterisco">*</span></label>
                     <input pInputText class="w-full" [(ngModel)]="rowData.nroCasaOEdificio"
                       name="nroCasaOEdificio{{rowData.idDireccion}}">
                   </div>
@@ -137,7 +137,7 @@
                 <!-- ======================= -->
                 <div class="col-12 md:col-6">
                   <div class="field mb-1">
-                    <label>Calle principal</label>
+                    <label>Calle principal <span class="asterisco">*</span></label>
                     <input pInputText class="w-full" [(ngModel)]="rowData.callePrincipal"
                       name="callePrincipal{{rowData.idDireccion}}">
                   </div>

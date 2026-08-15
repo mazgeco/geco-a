@@ -2,11 +2,11 @@
   <p-toolbar>
     <ng-template #start>
       <p-button id="btnGrdPer00101" icon="pi pi-plus" class="mr-1" label="Insertar" pTooltip="Inserta una fila"
-        tooltipPosition="bottom" (onClick)="insertarIdentificacion()" />
+        tooltipPosition="bottom" (onClick)="insertarFila()" />
       <p-button id="btnGrdPer00102" icon="pi pi-trash" class="mr-1" label="Eliminar"
         pTooltip="Elimina varias filas seleccionadas" tooltipPosition="bottom" (onClick)="eliminarVarias()" />
       <p-button id="btnGrdPer00103" icon="pi pi-refresh" class="mr-1" pTooltip="Refresca los datos del grid"
-        tooltipPosition="bottom" (onClick)="cargaIdentificaciones()" />
+        tooltipPosition="bottom" (onClick)="cargaDatos()" />
       <p-button id="btnGrdPer00104" icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual"
         tooltipPosition="bottom" (onClick)="muestraAuditoriaRegistro()" />
       <p-button id="btnGrdPer00105" icon="pi pi-info-circle" pTooltip="Información del objeto actual"
@@ -19,10 +19,10 @@
     </ng-template>
 
     <ng-template #end>
-      @if (identificacionMessage()?.visible) {
+      @if (barraMessage()?.visible) {
       <div class="message-container">
-        <p-message [severity]="identificacionMessage()!.severity" [icon]="identificacionMessage()!.icon">
-          {{ identificacionMessage()!.text }}
+        <p-message [severity]="barraMessage()!.severity" [icon]="barraMessage()!.icon">
+          {{ barraMessage()!.text }}
         </p-message>
       </div>
       }
@@ -32,14 +32,15 @@
   <!-- ===================================== -->
   <!-- LISTADO IDENTIFICACIONES -->
   <!-- ===================================== -->
-  <p-table id="grdPer0010" [value]="identificaciones()" editMode="row" selectionMode="multiple"
+  <p-table id="grdPer0010" [value]="filas()" editMode="row" selectionMode="multiple"
     [(selection)]="selectedRows" [metaKeySelection]="metaKey" dataKey="idIdentificacion" class="p-datatable-sm"
     [paginator]="true" [rows]="10" showGridlines [size]="'small'">
     <!-- HEADER -->
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 25%">Tipo</th>
-        <th style="width: 30%">Identificación</th>
+        <th style="width: 10%">Código <span class="asterisco">*</span></th>
+        <th style="width: 20%">Tipo <span class="asterisco">*</span></th>
+        <th style="width: 25%">Identificación <span class="asterisco">*</span></th>
         <th style="width: 25%">Fecha caducidad</th>
         <th style="width: 10%">Preferido</th>
         <th style="width: 10%"></th>
@@ -48,6 +49,9 @@
     <!-- BODY -->
     <ng-template pTemplate="body" let-rowData let-editing="editing" let-rowIndex="rowIndex">
       <tr [pEditableRow]="rowData" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+        <td>
+          {{ rowData.idIdentificacion }}
+        </td>
         <!-- TIPO -->
         <td>
           <p-cellEditor>
@@ -105,12 +109,12 @@
           <button pButton [id]="'btnGrdPer00106' + rowData.idIdentificacion" pInitEditableRow icon="pi pi-pencil" text
             rounded severity="primary"></button>
           <button pButton [id]="'btnGrdPer00107' + rowData.idIdentificacion" icon="pi pi-trash" text rounded
-            severity="danger" (click)="eliminarIdentificacion(rowData)"></button>
+            severity="danger" (click)="eliminarFila(rowData)"></button>
           }
           <!-- GUARDAR / CANCELAR -->
           @if (editing) {
           <button pButton [id]="'btnGrdPer00108' + rowData.idIdentificacion" pSaveEditableRow icon="pi pi-check" text
-            rounded severity="success" class="mr-1" (click)="saveIdentificacion(rowData)"></button>
+            rounded severity="success" class="mr-1" (click)="saveRow(rowData)"></button>
           <button pButton [id]="'btnGrdPer00109' + rowData.idIdentificacion" pCancelEditableRow icon="pi pi-times" text
             rounded severity="danger"></button>
           }

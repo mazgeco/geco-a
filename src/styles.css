@@ -35,6 +35,10 @@ body {
   background-color: #eeeeee !important;
 }
 
+textarea[pTextarea] {
+  font-size: 0.8rem;
+}
+
 .p-select-label {
   padding: 0.2rem 0.6rem !important;
   font-size: 0.8rem !important;
@@ -57,4 +61,15 @@ body {
 
 .message-container {
     height: 25px; /* la altura del mensaje */
+}
+
+.topName {
+  font-size: large;
+}
+
+.estado {
+  text-align: right;
+}
+.asterisco {
+  color: red;
 }

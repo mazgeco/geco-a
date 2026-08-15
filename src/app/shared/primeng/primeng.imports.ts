@@ -32,6 +32,7 @@ import { ListboxModule } from 'primeng/listbox';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToggleSwitch  } from 'primeng/toggleswitch'
+import { Editor, EditorModule } from 'primeng/editor'
 
 export const PRIMENG_MODULES = [
   ButtonModule,
@@ -41,6 +42,7 @@ export const PRIMENG_MODULES = [
   ConfirmDialogModule,
   DialogModule,
   DatePickerModule,
+  Editor,
   FileUploadModule,
   FieldsetModule,
   FormsModule,

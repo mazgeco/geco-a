@@ -13,8 +13,7 @@ import { TipoCaracteristicas } from '../../../../interfaces/personas.interfaces'
   selector: 'app-grd-per0020',
   imports: [...PRIMENG_MODULES],
   providers: [ConfirmationService],
-  templateUrl: './grd-per0020.html',
-  styles: ``,
+  templateUrl: './grd-per0020.html'
 })
 export class GrdPer0020 implements OnInit {
   /******************************************************************************************
@@ -188,7 +187,7 @@ export class GrdPer0020 implements OnInit {
   }
 
   //MÉTODO QUE ELIMINA VARIAS FILAS SELECCIONADAS DEL GRID
-  eliminarVariasFilas(): void {
+  eliminarVarias(): void {
     const selected = this.selectedRows;
     if (selected.length > 0) {
       this.confirmationService.confirm({

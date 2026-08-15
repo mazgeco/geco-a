@@ -1,11 +1,3 @@
-.razonSocial {
-  font-size: large;
-}
-
-.estado {
-  text-align: right;
-}
-
 .form-container {
   display: flex;
   flex-direction: column;
