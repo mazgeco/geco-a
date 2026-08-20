@@ -62,6 +62,11 @@ export enum MedidaCalculoPrecio {
     U = "U",
 }
 
+export enum IdiomaPorItinerario {
+    ES = "ES",
+    EN = "EN",
+}
+
 
 
 
@@ -87,6 +92,48 @@ export interface ListaTipoProductoResponse {
 export interface NombreTipoProducto {
   idTipoProducto: number;
  descripcionTipoProducto: string;
+}
+
+export interface DiaItinerario {
+  idItinerario: number;
+  idProducto: string;
+  diaItinerario: number;
+  imagenItinerario?: string;
+  idUnidadEstrategicaItinerario?: number;
+  idUsuarioCrea?: string;
+  fechaCrea?: string;
+  idUsuarioModifica?: string;
+  fechaModifica?: string;
+}
+
+export interface ItinerarioResponse {
+  status: string;
+  message: string;
+  data: DiaItinerario[];
+}
+
+export interface IdiomaXItinerario {
+  idIdiomaXItinerario: number;
+  idIdioma: string;
+  idTipoInclusion: number;
+  idItinerario: number;
+  descripcionItinerario: string;
+  origen: string;
+  destino: string;
+  actividad: string;
+  duracionItinerario: string;
+  observaciones: string;
+  idUsuarioCrea?: string;
+  fechaCrea?: string;
+  idUsuarioModifica?: string;
+  fechaModifica?: string;
+}
+
+// Y su respectiva respuesta si el backend devuelve esto como lista
+export interface RespuestaIdiomaItinerario {
+  status: string;
+  message: string;
+  data: IdiomaXItinerario[]; 
 }
 
 //COMPONENTES INSUMOS

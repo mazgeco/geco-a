@@ -2,6 +2,7 @@
 import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 //Imports generales
 import { Combo } from '../../../../interfaces/general.interface';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
@@ -14,6 +15,7 @@ import { ProductosService } from '../../../../services/productos.service';
 import { FuntionsService } from '../../../../services/functions.service';
 import { StatusMessage } from '../../../../interfaces/general.interface';
 import { StateService } from '../state-service';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-frm-prd0006',
@@ -48,11 +50,12 @@ export class FrmPrd0006 implements OnInit {
   private toastService = inject(ToastService);
   private confirmationService = inject(ConfirmationService);
   private fb = inject(FormBuilder);
+  private router = inject(Router);
 
    //VARIABLES PARA EL MANEJO DE LOS MENSAJES
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
-  personaMessage = computed(() =>
+  productoMessage = computed(() =>
     this.messageService.obtener(this.statusMessages, 'msgFrmPrd0006'),
   );
 
@@ -192,7 +195,21 @@ export class FrmPrd0006 implements OnInit {
 
     //Carga los datos del producto consultada
        this.cargaProducto(this.idProducto);
-   
+
+
+   // 1. EL AUTOGUARDADO (Replicando el estándar del sistema)
+    this.frmPrd0006.valueChanges.pipe(
+      debounceTime(500)
+    ).subscribe((producto) => {
+     
+      // Solo guardamos si al menos ya seleccionaron un Tipo de Producto 
+      if (producto.idTipoProducto) {
+        console.log('Autoguardando en segundo plano...', producto);
+        
+        // ¡Llamamos a la función centralizada!
+        this.saveForm(producto as Productos);
+      }
+    });
   }
 
 
@@ -284,6 +301,39 @@ export class FrmPrd0006 implements OnInit {
       }));
     }
   }
+
+
+
+  // 3. EL GUARDADO CENTRAL (Ejecutado por el autoguardado)
+ saveForm(producto: Productos): void {
+    const idActual = this.frmPrd0006.get('idProducto')?.value || '';
+
+    this.productosService.grabaProducto(idActual, producto).subscribe({
+      next: (resp) => {
+        // --- 1. BLOQUE DE CREACIÓN NUEVA ---
+        if (resp && resp.idNoSecuencial && (!idActual || idActual === '0' || idActual === '')) {
+          this.idProducto = resp.idNoSecuencial;
+          this.frmPrd0006.patchValue({ idProducto: resp.idNoSecuencial }, { emitEvent: false }); 
+          this.router.navigate(['/productos/producto', resp.idNoSecuencial], { replaceUrl: true });
+        } 
+
+        // --- 2. ACTUALIZAR EL NOMBRE EN LA CABECERA ---
+        this.stateService.producto.set(producto);
+
+        // --- 3. MENSAJE EN EL TOOLBAR ---
+        this.messageService.mostrar(
+          this.statusMessages,
+          'msgFrmPrd0006',
+          'success',
+          'Dato grabado correctamente.'
+        );
+      },
+      error: (err) => {
+        console.error('Error al grabar:', err);
+      }
+    });
+  }
 }
+
 
 

@@ -43,7 +43,13 @@
     </ng-template>
 
     <ng-template #end>
-      <span></span>
+       @if (productoMessage()?.visible) {
+        <div class="message-container">
+          <p-message [severity]="productoMessage()!.severity" [icon]="productoMessage()!.icon">
+            {{ productoMessage()!.text }}
+          </p-message>
+        </div>
+      }
     </ng-template>
   </p-toolbar>
   <form id="frmPrd0006" class="grid m-0" [formGroup]="frmPrd0006">
@@ -120,7 +126,8 @@
             <label>Descripción del Producto</label>
             <textarea
               pTextarea
-              row="5"
+              [autoResize]="true"
+              rows="4"
               class="w-full"
               formControlName="descripcionProducto"
               [readOnly]="esActivo()"
@@ -307,7 +314,7 @@
         <div class="col-12">
           <div class="field mb-1">
             <label>Notas:</label>
-            <textarea pTextarea rows="4" class="w-full" formControlName="notas"> </textarea>
+            <textarea pTextarea [autoResize]="true" rows="4" class="w-full" formControlName="notas"> </textarea>
           </div>
         </div>
       </div>

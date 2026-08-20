@@ -32,7 +32,11 @@ export class WinPrd0006 implements OnInit {
 
   ngOnInit(): void {
     //Toma el dato enviado por el router para colocar en el id principal
-    this.idProducto.set(this.route.snapshot.paramMap.get('id') || '0');
+    //this.idProducto.set(this.route.snapshot.paramMap.get('id') || '0');
+    this.route.paramMap.subscribe(params => {
+      const nuevoId = params.get('id') || '0';
+      this.idProducto.set(nuevoId);
+    });
   }
 
 }

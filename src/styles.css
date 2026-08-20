@@ -73,3 +73,9 @@ textarea[pTextarea] {
 .asterisco {
   color: red;
 }
+
+/* Forzar al editor de PrimeNG a usar la fuente de la aplicación */
+.ql-container .ql-editor {
+    font-family: 'Poppins', sans-serif; 
+    font-size: 0.8rem !important; /* Ajusta este valor si lo ves muy pequeño o grande */
+}

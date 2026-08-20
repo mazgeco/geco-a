@@ -1,0 +1,21 @@
+/* Altura de la barra horizontal para que sea fácil de agarrar con el mouse */
+.overflow-x-auto::-webkit-scrollbar {
+    height: 8px; 
+}
+
+/* Fondo transparente para la pista por donde se mueve */
+.overflow-x-auto::-webkit-scrollbar-track {
+    background: transparent;
+    margin-top: 5px;
+}
+
+/* El "pulgar" o barra deslizable con bordes redondeados */
+.overflow-x-auto::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1; /* Un gris muy suave y elegante */
+    border-radius: 10px;
+}
+
+/* Efecto al pasar el cursor por encima para indicar que es interactivo */
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8; 
+}

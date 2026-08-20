@@ -22,11 +22,11 @@
         <!-- ========================================== -->
         <!-- CARRUSEL DE DÍAS (Tarjetas Cuadradas)      -->
         <!-- ========================================== -->
-        <div class="flex align-items-center gap-3 mb-5 overflow-x-auto p-3 border-1 surface-border border-round surface-ground">
-            
+         <div class="flex align-items-center gap-3 mb-5 overflow-x-auto p-3 border-1 surface-border border-round surface-ground" 
+     style="width: 0; min-width: 100%;">
             @for (dia of dias(); track dia; let last = $last) {
                 <!-- Tarjeta de Día (Ahora cuadrada: 80x80) -->
-                <div (click)="cambiarDia(dia)" 
+                <div (click)="seleccionarDia(dia)" 
                      class="flex flex-column align-items-center justify-content-center border-round cursor-pointer transition-colors transition-duration-150 flex-shrink-0"
                      [class.bg-primary]="diaActivo() === dia"
                      [class.border-1]="diaActivo() !== dia"
@@ -44,12 +44,13 @@
                 </div>
                 
                 <!-- Flecha Separadora -->
-                @if (!last) {
+                <!-- @if (!last) {
                     <i class="pi pi-angle-right text-400 text-xl font-bold flex-shrink-0"></i>
-                }
+                } -->
             }
 
         </div>
+         
 
         <!-- ========================================== -->
         <!-- CONTENEDOR DE DOS COLUMNAS                 -->
@@ -69,8 +70,21 @@
                     <!-- Formulario Ficha -->
                     <div class="grid formgrid">
                         <div class="col-12 mb-3">
+                            <label class="font-medium text-700 block mb-2">Idioma</label>
+                            <p-select
+                                 class="w-full"
+                                [options]="idiomaPorItinerario()"
+                                formControlName="idIdioma"
+                                optionLabel="etiqueta"
+                                optionValue="codigo"
+                                (onChange)="alCambiarIdioma($event.value)"
+                                >
+                            </p-select>
+                        </div>
+                        <div class="col-12 mb-3">
                             <label class="font-medium text-700 block mb-2">Descripción</label>
-                            <input pInputText class="w-full" formControlName="descripcion" />
+                            <p-editor formControlName="descripcion" [style]="{'height': '250px'}">
+                            </p-editor>      
                         </div>
                         <div class="col-12 md:col-6 mb-3">
                             <label class="font-medium text-700 block mb-2">Origen</label>
@@ -84,11 +98,11 @@
                             <label class="font-medium text-700 block mb-2">Actividad</label>
                             <textarea pTextarea rows="3" class="w-full" formControlName="actividad"></textarea>
                         </div>
-                        <div class="col-12 mb-3">
-                            <label class="font-medium text-700 block mb-2">Observación</label>
-                            <textarea pTextarea rows="3" class="w-full" formControlName="observacion"></textarea>
+                         <div class="col-12 mb-3">
+                            <label class="font-medium text-700 block mb-2">Duración</label>
+                            <input pInputText class="w-full" formControlName="duracionItinerario" />
                         </div>
-                        <div class="col-12">
+                         <div class="col-12 mb-3">
                             <label class="font-medium text-700 block mb-3">Comidas Incluidas</label>
                             <div class="flex flex-wrap gap-4">
                                 <div class="flex align-items-center">
@@ -105,6 +119,12 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 mb-3">
+                            <label class="font-medium text-700 block mb-2">Observación</label>
+                            <p-editor formControlName="observacion" [style]="{'height': '250px'}">
+                            </p-editor>  
+                        </div>
+                       
                     </div>
 
                 </div>
