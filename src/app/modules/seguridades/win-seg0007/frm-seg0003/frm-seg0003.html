@@ -1,0 +1,143 @@
+<p-toast />
+<p-confirmdialog />
+<app-catalog-dialog />
+
+<div class="col-12">
+  <p-toolbar>
+    <ng-template #start>
+      @if (esActivo()) {
+        <p-button
+          icon="pi pi-check"
+          class="mr-1"
+          label="Inactivar"
+          pTooltip="Inactiva a la persona"
+          tooltipPosition="bottom"
+          (onClick)="cambiarEstado(EstadoUsuario.I)"
+        />
+      } @else {
+        <p-button
+          icon="pi pi-check"
+          class="mr-1"
+          label="Activar"
+          pTooltip="Activa a la persona"
+          tooltipPosition="bottom"
+          (onClick)="cambiarEstado(EstadoUsuario.A)"
+        />
+      }
+      <p-button
+        icon="pi pi-user"
+        class="mr-1"
+        pTooltip="Auditoría del registro actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraAuditoria(idUsuario, idTabla(), currentData)"
+      />
+      <p-button
+        icon="pi pi-info-circle"
+        pTooltip="Información del objeto actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
+      />
+    </ng-template>
+
+    <ng-template #center>
+      <span></span>
+    </ng-template>
+
+    <ng-template #end>
+      @if (usuarioMessage()?.visible) {
+        <div class="message-container">
+          <p-message [severity]="usuarioMessage()!.severity" [icon]="usuarioMessage()!.icon">
+            {{ usuarioMessage()!.text }}
+          </p-message>
+        </div>
+      }
+    </ng-template>
+  </p-toolbar>
+  <form id="frmSeg0003" class="grid m-0" [formGroup]="frmSeg0003">
+    <p-panel class="col-12">
+      <div class="grid">
+        <!-- ======================= -->
+        <!-- FILA 1 -->
+        <!-- ======================= -->
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Persona <span class="asterisco">*</span></label>
+            <input pInputText class="w-full" formControlName="idPersona" [readOnly]="esActivo()" />
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Forzar cambio clave</label>
+            <p-select
+                class="w-full"
+                [options]="opcionSN()"
+                formControlName="cambiaClave"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+          </div>
+        </div>
+
+        <!-- ======================= -->
+        <!-- FILA 2 -->
+        <!-- ======================= -->
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Código usuario <span class="asterisco">*</span></label>
+            <input pInputText class="w-full" formControlName="idUsuario" [readOnly]="true" />
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Operación</label>
+            <p-select
+                class="w-full"
+                [options]="opcionSN()"
+                formControlName="cambiaClave"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+          </div>
+        </div>
+
+        <!-- ======================= -->
+        <!-- FILA 3 -->
+        <!-- ======================= -->  
+        
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Perfil <span class="asterisco">*</span></label>
+            <p-select
+                class="w-full"
+                [options]="opcionSN()"
+                [disabled]="esActivo()"
+                formControlName="cambiaClave"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Ver solo productos operación</label>
+            <p-select
+                class="w-full"
+                [options]="opcionSN()"
+                formControlName="cambiaClave"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+          </div>
+        </div>
+
+
+
+      </div>
+    </p-panel>
+  </form>
+</div>

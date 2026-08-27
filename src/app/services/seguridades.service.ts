@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 import { SavedRow } from '../interfaces/general.interface';
-import { UsuariosResponse } from '../interfaces/seguridades.interface';
+import { ListaUsuariosResponse, UsuariosResponse } from '../interfaces/seguridades.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,14 @@ export class SeguridadesService {
   private apiUrl = environment.apiUrl;
   private idUsuario = 'mgzapata';
 
-  buscaUsuario(nombre: string): Observable<UsuariosResponse> {
-    return this.http.get<UsuariosResponse>(`${this.apiUrl}seguridades/usuarios/busqueda?nombre=${nombre}`);
+  buscaUsuario(nombre: string): Observable<ListaUsuariosResponse> {
+    return this.http.get<ListaUsuariosResponse>(`${this.apiUrl}seguridades/usuarios/busqueda?nombre=${nombre}`);
   }
+
+  usuarioPorId(idUsuario: string): Observable<UsuariosResponse>{
+    return this.http.get<UsuariosResponse>(`${this.apiUrl}seguridades/usuarios/usuario/${idUsuario}`);
+  }
+
+
+
 }

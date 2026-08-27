@@ -2,8 +2,10 @@
 import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { debounceTime } from 'rxjs';
 //Imports generales
 import { Combo } from '../../../../interfaces/general.interface';
+import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
 import {
   Denominaciones,
   EstadoPersona,
@@ -12,17 +14,15 @@ import {
   Personas,
   TipoEmpresas,
 } from '../../../../interfaces/personas.interfaces';
-import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
 //Servicios propios
 import { ToastService } from '../../../../services/toast.service';
 import { MessageService } from '../../../../services/message.service';
-import { PersonasService } from '../../../../services/personas.service';
 import { FuntionsService } from '../../../../services/functions.service';
 import { StatusMessage } from '../../../../interfaces/general.interface';
-import { StateService } from '../state-service';
+import { StateService } from '../state.service';
 import { CatalogService } from '../../../../services/catalog.service';
 import { CatalogDialogComponent } from '../../../../shared/catalog-dialog-component/catalog-dialog-component';
-import { debounceTime } from 'rxjs';
+import { PersonasService } from '../../../../services/personas.service';
 
 @Component({
   selector: 'app-frm-per0001',
@@ -164,7 +164,7 @@ export class FrmPer0001 implements OnInit {
     },
     {
       updateOn: 'blur',
-    },
+    }
   );
 
   /******************************************************************************************
@@ -393,6 +393,7 @@ export class FrmPer0001 implements OnInit {
     });
   }
 
+  //ABRIR NUEVA PERSONA
   abrirNuevo(tipo: string) {
     const catalogos = {
       NAC: {

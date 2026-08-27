@@ -1,50 +1,38 @@
-export interface UsuariosResponse {
+export interface ListaUsuariosResponse {
   status: string;
   message: string;
   data: Usuarios[];
+}
+
+export interface UsuariosResponse {
+  status: string;
+  message: string;
+  data: Usuarios;
 }
 
 export interface Usuarios {
   idUsuario: string | null;
   idPersona: number;
   idPerfil: string | null;
-  idEmpresa?: number | null;
-  idOperacion?: null;
+  idOperacion: number | null;
   nombrePersona?: string | null;
   superUsuario?: string | null;
-  usuarioCorrector?: string | null;
   estadoUsuario: string | null;
   disparaAlerta1?: string | null;
-  ipValidar?: null;
+  disparaAlerta2?: string | null;
   habilitaColores?: string | null;
   fechaUltimoCambioClave?: Date;
   cambiaClave?: string | null;
-  disparaAlerta2?: string | null;
   regeneraComponentes?: string | null;
   usuarioEmail?: null | string;
   passwordEmail?: null | string;
   firmaEmail?: null | string;
-  accesoBoton?: null;
-  accedeTodoCaso?: string | null;
-  cambiaAgenciaCaso?: string | null;
-  nickEmpresaRelacionada?: null | string;
-  replicaUsuario?: string | null;
-  activaApp?: string | null;
-  accesoBotonApp?: null;
-  cambiaTipoCaso?: string | null;
   ejecutaKardexCompra?: string | null;
   desmayoriza?: string | null;
   modificaFormaPago?: string | null;
-  cambiaReservaCompra?: string | null;
   accesoColumna?: string | null;
   soloProductosOperacion?: string | null;
   token?: string | null;
-  verDashCrm?: string | null;
-  verDashRes?: string | null;
-  verDashFac?: string | null;
-  verDashPrv?: string | null;
-  verDashCrt?: string | null;
-  verDashSeg?: string | null;
   saltaAprobacion?: string | null;
   ingresarRubroPrefactura?: string | null;
   generarPrefactura?: string | null;
@@ -61,4 +49,9 @@ export interface Usuarios {
   fechaCrea?: string | null;
   idUsuarioModifica?: string | null;
   fechaModifica?: string | null;
+}
+
+export enum EstadoUsuario {
+  A = 'A',
+  I = 'I',
 }

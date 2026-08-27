@@ -10,7 +10,7 @@ import { GrdPer0002 } from './grd-per0002/grd-per0002';
 import { GrdPer0008 } from './grd-per0008/grd-per0008';
 import { GrdPer0019 } from './grd-per0019/grd-per0019';
 import { FrmPer0001 } from './frm-per0001/frm-per0001'
-import { StateService } from './state-service';
+import { StateService } from './state.service';
 
 
 @Component({

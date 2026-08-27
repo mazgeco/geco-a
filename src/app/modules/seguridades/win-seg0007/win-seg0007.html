@@ -1,1 +1,22 @@
-<p>win-seg0007 works!</p>
+
+
+<p-toolbar>
+  <ng-template #start>
+    <label class="font-bold">
+      {{ stateService.codigo() }}
+    </label>
+  </ng-template>
+  <ng-template #center>
+    <label class="font-bold topName">
+      {{ stateService.nombre() }}
+    </label>
+  </ng-template>
+  <ng-template #end>
+    <label class="font-bold">
+      {{ stateService.estadoNombre() }}
+    </label>
+  </ng-template>
+</p-toolbar>
+
+<app-frm-seg0003 [idUsuario]="idUsuario()" />
+
