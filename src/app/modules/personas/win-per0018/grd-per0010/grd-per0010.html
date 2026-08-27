@@ -38,9 +38,8 @@
     <!-- HEADER -->
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 10%">Código <span class="asterisco">*</span></th>
-        <th style="width: 20%">Tipo <span class="asterisco">*</span></th>
-        <th style="width: 25%">Identificación <span class="asterisco">*</span></th>
+        <th style="width: 25%">Tipo <span class="asterisco">*</span></th>
+        <th style="width: 30%">Identificación <span class="asterisco">*</span></th>
         <th style="width: 25%">Fecha caducidad</th>
         <th style="width: 10%">Preferido</th>
         <th style="width: 10%"></th>
@@ -49,9 +48,6 @@
     <!-- BODY -->
     <ng-template pTemplate="body" let-rowData let-editing="editing" let-rowIndex="rowIndex">
       <tr [pEditableRow]="rowData" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-        <td>
-          {{ rowData.idIdentificacion }}
-        </td>
         <!-- TIPO -->
         <td>
           <p-cellEditor>
@@ -106,16 +102,16 @@
         <td class="text-center">
           <!-- EDITAR -->
           @if (!editing) {
-          <button pButton [id]="'btnGrdPer00106' + rowData.idIdentificacion" pInitEditableRow icon="pi pi-pencil" text
+          <button pButton [id]="'btnGrdPer00106' + rowIndex" pInitEditableRow icon="pi pi-pencil" text
             rounded severity="primary"></button>
-          <button pButton [id]="'btnGrdPer00107' + rowData.idIdentificacion" icon="pi pi-trash" text rounded
+          <button pButton [id]="'btnGrdPer00107' + rowIndex" icon="pi pi-trash" text rounded
             severity="danger" (click)="eliminarFila(rowData)"></button>
           }
           <!-- GUARDAR / CANCELAR -->
           @if (editing) {
-          <button pButton [id]="'btnGrdPer00108' + rowData.idIdentificacion" pSaveEditableRow icon="pi pi-check" text
+          <button pButton [id]="'btnGrdPer00108' + rowIndex" pSaveEditableRow icon="pi pi-check" text
             rounded severity="success" class="mr-1" (click)="saveRow(rowData)"></button>
-          <button pButton [id]="'btnGrdPer00109' + rowData.idIdentificacion" pCancelEditableRow icon="pi pi-times" text
+          <button pButton [id]="'btnGrdPer00109' + rowIndex" pCancelEditableRow icon="pi pi-times" text
             rounded severity="danger"></button>
           }
         </td>

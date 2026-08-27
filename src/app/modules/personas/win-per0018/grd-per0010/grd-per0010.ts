@@ -34,18 +34,6 @@ export class GrdPer0010 implements OnInit {
   newRow: boolean = false;
   campoId: 'idIdentificacion' = 'idIdentificacion';
   msgName: string = 'msg' + this.idObjeto;
-  nuevaFila: Identificaciones = {
-    idIdentificacion: null, // Id temporal nulo para crear espera que sea null
-    idPersona: this.idPersona,
-    idTipoIdentificacion: '',
-    descripcionIdentificacion: '',
-    fechaCaducidad: null,
-    principalIdentificacion: 'N',
-    idUsuarioCrea: '',
-    fechaCrea: '',
-    idUsuarioModifica: '',
-    fechaModifica: '',
-  };
 
   //INJECTIONS PÚBLICAS
   funciones = inject(FuntionsService);
@@ -56,9 +44,7 @@ export class GrdPer0010 implements OnInit {
   //VARIABLES PARA EL MANEJO DE LOS MENSAJES
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
-  barraMessage = computed(() =>
-    this.messageService.obtener(this.statusMessages, this.msgName),
-  );
+  barraMessage = computed(() => this.messageService.obtener(this.statusMessages, this.msgName));
   //Declaración de variables
   selectedRows!: Identificaciones[];
   metaKey: boolean = true;
@@ -81,9 +67,22 @@ export class GrdPer0010 implements OnInit {
 
   //MÉTODO QUE INSERTA UNA FILA EN EL GRID
   insertarFila(): void {
+    const nuevaFila: Identificaciones = {
+      idIdentificacion: null,
+      idPersona: this.idPersona,
+      idTipoIdentificacion: '',
+      descripcionIdentificacion: '',
+      fechaCaducidad: null,
+      principalIdentificacion: 'N',
+      idUsuarioCrea: '',
+      fechaCrea: '',
+      idUsuarioModifica: '',
+      fechaModifica: '',
+    };
+
     let mensaje = this.funciones.insertRowA(
       this.filas,
-      this.nuevaFila,
+      nuevaFila,
       this.idPersona !== 0,
       'btn' + this.idObjeto() + '60',
     );
@@ -183,9 +182,7 @@ export class GrdPer0010 implements OnInit {
           this.personasService.eliminaIdentificacion(rowData.idIdentificacion!).subscribe({
             next: (resp) => {
               this.filas.set(
-                this.filas().filter(
-                  (item) => item.idIdentificacion != resp.idSecuencial,
-                ),
+                this.filas().filter((item) => item.idIdentificacion != resp.idSecuencial),
               );
               //Envía un mensaje de carga exitosa
               this.messageService.mostrar(
@@ -231,9 +228,7 @@ export class GrdPer0010 implements OnInit {
             this.personasService.eliminaIdentificacion(idIdentificacion!).subscribe({
               next: (resp) => {
                 this.filas.set(
-                  this.filas().filter(
-                    (item) => item.idIdentificacion != resp.idSecuencial,
-                  ),
+                  this.filas().filter((item) => item.idIdentificacion != resp.idSecuencial),
                 );
               },
               error: (err) => {
