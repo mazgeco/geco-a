@@ -136,19 +136,51 @@ export interface RespuestaIdiomaItinerario {
   data: IdiomaXItinerario[]; 
 }
 
-//COMPONENTES INSUMOS
-export interface ComponenteInsumo {
-  idComponente?: string; // O number, según tu base de datos
-  tipoInsumo: string;
-  idTipoInsumo?: string; // Para guardar el código real si usas catálogos
-  insumo: string;
-  idInsumo?: string;
-  horaEjecucion: string;
-  proveedor: string;
-  idProveedor?: string;
-  darAnticipo: boolean;
-  observaciones: string;
-  centroCostos: string;
+
+export interface TipoInsumo {
+  idTipoInsumo: number;
+  descripcionTipoInsumo: string;
 }
+
+export interface ListaInsumo {
+  idInsumo: number;
+  descripcionInsumo: string;
+}
+
+export interface ListaProveedores {
+  idProveedor: number;
+  idPersona:number;
+  nombrePersona: string;
+  observaciones: string;
+}
+
+export interface InsumoItinerario {
+  idItinerarioInsumo: number; // Llave primaria de esta fila
+  idProducto: string;
+  diaItinerario: number;
+  
+  // Campos de la imagen
+  idTipoInsumo: number | null;
+  descripcionTipoInsumo?: string; 
+  
+  idInsumo: number | null;
+  descripcionInsumo: string; 
+  
+  horaEjecucion: string; // Ej: '15:00'
+  
+  idProveedor: number | null;
+  nombreProveedor?: string; 
+  
+  darAnticipo: boolean; 
+  observaciones: string;
+  
+  // Auditoría
+  idUsuarioCrea?: string;
+  fechaCrea?: string;
+  idUsuarioModifica?: string;
+  fechaModifica?: string;
+}
+
+
 
 

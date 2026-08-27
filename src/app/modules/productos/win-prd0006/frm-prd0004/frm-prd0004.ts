@@ -34,6 +34,8 @@ export class FrmPrd0004 implements OnInit {
   dias = signal<number[]>([1, 2]); // Empezamos con 2 días base
   diaActivo = signal<number>(1);      // Dejamos el día 1 activo 
   listaCompletaDias = signal<DiaItinerario[]>([]);
+  // Guardará el ID real de la base de datos para pasárselo a la grilla
+  idItinerarioActivo = signal<number>(0);
   idiomaPorItinerario = signal<Combo[]>([
         {
           codigo: 'es',
@@ -79,6 +81,8 @@ cargarItinerarioDesdeBD(): void {
           
           // NUEVO: Guardamos la lista completa en la signal para no perder los IDs reales
           this.listaCompletaDias.set(listaItinerario);
+
+          this.seleccionarDia(listaItinerario[0].diaItinerario);
 
           // 2. Extraemos el número del día.
           const diasMapeados = listaItinerario.map((item: any) => item.diaItinerario);
@@ -152,21 +156,24 @@ cargarDatosOperativos(idItinerario: number): void {
 }
 
 seleccionarDia(numeroDia: number): void {
-  this.diaActivo.set(numeroDia);
+    this.diaActivo.set(numeroDia);
 
-  // Buscamos el objeto completo del día en la lista que trajo Java
-  const diaEncontrado = this.listaCompletaDias().find((d: any) => d.diaItinerario === numeroDia);
+    // Buscamos el objeto completo del día en la lista que trajo Java
+    const diaEncontrado = this.listaCompletaDias().find((d: any) => d.diaItinerario === numeroDia);
 
-  if (diaEncontrado) {
-    // AQUÍ ESTÁ LA CLAVE REAL: Asignamos el idItinerario al formulario
-    this.frmPrd0004.patchValue({
-      idItinerario: diaEncontrado.idItinerario
-    }, { emitEvent: false });
+    if (diaEncontrado) {
+      // 1. Asignamos el idItinerario al formulario
+      this.frmPrd0004.patchValue({
+        idItinerario: diaEncontrado.idItinerario
+      }, { emitEvent: false });
 
-    // Y luego cargamos sus datos operativos
-    this.cargarDatosOperativos(diaEncontrado.idItinerario);
+      // 2. LO NUEVO: Actualizamos el Signal para avisarle a la grilla
+      this.idItinerarioActivo.set(diaEncontrado.idItinerario);
+
+      // 3. Y luego cargamos sus datos operativos
+      this.cargarDatosOperativos(diaEncontrado.idItinerario);
+    }
   }
-}
 
 
 alCambiarIdioma(nuevoIdioma: string): void {
@@ -179,6 +186,7 @@ alCambiarIdioma(nuevoIdioma: string): void {
     this.seleccionarDia(diaActual);
   }
 }
+
 
 
 

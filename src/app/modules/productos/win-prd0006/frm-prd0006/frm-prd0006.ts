@@ -33,7 +33,7 @@ export class FrmPrd0006 implements OnInit {
   *******************************************************************************************/
 
   //IDENTIFICADORES PRINCIPALES
-  idContenedor = signal<string>("WinPrd0018");
+  idContenedor = signal<string>("WinPrd0006");
   idObjeto = signal<string>("FrmPrd0006");
   idTabla = signal<string>("211");
   permiso = signal<string>("w");

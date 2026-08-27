@@ -1,1 +1,148 @@
-<p>Tabla de insumos y servicios operativos</p>
+<div class="col-12">
+  <p-toolbar>
+    <ng-template #start>
+      <p-button id="btnGrdPrd00061" icon="pi pi-plus" class="mr-1" label="Insertar" pTooltip="Agrega un insumo al día"
+        tooltipPosition="bottom" (onClick)="insertarFila()" />
+      <p-button id="btnGrdPrd00062" icon="pi pi-trash" class="mr-1" label="Eliminar"
+        pTooltip="Elimina varias filas seleccionadas" tooltipPosition="bottom" (onClick)="eliminarVarias()" />
+      <p-button id="btnGrdPrd00063" icon="pi pi-refresh" class="mr-1" pTooltip="Refresca los datos del grid"
+        tooltipPosition="bottom" (onClick)="cargaDatos()" />
+      <p-button id="btnGrdPrd00064" icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual"
+        tooltipPosition="bottom" (onClick)="muestraAuditoriaRegistro()" />
+      <p-button id="btnGrdPrd00065" icon="pi pi-info-circle" pTooltip="Información del objeto actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())" />
+    </ng-template>
+
+    <ng-template #center>
+      <span></span>
+    </ng-template>
+
+    <ng-template #end>
+      @if (barraMessage()?.visible) {
+      <div class="message-container">
+        <p-message [severity]="barraMessage()!.severity" [icon]="barraMessage()!.icon">
+          {{ barraMessage()!.text }}
+        </p-message>
+      </div>
+      }
+    </ng-template>
+  </p-toolbar>
+
+  <!-- ===================================== -->
+  <!-- LISTADO DE INSUMOS DEL ITINERARIO -->
+  <!-- ===================================== -->
+  <p-table id="GrdPrd0006" [value]="fila()" editMode="row" selectionMode="multiple"
+    [(selection)]="selectedRows" [metaKeySelection]="metaKey" dataKey="idItinerarioInsumo" class="p-datatable-sm"
+    [paginator]="true" [rows]="10" showGridlines [size]="'small'">
+    
+    <!-- HEADER (Actualizado con las 7 columnas) -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 15%">Tipo de insumo</th>
+        <th style="width: 20%">Insumo</th>
+        <th style="width: 10%">Hora ejecución</th>
+        <th style="width: 20%">Proveedor</th>
+        <th style="width: 10%" class="text-center">Dar anticipo</th>
+        <th style="width: 15%">Observaciones</th>
+        <th style="width: 10%" class="text-center">Acciones</th>
+      </tr>
+    </ng-template>
+    
+    <!-- BODY (Con los p-select) -->
+    <ng-template pTemplate="body" let-rowData let-editing="editing" let-rowIndex="rowIndex">
+      <tr [pEditableRow]="rowData" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+        
+        <!-- 1. TIPO DE INSUMO (p-select) -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-select [options]="tiposInsumo()" optionLabel="descripcionTipoInsumo"
+                optionValue="idTipoInsumo" [filter]="true" [(ngModel)]="rowData.idTipoInsumo"
+                placeholder="Seleccione" class="w-full" appendTo="body" />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ funciones.obtenerEtiqueta(tiposInsumo(), rowData.idTipoInsumo, 'tipoInsumo') }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <!-- 2. INSUMO (p-select) -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-select [options]="listaInsumos()" optionLabel="descripcionInsumo"
+                optionValue="idInsumo" [filter]="true" [(ngModel)]="rowData.idInsumo"
+                placeholder="Seleccione" class="w-full" appendTo="body" />
+            </ng-template>
+            <ng-template pTemplate="output">
+               {{ funciones.obtenerEtiqueta(listaInsumos(), rowData.idInsumo, 'insumo') }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <!-- 3. HORA EJECUCIÓN -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="time" [(ngModel)]="rowData.horaEjecucion" class="w-full" />
+            </ng-template>
+            <ng-template pTemplate="output">{{ rowData.horaEjecucion }}</ng-template>
+          </p-cellEditor>
+        </td>
+
+        <!-- 4. PROVEEDOR (p-select) -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-select [options]="listaProveedores()" optionLabel="nombrePersona"
+                optionValue="idProveedor" [filter]="true" [(ngModel)]="rowData.idProveedor"
+                placeholder="Seleccione" class="w-full" appendTo="body" />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ funciones.obtenerEtiqueta(listaProveedores(), rowData.idProveedor, 'proveedor') }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <!-- 5. DAR ANTICIPO -->
+        <td class="text-center">
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-checkbox [(ngModel)]="rowData.darAnticipo" [binary]="true" />
+            </ng-template>
+            <ng-template pTemplate="output">
+              <i [class]="rowData.darAnticipo ? 'pi pi-check-circle text-green-500' : 'pi pi-circle'"></i>
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <!-- 6. OBSERVACIONES -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="rowData.observaciones" class="w-full" />
+            </ng-template>
+            <ng-template pTemplate="output">{{ rowData.observaciones }}</ng-template>
+          </p-cellEditor>
+        </td>
+
+        <!-- 7. ACCIONES -->
+        <td class="text-center">
+          @if (!editing) {
+          <button pButton [id]="'btnGrdPrd00065' + rowData.idItinerarioInsumo" pInitEditableRow icon="pi pi-pencil" text
+            rounded severity="primary"></button>
+          <button pButton [id]="'btnGrdPrd00066' + rowData.idItinerarioInsumo" icon="pi pi-trash" text rounded
+            severity="danger" (click)="eliminarFila(rowData)"></button>
+          }
+          @if (editing) {
+          <button pButton [id]="'btnGrdPrd00067' + rowData.idItinerarioInsumo" pSaveEditableRow icon="pi pi-check" text
+            rounded severity="success" class="mr-1" (click)="saveData(rowData)"></button>
+          <button pButton [id]="'btnGrdPrd00068' + rowData.idItinerarioInsumo" pCancelEditableRow icon="pi pi-times" text
+            rounded severity="danger"></button>
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
