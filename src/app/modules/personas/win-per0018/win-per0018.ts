@@ -28,6 +28,7 @@ export class WinPer0018 implements OnInit {
   stateService = inject(StateService);
 
   ngOnInit(): void {
+    this.stateService.persona.set(null);
     //Toma el dato enviado por el router para colocar en el id principal
     this.idPersona.set(Number(this.route.snapshot.paramMap.get('id')));
   }

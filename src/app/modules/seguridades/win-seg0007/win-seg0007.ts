@@ -19,6 +19,7 @@ export class WinSeg0007 implements OnInit {
   stateService = inject(StateService);
 
   ngOnInit(): void {
+    this.stateService.usuario.set(null);
     //Toma el dato enviado por el router para colocar en el id principal
     this.idUsuario.set(String(this.route.snapshot.paramMap.get('id')));
   }
