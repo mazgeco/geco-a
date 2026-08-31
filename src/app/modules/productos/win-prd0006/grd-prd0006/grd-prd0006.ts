@@ -1,14 +1,13 @@
 import { Component, computed, inject, Input, OnInit, OnChanges, SimpleChanges, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
-// TODO: Asegúrate de tener estas interfaces en tu archivo de productos
 import { InsumoItinerario, TipoInsumo, ListaInsumo, ListaProveedores} from '../../../../interfaces/productos.interfaces';
 import { FuntionsService } from '../../../../services/functions.service';
 import { ProductosService } from '../../../../services/productos.service';
 import { StatusMessage } from '../../../../interfaces/general.interface';
 import { MessageService } from '../../../../services/message.service';
 import { ToastService } from '../../../../services/toast.service';
-import { StateService } from '../state-service'; // Importamos tu pizarra central
+import { StateService } from '../state-service';
 
 @Component({
   selector: 'app-grd-prd0006',

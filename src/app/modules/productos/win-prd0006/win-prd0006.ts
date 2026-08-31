@@ -10,15 +10,15 @@ import { PRIMENG_MODULES } from '../../../shared/primeng/primeng.imports';
 // import { GrdPer0002 } from './grd-per0002/grd-per0002';
 // import { GrdPer0008 } from './grd-per0008/grd-per0008';
 // import { GrdPer0019 } from './grd-per0019/grd-per0019';
-import { FrmPrd0006 } from './frm-prd0006/frm-prd0006';
+import { FrmPrd0002 } from "./frm-prd0002/frm-prd0002";
 import { FrmPrd0004 } from "./frm-prd0004/frm-prd0004";
 import { StateService } from './state-service';
-
+import { GrdPrd0011 } from "./grd-prd0011/grd-prd0011";
 
 
 @Component({
   selector: 'app-win-prd0006',
-  imports: [...PRIMENG_MODULES, FrmPrd0006, FrmPrd0004],
+  imports: [...PRIMENG_MODULES, FrmPrd0002, FrmPrd0004, GrdPrd0011],
   providers: [ConfirmationService],
   templateUrl: './win-prd0006.html',
   styleUrl: './win-prd0006.css'

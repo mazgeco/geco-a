@@ -18,13 +18,13 @@ import { StateService } from '../state-service';
 import { debounceTime } from 'rxjs';
 
 @Component({
-  selector: 'app-frm-prd0006',
+  selector: 'app-frm-prd0002',
   imports: [...PRIMENG_MODULES, ReactiveFormsModule],
   providers: [ConfirmationService],
-  templateUrl: './frm-prd0006.html',
-  styleUrl: './frm-prd0006.css',
+  templateUrl: './frm-prd0002.html',
+  styleUrl: './frm-prd0002.css',
 })
-export class FrmPrd0006 implements OnInit {
+export class FrmPrd0002 implements OnInit {
  @Input()
   idProducto!: string;
 
@@ -34,7 +34,7 @@ export class FrmPrd0006 implements OnInit {
 
   //IDENTIFICADORES PRINCIPALES
   idContenedor = signal<string>("WinPrd0006");
-  idObjeto = signal<string>("FrmPrd0006");
+  idObjeto = signal<string>("FrmPrd0002");
   idTabla = signal<string>("211");
   permiso = signal<string>("w");
 
@@ -56,7 +56,7 @@ export class FrmPrd0006 implements OnInit {
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
   productoMessage = computed(() =>
-    this.messageService.obtener(this.statusMessages, 'msgFrmPrd0006'),
+    this.messageService.obtener(this.statusMessages, 'msgFrmPrd0002'),
   );
 
   //DECLARACIÓN DE VARIABLES

@@ -33,6 +33,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToggleSwitch  } from 'primeng/toggleswitch'
 import { Editor, EditorModule } from 'primeng/editor'
+import { RadioButtonModule } from 'primeng/radiobutton';
+
 
 export const PRIMENG_MODULES = [
   ButtonModule,
@@ -71,5 +73,6 @@ export const PRIMENG_MODULES = [
   ToastModule,
   TooltipModule,
   Toolbar,
-  ToggleSwitch
+  ToggleSwitch,
+  RadioButtonModule
 ];

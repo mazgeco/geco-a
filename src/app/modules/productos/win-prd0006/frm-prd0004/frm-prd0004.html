@@ -3,6 +3,55 @@
 <p-confirmdialog />
 
 <div class="col-12">
+     <p-toolbar>
+    <ng-template #start>
+      <p-button
+          icon="pi pi-plus"
+          class="mr-1"
+          label="Agregar Día"
+          pTooltip="Agregar Día Secuencial al itinerario"
+          tooltipPosition="bottom"
+          (onClick)="agregarDiaSecuencial()"
+          
+        />
+      <p-button
+          icon="pi pi-trash"
+          class="mr-1"
+          label="Eliminar Día"
+          pTooltip="Eliminar día del itinerario"
+          tooltipPosition="bottom"
+          
+          
+        />
+      <p-button
+        icon="pi pi-user"
+        class="mr-1"
+        pTooltip="Auditoría del registro actual"
+        tooltipPosition="bottom"
+     
+      />
+      <p-button
+        icon="pi pi-info-circle"
+        pTooltip="Información del objeto actual"
+        tooltipPosition="bottom"
+        
+      />
+    </ng-template>
+
+    <ng-template #center>
+      <span></span>
+    </ng-template>
+
+    <!-- <ng-template #end>
+       @if (productoMessage()?.visible) {
+        <div class="message-container">
+          <p-message [severity]="productoMessage()!.severity" [icon]="productoMessage()!.icon">
+            {{ productoMessage()!.text }}
+          </p-message>
+        </div>
+      }
+    </ng-template> -->
+  </p-toolbar>
 <form id="frmPrd0004" class="grid m-0" [formGroup]="frmPrd0004">
     
     <!-- CONTENEDOR PRINCIPAL ESTÁNDAR -->
@@ -16,7 +65,6 @@
                 <h3 class="m-0">Itinerario Secuencial y Recursos Operativos</h3>
                 <p class="text-color-secondary text-sm m-0 mt-1">Planificación de jornadas, comidas incluidas e insumos.</p>
             </div>
-            <p-button icon="pi pi-plus" class="mr-1" label="Agregar Día" pTooltip="Agregar Día Secuencial al itinerario" tooltipPosition="bottom" (click)="agregarDiaSecuencial()"></p-button>
         </div>
 
         <!-- ========================================== -->
@@ -58,13 +106,13 @@
         <div class="grid">
             
             <!-- COLUMNA IZQUIERDA: Ficha Operativa -->
-            <div class="col-12 md:col-5">
+            <div class="col-12 md:col-5" style="min-width: 0;">
                 <div class="border-1 surface-border border-round p-3 h-full surface-card">
                     
                     <!-- Título y Botón Eliminar -->
                     <div class="flex justify-content-between align-items-center mb-4 border-bottom-1 surface-border pb-2">
                         <h4 class="m-0 text-primary">Ficha Operativa - Día {{ diaActivo() }}</h4>
-                        <p-button icon="pi pi-trash" class="mr-1" label="Eliminar Día" pTooltip="Eliminar día del itinerario" tooltipPosition="bottom"  ></p-button>
+                        
                     </div>
 
                     <!-- Formulario Ficha -->
@@ -131,7 +179,7 @@
             </div>
 
             <!-- COLUMNA DERECHA: Insumos -->
-            <div class="col-12 md:col-7">
+            <div class="col-12 md:col-7" style="min-width: 0;">
                 <div class="border-1 surface-border border-round p-3 h-full surface-card">
                     <div class="flex justify-content-between align-items-center mb-4 border-bottom-1 surface-border pb-2">
                         <div>
