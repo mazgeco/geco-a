@@ -2,7 +2,8 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { PRIMENG_MODULES } from '../../../shared/primeng/primeng.imports';
 import { ChartModule } from 'primeng/chart';
 import { PersonasService } from '../../../services/personas.service';
-import { Grafico } from '../../../interfaces/personas.interfaces';
+import { FuntionsService } from '../../../services/functions.service';
+
 
 @Component({
   selector: 'app-dsh-per0001',
@@ -24,6 +25,8 @@ export class DshPer0001 implements OnInit {
   pieData2: any;
   pieOptions2: any;
   isLoadingPie2 = signal<boolean>(false);
+  //Funtions service
+  functionsService = inject(FuntionsService);
   //Servicio personas
   personasService = inject(PersonasService);
 
@@ -38,7 +41,7 @@ export class DshPer0001 implements OnInit {
     this.isLoadingPie1.set(true);
     this.personasService.graficoNacionalidades().subscribe({
       next: (resp) => {
-        this.pieData1 = this._crearChart(resp.data);
+        this.pieData1 = this.functionsService.crearChart(resp.data);
         this.isLoadingPie1.set(false);
       },
       error: (err) => {
@@ -75,7 +78,7 @@ export class DshPer0001 implements OnInit {
     this.isLoadingPie2.set(true);
     this.personasService.graficoTipoEmpresas().subscribe({
       next: (resp) => {
-        this.pieData2 = this._crearChart(resp.data);
+        this.pieData2 = this.functionsService.crearChart(resp.data);
         this.isLoadingPie2.set(false);
       },
       error: (err) => {
@@ -111,7 +114,7 @@ export class DshPer0001 implements OnInit {
     this.isLoadingBar.set(true);
     this.personasService.graficoPersonasModulos().subscribe({
       next: (resp) => {
-        this.barData = this._crearChart(resp.data);
+        this.barData = this.functionsService.crearChart(resp.data);
         this.isLoadingBar.set(false);
       },
       error: (err) => {
@@ -139,25 +142,6 @@ export class DshPer0001 implements OnInit {
         }
       }
     };
-  }
-
-  private _crearChart(datos: Grafico[]) {
-    return {
-      labels: datos.map(x => x.descripcion),
-      datasets: [
-        {
-          data: datos.map(x => x.cuantos),
-          backgroundColor: this._generarColores(datos.length)
-        }
-      ]
-    };
-
-  }
-
-  private _generarColores(cantidad: number): string[] {
-    return Array.from({ length: cantidad }, (_, i) =>
-      `hsl(${(i * 360) / cantidad}, 70%, 55%)`
-    );
   }
 
 }

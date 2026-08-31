@@ -1,18 +1,42 @@
 <div class="grid w-full mt-1">
   <div class="col-12 md:col-6 lg:col-4">
-    <p-card class="h-full">
-      <p-chart type="pie" [data]="data" [options]="options" width="400" height="400"> </p-chart>
-    </p-card>
+    @if (isLoadingPie()) {
+      <div class="flex justify-center">
+        <p-progress-spinner ariaLabel="loading" />
+      </div>
+    } @else {
+      <p-card class="h-full">
+        <p-chart type="pie" [data]="pieData" [options]="pieOptions" width="400" height="400">
+        </p-chart>
+      </p-card>
+    }
   </div>
   <div class="col-12 md:col-6 lg:col-4">
-    <p-card class="h-full">
-      <p-chart type="bar" [data]="barData" [options]="barOptions" height="300">
-      </p-chart>
-    </p-card>
+    @if (isLoadingBar1()) {
+      <div class="flex justify-center">
+        <p-progress-spinner ariaLabel="loading" />
+      </div>
+    } @else {
+      <p-card class="h-full bar-card">
+        <div class="chart-container">
+          <p-chart type="bar" [data]="barData1" [options]="barOptions1" style="height: 100%">
+          </p-chart>
+        </div>
+      </p-card>
+    }
   </div>
   <div class="col-12 md:col-6 lg:col-4">
-    <p-card class="h-full">
-      
-    </p-card>
+    @if (isLoadingBar2()) {
+      <div class="flex justify-center">
+        <p-progress-spinner ariaLabel="loading" />
+      </div>
+    } @else {
+      <p-card class="h-full bar-card">
+        <div class="chart-container">
+          <p-chart type="bar" [data]="barData2" [options]="barOptions2" style="height: 100%">
+          </p-chart>
+        </div>
+      </p-card>
+    }
   </div>
 </div>

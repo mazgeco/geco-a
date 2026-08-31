@@ -1,6 +1,7 @@
 import { inject, Injectable, WritableSignal } from '@angular/core';
 import { ToastService } from './toast.service';
 import { FilaTabla } from './../interfaces/general.interface';
+import { Grafico } from '../interfaces/personas.interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -105,16 +106,17 @@ export class FuntionsService {
         );
       case 'tipoFichaMedica':
         return (
-          tipos.find((item) => item.idTipoFichaMedica === codigo)
-            ?.descripcionTipoFichaMedica ?? ''
+          tipos.find((item) => item.idTipoFichaMedica === codigo)?.descripcionTipoFichaMedica ?? ''
         );
       case 'tipoInsumo':
-      return tipos.find((item) => item.idTipoInsumo === codigo)?.descripcionTipoInsumo ?? '';
-    
-    case 'insumo':
-      return tipos.find((item) => item.idInsumo === codigo)?.descripcionInsumo ?? '';
-     case 'proveedor':
-      return tipos.find((item) => Number(item.idProveedor) === Number(codigo))?.nombrePersona?? ''; 
+        return tipos.find((item) => item.idTipoInsumo === codigo)?.descripcionTipoInsumo ?? '';
+
+      case 'insumo':
+        return tipos.find((item) => item.idInsumo === codigo)?.descripcionInsumo ?? '';
+      case 'proveedor':
+        return (
+          tipos.find((item) => Number(item.idProveedor) === Number(codigo))?.nombrePersona ?? ''
+        );
       default:
         return tipos.find((item) => item.codigo === codigo)?.etiqueta ?? '';
     }
@@ -166,5 +168,21 @@ export class FuntionsService {
       '',
       pausa,
     );
+  }
+
+  crearChart(datos: Grafico[]) {
+    return {
+      labels: datos.map((x) => x.descripcion),
+      datasets: [
+        {
+          data: datos.map((x) => x.cuantos),
+          backgroundColor: this.generarColores(datos.length),
+        },
+      ],
+    };
+  }
+
+  generarColores(cantidad: number): string[] {
+    return Array.from({ length: cantidad }, (_, i) => `hsl(${(i * 360) / cantidad}, 70%, 55%)`);
   }
 }

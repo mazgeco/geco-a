@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 
 import { SavedRow } from '../interfaces/general.interface';
 import { ProveedoresResponse } from '../interfaces/proveedores.interfaces';
+import { GraficosResponse } from '../interfaces/personas.interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -18,5 +19,17 @@ export class ProveedoresService {
     return this.http.get<ProveedoresResponse>(
       `${this.apiUrl}proveedores/busqueda?nombre=${nombre}`,
     );
+  }
+
+  graficoProveedorPorClasificador(): Observable<GraficosResponse> {
+    return this.http.get<GraficosResponse>(`${this.apiUrl}proveedores/grafico/clasificador`);
+  }
+
+  graficoProveedorPorEstado(): Observable<GraficosResponse> {
+    return this.http.get<GraficosResponse>(`${this.apiUrl}proveedores/grafico/estado`);
+  }
+
+  graficoProveedorPorAnio(): Observable<GraficosResponse> {
+    return this.http.get<GraficosResponse>(`${this.apiUrl}proveedores/grafico/anio`);
   }
 }
