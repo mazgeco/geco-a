@@ -121,6 +121,7 @@ export interface IdiomaXItinerario {
   origen: string;
   destino: string;
   actividad: string;
+  tipoComidaIncluida?:  string | null;
   duracionItinerario: string;
   observaciones: string;
   idUsuarioCrea?: string;

@@ -138,7 +138,7 @@ export class FrmPrd0002 implements OnInit {
    
 
   //DECLARACIÓN DE LA VARIABLE PARA FORMULARIO
-  public frmPrd0006 = this.fb.group({
+  public frmPrd0002 = this.fb.group({
   idProducto: [''],
   idTipoProducto: [''],
   nombreTipoProducto: [''],
@@ -180,7 +180,7 @@ export class FrmPrd0002 implements OnInit {
   
     //GETTER PARA TRAER LOS DATOS ACTUALES DE LOS PRODUCTOS
      get currentData(): Productos {
-       const producto = this.frmPrd0006.getRawValue() as Productos;
+       const producto = this.frmPrd0002.getRawValue() as Productos;
        return producto;
      }
 
@@ -198,7 +198,7 @@ export class FrmPrd0002 implements OnInit {
 
 
    // 1. EL AUTOGUARDADO (Replicando el estándar del sistema)
-    this.frmPrd0006.valueChanges.pipe(
+    this.frmPrd0002.valueChanges.pipe(
       debounceTime(500)
     ).subscribe((producto) => {
      
@@ -242,7 +242,7 @@ export class FrmPrd0002 implements OnInit {
            accept: () => {
              this.esActivo.set(estado === "A" ? true : false);
              this.estadoProducto.set(estado === "A" ? "ACTIVO" : "INACTIVO");
-             this.frmPrd0006.patchValue({
+             this.frmPrd0002.patchValue({
                estadoProducto: estado
              });
              this.stateService.producto.update(p => ({
@@ -264,13 +264,13 @@ export class FrmPrd0002 implements OnInit {
           this.estadoProducto.set(resp.data.estadoProducto === 'A' ? 'ACTIVO' : 'INACTIVO');
          
           //PEGA LOS DATOS EN EL FORMULARIO
-          this.frmPrd0006.reset(resp.data);
+          this.frmPrd0002.reset(resp.data);
           this.loadingProducto.set(false);
           this.stateService.producto.set(resp.data);
           //Muestra un mensaje en la barra indicando que el producto se cargó correctamente
           this.messageService.mostrar(
             this.statusMessages,
-            'msgFrmPrd0006',
+            'msgFrmPrd0002',
             'success',
             'Producto cargado correctamente.',
           );
@@ -280,7 +280,7 @@ export class FrmPrd0002 implements OnInit {
           //Muestra el error en la barra
           this.messageService.mostrar(
             this.statusMessages,
-            'msgFrmPrd0006',
+            'msgFrmPrd0002',
             'error',
             'El producto no se cargó correctamente.',
           );
@@ -306,14 +306,14 @@ export class FrmPrd0002 implements OnInit {
 
   // 3. EL GUARDADO CENTRAL (Ejecutado por el autoguardado)
  saveForm(producto: Productos): void {
-    const idActual = this.frmPrd0006.get('idProducto')?.value || '';
+    const idActual = this.frmPrd0002.get('idProducto')?.value || '';
 
     this.productosService.grabaProducto(idActual, producto).subscribe({
       next: (resp) => {
         // --- 1. BLOQUE DE CREACIÓN NUEVA ---
         if (resp && resp.idNoSecuencial && (!idActual || idActual === '0' || idActual === '')) {
           this.idProducto = resp.idNoSecuencial;
-          this.frmPrd0006.patchValue({ idProducto: resp.idNoSecuencial }, { emitEvent: false }); 
+          this.frmPrd0002.patchValue({ idProducto: resp.idNoSecuencial }, { emitEvent: false }); 
           this.router.navigate(['/productos/producto', resp.idNoSecuencial], { replaceUrl: true });
         } 
 
@@ -323,7 +323,7 @@ export class FrmPrd0002 implements OnInit {
         // --- 3. MENSAJE EN EL TOOLBAR ---
         this.messageService.mostrar(
           this.statusMessages,
-          'msgFrmPrd0006',
+          'msgFrmPrd0002',
           'success',
           'Dato grabado correctamente.'
         );

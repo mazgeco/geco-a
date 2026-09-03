@@ -24,7 +24,7 @@
     <p-tab value="0">Datos generales</p-tab>
     <p-tab value="1">Itinerario e insumos</p-tab>
     <p-tab value="2">Tarifas y precios</p-tab>
-    <!-- <p-tab value="3">Impuestos</p-tab> -->
+    <p-tab value="3">Impuestos</p-tab>
   </p-tablist>
   <p-tabpanels>
     <p-tabpanel value="0">
@@ -34,7 +34,10 @@
       <app-frm-prd0004 [idProducto]="idProducto()" />
     </p-tabpanel>
     <p-tabpanel value="2">
-      <app-grd-prd0011 [idProducto]="idProducto()" />
+      <app-frm-prd0003 [idProducto]="idProducto()" />
+    </p-tabpanel>
+    <p-tabpanel value="3">
+      <app-frm-prd0005 [idProducto]="idProducto()" />
     </p-tabpanel>
   </p-tabpanels>
 </p-tabs>

@@ -28,48 +28,121 @@
       } -->
     </ng-template>
   </p-toolbar>
-  <p-panel class="col-12">
+<p-table id="GrdPrd0006"  editMode="row" selectionMode="multiple"
+     dataKey="idItinerarioInsumo" class="p-datatable-sm"
+    [paginator]="true" [rows]="10" showGridlines [size]="'small'">
     
-        <!-- ========================================== -->
-        <!-- CABECERA DE LA PESTAÑA                     -->
-        <!-- ========================================== -->
-        <div class="flex justify-content-between align-items-center mb-4">
-            <div>
-                <h3 class="m-0">Matriz de Tarifas</h3>
-                <p class="text-color-secondary text-sm m-0 mt-1">Define el modelo comercial del producto (Estacional con validación de rangos o Tarifa Plana Única).</p>
-            </div>
-        </div>
-     <!-- SECCIÓN 1: MODELOS DE COBRO (Tarjetas) -->
-    <div class="surface-card border-1 surface-border border-round-2xl p-4 mb-4">
-        <label class="block font-bold mb-3 text-sm text-600 uppercase">Modelo de cobro del producto (Mutuamente excluyente) *</label>
+    <!-- HEADER (Actualizado con las 7 columnas) -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 15%">Nombre Tarifa</th>
+        <th style="width: 20%">Pax Min</th>
+        <th style="width: 10%">Pax Max</th>
+        <th style="width: 20%">Costo Base($)</th>
+        <th style="width: 10%" >Tarifa RAC</th>
+        <th style="width: 15%">PVP Final</th>
+        <th style="width: 10%" class="text-center">Acciones</th>
+      </tr>
+    </ng-template>
+    
+    <!-- BODY (Con los p-select) -->
+    <ng-template pTemplate="body" let-rowData let-editing="editing" let-rowIndex="rowIndex">
+      <tr [pEditableRow]="rowData" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
         
-        <div class="grid">
-            <!-- Tarjeta Modelo 1 -->
-            <div class="col-12 md:col-6">
-                <div class="p-3 border-round-xl border-2 cursor-pointer flex align-items-center gap-3 transition-colors transition-duration-200"
-                     [ngClass]="{'border-primary bg-blue-50': modeloCobro === 1, 'surface-border surface-card': modeloCobro !== 1}"
-                     (click)="modeloCobro = 1">
-                    <p-radioButton name="modelo" [value]="1" [(ngModel)]="modeloCobro"></p-radioButton>
-                    <div>
-                        <div class="font-bold mb-1 text-900 text-sm">1. MODELO ESTACIONAL (POR RANGOS DE PAX)</div>
-                        <div class="text-sm text-500">Varía por número de pasajeros y temporada.</div>
-                    </div>
-                </div>
-            </div>
+        <!-- 1. TIPO DE INSUMO (p-select) -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-select  optionLabel="descripcionTipoInsumo"
+                optionValue="idTipoInsumo" [filter]="true" [(ngModel)]="rowData.idTipoInsumo"
+                placeholder="Seleccione" class="w-full" appendTo="body" />
+            </ng-template>
+            <ng-template pTemplate="output">
+            
+            </ng-template>
+          </p-cellEditor>
+        </td>
 
-            <!-- Tarjeta Modelo 2 -->
-            <div class="col-12 md:col-6">
-                <div class="p-3 border-round-xl border-2 cursor-pointer flex align-items-center gap-3 transition-colors transition-duration-200"
-                     [ngClass]="{'border-primary bg-blue-50': modeloCobro === 2, 'surface-border surface-card': modeloCobro !== 2}"
-                     (click)="modeloCobro = 2">
-                    <p-radioButton name="modelo" [value]="2" [(ngModel)]="modeloCobro"></p-radioButton>
-                    <div>
-                        <div class="font-bold mb-1 text-900 text-sm">2. MODELO DE TARIFA PLANA (PRECIO FIJO ANUAL)</div>
-                        <div class="text-sm text-500">Valor único e invariable los 365 días del año.</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-</p-panel>
+        <!-- 2. INSUMO (p-select) -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-select  optionLabel="descripcionInsumo"
+                optionValue="idInsumo" [filter]="true" [(ngModel)]="rowData.idInsumo"
+                placeholder="Seleccione" class="w-full" appendTo="body" />
+            </ng-template>
+            <ng-template pTemplate="output">
+              
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <!-- 3. HORA EJECUCIÓN -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="time" [(ngModel)]="rowData.horaEjecucion" class="w-full" />
+            </ng-template>
+            <ng-template pTemplate="output">{{ rowData.horaEjecucion }}</ng-template>
+          </p-cellEditor>
+        </td>
+
+        <!-- 4. PROVEEDOR (p-select) -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-select  optionLabel="nombrePersona"
+                optionValue="idProveedor" [filter]="true" [(ngModel)]="rowData.idProveedor"
+                placeholder="Seleccione" class="w-full" appendTo="body" />
+            </ng-template>
+            <ng-template pTemplate="output">
+             
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <!-- 5. DAR ANTICIPO -->
+        <td class="text-center">
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-checkbox [(ngModel)]="rowData.darAnticipo" [binary]="true" />
+            </ng-template>
+            <ng-template pTemplate="output">
+              <i [class]="rowData.darAnticipo ? 'pi pi-check-circle text-green-500' : 'pi pi-circle'"></i>
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <!-- 6. OBSERVACIONES -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="rowData.observaciones" class="w-full" />
+            </ng-template>
+            <ng-template pTemplate="output">{{ rowData.observaciones }}</ng-template>
+          </p-cellEditor>
+        </td>
+
+        <!-- 7. ACCIONES -->
+        <td class="text-center">
+          @if (!editing) {
+          <button pButton [id]="'btnGrdPrd00065' + rowData.idItinerarioInsumo" pInitEditableRow icon="pi pi-pencil" text
+            rounded severity="primary"></button>
+          <button pButton [id]="'btnGrdPrd00066' + rowData.idItinerarioInsumo" icon="pi pi-trash" text rounded
+            severity="danger" ></button>
+          }
+          @if (editing) {
+          <button pButton [id]="'btnGrdPrd00067' + rowData.idItinerarioInsumo" pSaveEditableRow icon="pi pi-check" text
+            rounded severity="success" class="mr-1" ></button>
+          <button pButton [id]="'btnGrdPrd00068' + rowData.idItinerarioInsumo" pCancelEditableRow icon="pi pi-times" text
+            rounded severity="danger"></button>
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+
+
+  </div>
+  
