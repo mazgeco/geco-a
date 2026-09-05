@@ -39,6 +39,10 @@ export const routes: Routes = [
       { path: 'dash', component: Productos.DshPrd0001 },
       { path: 'search', component: Productos.BsqPrd0001 },
       { path: 'producto/:id', component: Productos.WinPrd0006 },
+      { path: 'parametrizacion/operacion', component: Productos.WinPrd0001 },
+      { path: 'parametrizacion/uens', component: Productos.WinPrd0002 },
+      { path: 'parametrizacion/temporadas', component: Productos.WinPrd0003 },
+      { path: 'parametrizacion/impuestos', component: Productos.WinPrd0004 },
       { path: '', redirectTo: 'dash', pathMatch: 'full' },
     ]
   },
