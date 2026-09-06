@@ -52,8 +52,8 @@ public frmPrd0004 = this.fb.group({
   idIdioma: ['es'],
   idItinerario: [null as number | null],       
   // idTipoInclusion: [null as number | null],
-  tipoComidaIncluida: [[] as string[]],
   duracionItinerario: [null as string | null],
+   tipoComidaIncluida: [[] as string[]],
   origen: [null as string | null],
   destino: [null as string | null],
   actividad: [null as string | null],
@@ -125,6 +125,7 @@ cargarItinerarioDesdeBD(): void {
 cargarDatosOperativos(idItinerario: number): void {
   this.productosService.obtenerDatosOperativos(idItinerario).subscribe({
     next: (respuesta) => {
+      console.log('🔴 DATOS REALES DEL Idioma:', respuesta);
       const idiomaActual = this.frmPrd0004.get('idIdioma')?.value || 'es';
       const listaDatos = respuesta.data || [];
 
@@ -137,7 +138,7 @@ cargarDatosOperativos(idItinerario: number): void {
       if (datosParaMostrar) {
         // Inyectamos todo el DTO real al formulario
         const textoBD = datosParaMostrar.tipoComidaIncluida; // O como se llame la propiedad que viene del backend
-        const arrayComidas: string[] = textoBD ? textoBD.split(',') : [];
+        const arrayComidas: string[] = textoBD ? textoBD.split(',').map(letra => letra.trim()) : [];
         this.frmPrd0004.patchValue({
           idItinerario: datosParaMostrar.idItinerario,
           idIdioma: datosParaMostrar.idIdioma,

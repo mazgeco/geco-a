@@ -45,10 +45,6 @@ export class ProductosLayout implements OnInit {
            {
             label: 'Impuestos',
             routerLink: '/productos/parametrizacion/impuestos',
-          },
-           {
-            label: 'Tipo de comida incluida',
-            routerLink: '/productos/parametrizacion/tipos-comida',
           }
         ],
       },

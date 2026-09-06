@@ -95,7 +95,7 @@ export class GrdPrd0006 implements OnInit, OnChanges {
       horaEjecucion: '',
       idProveedor: null,
       darAnticipo: false,
-      observaciones: '',
+      observacionInsumoXItinerario: '',
       idUsuarioCrea: '',
       fechaCrea: '',
       idUsuarioModifica: '',
@@ -177,6 +177,7 @@ cargaTipos(): void {
     if (this.idItinerario) {
       this.productosService.listaInsumosPorItinerario(this.idItinerario).subscribe({
         next: (resp) => {
+           console.log('🔴 DATOS REALES DEL insumo por itinerario:', resp);
           this.fila.set(resp.data);
         },
         error: (err) => {
