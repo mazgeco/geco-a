@@ -28,13 +28,13 @@
         class="mr-1"
         pTooltip="Auditoría del registro actual"
         tooltipPosition="bottom"
-     
+        (onClick)="funciones.muestraAuditoria(idItinerarioActivo(), idTabla(), currentData)"
       />
       <p-button
         icon="pi pi-info-circle"
         pTooltip="Información del objeto actual"
         tooltipPosition="bottom"
-        
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
       />
     </ng-template>
 
@@ -42,7 +42,7 @@
       <span></span>
     </ng-template>
 
-    <!-- <ng-template #end>
+    <ng-template #end>
        @if (productoMessage()?.visible) {
         <div class="message-container">
           <p-message [severity]="productoMessage()!.severity" [icon]="productoMessage()!.icon">
@@ -50,7 +50,7 @@
           </p-message>
         </div>
       }
-    </ng-template> -->
+    </ng-template>
   </p-toolbar>
 <form id="frmPrd0004" class="grid m-0" [formGroup]="frmPrd0004">
     
@@ -72,23 +72,23 @@
         <!-- ========================================== -->
          <div class="flex align-items-center gap-3 mb-5 overflow-x-auto p-3 border-1 surface-border border-round surface-ground" 
      style="width: 0; min-width: 100%;">
-            @for (dia of dias(); track dia; let last = $last) {
+            @for (dia of listaCompletaDias(); track dia.diaItinerario; let last = $last) {
                 <!-- Tarjeta de Día (Ahora cuadrada: 80x80) -->
-                <div (click)="seleccionarDia(dia)" 
+                <div (click)="seleccionarDia(dia.diaItinerario)" 
                      class="flex flex-column align-items-center justify-content-center border-round cursor-pointer transition-colors transition-duration-150 flex-shrink-0"
-                     [class.bg-primary]="diaActivo() === dia"
-                     [class.border-1]="diaActivo() !== dia"
-                     [class.surface-border]="diaActivo() !== dia"
-                     [class.surface-card]="diaActivo() !== dia"
-                     [class.hover:surface-100]="diaActivo() !== dia"
+                     [class.bg-primary]="diaActivo() === dia.diaItinerario"
+                     [class.border-1]="diaActivo() !== dia.diaItinerario"
+                     [class.surface-border]="diaActivo() !== dia.diaItinerario"
+                     [class.surface-card]="diaActivo() !== dia.diaItinerario"
+                     [class.hover:surface-100]="diaActivo() !== dia.diaItinerario"
                      style="width: 80px; height: 80px;">
                     
                     <span class="text-xs font-bold mb-1" 
-                          [class.text-white]="diaActivo() === dia" 
-                          [class.text-500]="diaActivo() !== dia">DÍA</span>
+                          [class.text-white]="diaActivo() === dia.diaItinerario" 
+                          [class.text-500]="diaActivo() !== dia.diaItinerario">DÍA</span>
                     <span class="text-3xl font-bold" 
-                          [class.text-white]="diaActivo() === dia" 
-                          [class.text-900]="diaActivo() !== dia">{{ dia }}</span>
+                          [class.text-white]="diaActivo() === dia.diaItinerario" 
+                          [class.text-900]="diaActivo() !== dia.diaItinerario">{{ dia.diaItinerario}}</span>
                 </div>
                 
                 <!-- Flecha Separadora -->
@@ -131,7 +131,7 @@
                         </div>
                         <div class="col-12 mb-3">
                             <label class="font-medium text-700 block mb-2">Descripción</label>
-                            <p-editor formControlName="descripcion" [style]="{'height': '250px'}">
+                            <p-editor formControlName="descripcionItinerario" [style]="{'height': '250px'}">
                             </p-editor>      
                         </div>
                         <div class="col-12 md:col-6 mb-3">
@@ -169,7 +169,7 @@
                         </div>
                         <div class="col-12 mb-3">
                             <label class="font-medium text-700 block mb-2">Observación</label>
-                            <p-editor formControlName="observacion" [style]="{'height': '250px'}">
+                            <p-editor formControlName="observaciones" [style]="{'height': '250px'}">
                             </p-editor>  
                         </div>
                        

@@ -113,9 +113,9 @@ export interface ItinerarioResponse {
 }
 
 export interface IdiomaXItinerario {
-  idIdiomaXItinerario: number;
+  idIdiomaXItinerario: number | null;
   idIdioma: string;
-  idTipoInclusion: number;
+  // idTipoInclusion: number;
   idItinerario: number;
   descripcionItinerario: string;
   origen: string;
