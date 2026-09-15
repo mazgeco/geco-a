@@ -156,9 +156,9 @@ export interface ListaProveedores {
 }
 
 export interface InsumoItinerario {
-  idItinerarioInsumo: number; // Llave primaria de esta fila
+  idInsumoXItinerario: number | null; // Llave primaria de esta fila
   idProducto: string;
-  diaItinerario: number;
+  idItinerario: number;
   
   // Campos de la imagen
   idTipoInsumo: number | null;

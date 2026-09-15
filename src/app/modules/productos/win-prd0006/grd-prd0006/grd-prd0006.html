@@ -33,7 +33,7 @@
   <!-- LISTADO DE INSUMOS DEL ITINERARIO -->
   <!-- ===================================== -->
   <p-table id="GrdPrd0006" [value]="fila()" editMode="row" selectionMode="multiple"
-    [(selection)]="selectedRows" [metaKeySelection]="metaKey" dataKey="idItinerarioInsumo" class="p-datatable-sm"
+    [(selection)]="selectedRows" [metaKeySelection]="metaKey" dataKey="idInsumoXItinerario" class="p-datatable-sm"
     [paginator]="true" [rows]="10" showGridlines [size]="'small'">
     
     <!-- HEADER (Actualizado con las 7 columnas) -->
@@ -144,5 +144,13 @@
         </td>
       </tr>
     </ng-template>
+    <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="7" class="text-center p-4">
+        No existen insumos para este itinerario.
+      </td>
+    </tr>
+  </ng-template>
+
   </p-table>
 </div>

@@ -26,7 +26,7 @@ export class GrdPrd0006 implements OnInit, OnChanges {
   // IDENTIFICADORES PRINCIPALES
   idContenedor = signal<string>('WinPrd0006');
   idObjeto = signal<string>('GrdPrd0006');
-  idTabla = signal<string>('999'); // TODO: Cambiar por el ID real de tu tabla de insumos
+  idTabla = signal<string>('206'); // TODO: Cambiar por el ID real de tu tabla de insumos
   permiso = signal<string>('w');
 
   // INJECTIONS PÚBLICAS Y PRIVADAS
@@ -34,9 +34,10 @@ export class GrdPrd0006 implements OnInit, OnChanges {
   private confirmationService = inject(ConfirmationService);
   private productosService = inject(ProductosService); // Cambiado a ProductosService
   private toastService = inject(ToastService);
-  messageService = inject(MessageService);
+  
   
   // MANEJO DE MENSAJES
+  messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
   barraMessage = computed(() =>
     this.messageService.obtener(this.statusMessages, 'msgGrdPrd0006')
@@ -72,6 +73,9 @@ export class GrdPrd0006 implements OnInit, OnChanges {
   // Verificamos si idItinerario tiene un valor (ya sea que acaba de cambiar o que acaba de llegar por primera vez)
   if (this.idItinerario) {
     this.cargaDatos();
+  }else {
+    // Si el ID viene vacío (es un nuevo día temporal), limpiamos la tabla de inmediato
+    this.fila.set([]);
   }
 }
 
@@ -83,12 +87,11 @@ export class GrdPrd0006 implements OnInit, OnChanges {
       this.toastService.showMessage('warn', 'Aviso', 'Debe guardar el producto antes de agregar insumos.');
       return;
     }
-
     const nueva: InsumoItinerario = {
-      idItinerarioInsumo: 0,
+      idInsumoXItinerario: 0,
       idProducto: idProductoActual,
       // Usamos la nueva variable this.idItinerario (Asegúrate de que la propiedad a la izquierda coincida con tu interfaz, ya sea diaItinerario o idItinerario)
-      diaItinerario: this.idItinerario, 
+      idItinerario: this.idItinerario, 
       idTipoInsumo: null,
       idInsumo: null,
       descripcionInsumo: '',
@@ -105,7 +108,7 @@ export class GrdPrd0006 implements OnInit, OnChanges {
     let mensaje = this.funciones.insertRow(
       this.fila,
       nueva,
-      'idItinerarioInsumo', // <- Usamos la llave primaria correcta
+      'idInsumoXItinerario', // <- Usamos la llave primaria correcta
       true, 
       'btnGrdPrd00065'      // <- Usamos el botón del lápiz para que despierte en modo edición
     );
@@ -114,6 +117,7 @@ export class GrdPrd0006 implements OnInit, OnChanges {
       this.toastService.showMessage('error', 'Error', mensaje);
     }
   }
+
 
   // READ TIPOS PARA EL COMBOBOX
 cargaTipos(): void {
@@ -159,15 +163,24 @@ cargaTipos(): void {
     // 1. Agregamos el 'ADMIN' quemado temporalmente
     this.productosService.grabaInsumoItinerario(insumo, 'ADMIN').subscribe({
       next: (resp) => {
+        console.log('🔴 RESPUESTA DEL BACKEND AL GRABAR INSUMO:', resp);
         // 2. Usamos el nombre correcto de la llave primaria
-        insumo.idItinerarioInsumo = resp.idSecuencial!;
+        insumo.idInsumoXItinerario = resp.idSecuencial!;
         this.cargaDatos(); // Refrescamos la grilla
+         this.messageService.mostrar(
+          this.statusMessages,
+          'msgGrdPrd0006',
+          'success',
+          'Dato grabado correctamente.'
+        );
       },
       error: (err) => {
         this.toastService.showMessage('error', 'Error', 'Error al guardar: ' + err.error.message, err.error.status);
       },
     });
   }
+
+   
 
 // READ DATOS DE LA TABLA
   cargaDatos(): void {
@@ -181,17 +194,22 @@ cargaTipos(): void {
           this.fila.set(resp.data);
         },
         error: (err) => {
+          if (err.status === 404) {
+    // Si es 404, limpiamos la señal de la tabla silenciosamente para que muestre el mensaje del HTML
+    this.fila.set([]); 
+  } else {
           this.toastService.showMessage('error', 'Error', 'Error al cargar insumos: ' + err.error.message, err.error.status);
-        },
+        }
+        }
       });
     }
   }
 
 // DELETE UNA FILA
   eliminarFila(rowData: InsumoItinerario): void {
-    // 1. Usamos la llave primaria correcta (idItinerarioInsumo)
-    if (rowData.idItinerarioInsumo === 0) {
-      this.fila.set(this.fila().filter((item) => item.idItinerarioInsumo !== rowData.idItinerarioInsumo));
+    // 1. Usamos la llave primaria correcta (idInsumoXItinerario)
+    if (rowData.idInsumoXItinerario === 0) {
+      this.fila.set(this.fila().filter((item) => item.idInsumoXItinerario !== rowData.idInsumoXItinerario));
     } else {
       this.confirmationService.confirm({
         message: '¿Desea eliminar este insumo?',
@@ -200,9 +218,16 @@ cargaTipos(): void {
         rejectLabel: 'Cancelar',
         accept: () => {
           // 2. Le pasamos el ID correcto y el usuario temporal 'ADMIN'
-          this.productosService.eliminaInsumoItinerario(rowData.idItinerarioInsumo!, 'ADMIN').subscribe({
+          this.productosService.eliminaInsumoItinerario(rowData.idInsumoXItinerario!, 'ADMIN').subscribe({
             next: (resp) => {
-              this.fila.set(this.fila().filter((item) => item.idItinerarioInsumo !== resp.idSecuencial));
+              this.fila.set(this.fila().filter((item) => item.idInsumoXItinerario !== resp.idSecuencial));
+              //Envía un mensaje de carga exitosa
+              this.messageService.mostrar(
+                this.statusMessages,
+                'msg' + this.idObjeto(),
+                'success',
+                'Fila eliminada correctamente.',
+              );
             },
             error: (err) => {
               this.toastService.showMessage('error', 'Error', 'Error al eliminar: ' + err.error.message, err.error.status);
@@ -225,13 +250,13 @@ cargaTipos(): void {
         accept: () => {
           for (let i = 0; i < selected.length; i++) {
             // 1. Usamos la llave primaria correcta
-            let idItinerarioInsumo = selected[i].idItinerarioInsumo;
+            let idInsumoXItinerario = selected[i].idInsumoXItinerario;
             
             // 2. Le pasamos el ID y el usuario temporal 'ADMIN'
-            this.productosService.eliminaInsumoItinerario(idItinerarioInsumo!, 'ADMIN').subscribe({
+            this.productosService.eliminaInsumoItinerario(idInsumoXItinerario!, 'ADMIN').subscribe({
               next: (resp) => {
                 // 3. Actualizamos el filtro con la llave correcta
-                this.fila.set(this.fila().filter((item) => item.idItinerarioInsumo !== resp.idSecuencial));
+                this.fila.set(this.fila().filter((item) => item.idInsumoXItinerario !== resp.idSecuencial));
               },
               error: (err) => {
                 this.toastService.showMessage('error', 'Error', 'Error al eliminar: ' + err.error.message, err.error.status);
@@ -245,13 +270,18 @@ cargaTipos(): void {
     }
   }
 
+
+  
+
   // AUDITORÍA DEL REGISTRO
   muestraAuditoriaRegistro(): void {
     const selected = this.selectedRows || [];
     if (selected.length === 1) {
-      this.funciones.muestraAuditoria(selected[0].idInsumo, this.idTabla(), selected[0]);
+      this.funciones.muestraAuditoria(selected[0].idInsumoXItinerario, this.idTabla(), selected[0]);
     } else {
       this.toastService.showMessage('error', 'Error', 'Seleccione un registro para ver la auditoría');
     }
   }
+
+
 }

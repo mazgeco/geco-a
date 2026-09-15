@@ -408,11 +408,11 @@ alCambiarIdioma(nuevoIdioma: string): void {
       next: (resp) => {
         console.log('Respuesta del guardado en Java:', resp);
        
-      if (resp && resp.idNoSecuencial && (!idActual || idActual === 0)) {
+      if (resp && resp.idSecuencial && (!idActual || idActual === 0)) {
         // this.idItinerario = resp.idItinerario; // (Descomenta si usas esta variable local)
-        this.frmPrd0004.patchValue({ idItinerario: Number(resp.idNoSecuencial) }, { emitEvent: false });
+        this.frmPrd0004.patchValue({ idItinerario: Number(resp.idSecuencial) }, { emitEvent: false });
         // 2. Actualizamos el Signal activo para que la grilla y el sistema sepan qué día estamos tocando
-        this.idItinerarioActivo.set(Number(resp.idNoSecuencial));
+        this.idItinerarioActivo.set(Number(resp.idSecuencial));
         // 3. ¡AQUÍ! Actualizamos la lista local de días para que el día 4 o 5 queden registrados formalmente
   
     const diaActual = Number(this.diaActivo()); 
@@ -422,11 +422,11 @@ this.dias.update((lista: any[]) => {
 
   if (index >= 0) {
     // Si ya existe, actualizamos su ID
-    lista[index].idItinerario = Number(resp.idNoSecuencial);
+    lista[index].idItinerario = Number(resp.idSecuencial);
     return [...lista];
   } else {
     // Si no existía, lo agregamos oficialmente como objeto con su número e ID
-    return [...lista, { diaItinerario: diaActual, idItinerario: Number(resp.idNoSecuencial) }];
+    return [...lista, { diaItinerario: diaActual, idItinerario: Number(resp.idSecuencial) }];
   }
 });
       }
@@ -450,7 +450,7 @@ this.dias.update((lista: any[]) => {
             idIdiomaXItinerario: this.idIdiomaXItinerarioActual ? this.idIdiomaXItinerarioActual : null,
             idIdioma: formValues.idIdioma,
             // idTipoInclusion: 0,
-            idItinerario: resp.idNoSecuencial ? Number(resp.idNoSecuencial) : Number(idActual),
+            idItinerario: resp.idSecuencial ? Number(resp.idSecuencial) : Number(idActual),
             descripcionItinerario: formValues.descripcionItinerario || '',
             origen: formValues.origen || '',
             destino: formValues.destino || '',
@@ -471,7 +471,7 @@ this.dias.update((lista: any[]) => {
                     'Dato grabado correctamente.'
         );
               // Capturamos el ID que devuelve el backend (revisa si en tu respuesta viene como 'idNoSecuencial' o 'idSecuencial')
-              const idGenerado = resTextos.idNoSecuencial || resTextos.idSecuencial;
+              const idGenerado = resTextos.idSecuencial || resTextos.idNoSecuencial;
               if (idGenerado) {
                 this.idIdiomaXItinerarioActual = Number(idGenerado);
               }

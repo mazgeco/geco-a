@@ -129,22 +129,25 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
 
   // Inserta o actualiza un insumo
   grabaInsumoItinerario(insumo: InsumoItinerario, idUsuario: string) {
-    if (insumo.idItinerarioInsumo === 0) {
+    if (insumo.idInsumoXItinerario === 0) {
+       insumo.idInsumoXItinerario = null;
       // POST (Nuevo): Pasamos el idUsuario en la URL
-      return this.http.post<any>(`${this.apiUrl}/insumosxitinerario/${idUsuario}`, insumo);
+      return this.http.post<any>(`${this.apiUrl}productos/insumosxitinerario/${idUsuario}`, insumo);
     } else {
       // PUT (Actualizar): Pasamos idUsuario en URL y el idInsumoXItinerario como Query Param
       return this.http.put<any>(
-        `${this.apiUrl}/insumosxitinerario/${idUsuario}?idInsumoXItinerario=${insumo.idItinerarioInsumo}`, 
+        `${this.apiUrl}productos/insumosxitinerario/${idUsuario}?idInsumoXItinerario=${insumo.idInsumoXItinerario}`, 
         insumo
       );
     }
   }
 
+ 
+
   // Elimina un insumo (Asumiendo la estructura estándar del DELETE que no se ve completa en la foto)
   eliminaInsumoItinerario(idInsumoXItinerario: number, idUsuario: string) {
     return this.http.delete<any>(
-      `${this.apiUrl}/insumosxitinerario/${idUsuario}?idInsumoXItinerario=${idInsumoXItinerario}`
+      `${this.apiUrl}productos/insumosxitinerario/${idUsuario}?idInsumoXItinerario=${idInsumoXItinerario}`
     );
   }
 
