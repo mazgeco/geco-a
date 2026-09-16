@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario} from '../interfaces/productos.interfaces';
+import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse} from '../interfaces/productos.interfaces';
 import { SavedRow } from '../interfaces/general.interface'
 
 @Injectable({
@@ -158,4 +158,64 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
     return this.http.delete(url);
   }
 
+   listaOperaciones(): Observable<ListaOperacionResponse> {
+      return this.http.get<ListaOperacionResponse>(`${this.apiUrl}productos/operaciones`);
     }
+
+   grabaOperacion(operacion: Operacion, nuevaFila: boolean): Observable<SavedRow> {
+        if (nuevaFila) {
+          operacion.idOperacion = null;
+          return this.http.post<SavedRow>(
+            `${this.apiUrl}productos/${this.idUsuario}/operaciones`,
+            operacion,
+          );
+        } else {
+          const params = new HttpParams().set('idOperacion', operacion.idOperacion!);
+          return this.http.put<SavedRow>(
+            `${this.apiUrl}productos/${this.idUsuario}/operaciones`,
+            operacion,
+            { params },
+          );
+        }
+      }
+
+       eliminaOperacion(idOperacion: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idOperacion', idOperacion);
+    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/operaciones`, {
+      params,
+    });
+  }
+
+
+
+   listaUnidadEstrategica(): Observable<ListaUnidadEstrategicaResponse> {
+      return this.http.get<ListaUnidadEstrategicaResponse>(`${this.apiUrl}productos/unidadesestrategicas`);
+    }
+
+   grabaUnidadEstrategica(unidad: UnidadEstrategica, nuevaFila: boolean): Observable<SavedRow> {
+        if (nuevaFila) {
+          unidad.idUnidadEstrategica = null;
+          return this.http.post<SavedRow>(
+            `${this.apiUrl}productos/${this.idUsuario}/unidadesestrategicas`,
+            unidad,
+          );
+        } else {
+          const params = new HttpParams().set('idUnidadEstrategica', unidad.idUnidadEstrategica!);
+          return this.http.put<SavedRow>(
+            `${this.apiUrl}productos/${this.idUsuario}/unidadesestrategicas`,
+            unidad,
+            { params },
+          );
+        }
+      }
+
+       eliminaUnidadEstrategica(idUnidadEstrategica: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idUnidadEstrategica', idUnidadEstrategica);
+    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/unidadesestrategicas`, {
+      params,
+    });
+  }
+
+    }
+
+   

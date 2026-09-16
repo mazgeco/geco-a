@@ -195,9 +195,9 @@ cargaTipos(): void {
         },
         error: (err) => {
           if (err.status === 404) {
-    // Si es 404, limpiamos la señal de la tabla silenciosamente para que muestre el mensaje del HTML
-    this.fila.set([]); 
-  } else {
+          // Si es 404, limpiamos la señal de la tabla silenciosamente para que muestre el mensaje del HTML
+          this.fila.set([]); 
+          } else {
           this.toastService.showMessage('error', 'Error', 'Error al cargar insumos: ' + err.error.message, err.error.status);
         }
         }

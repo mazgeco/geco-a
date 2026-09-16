@@ -182,6 +182,37 @@ export interface InsumoItinerario {
   fechaModifica?: string;
 }
 
+export interface Operacion {
+  idOperacion: number | null;
+  descripcionOperacion: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
 
+export interface ListaOperacionResponse {
+  status: string;
+  message: string;
+  data: Operacion[];
+}
+
+export interface UnidadEstrategica {
+  idUnidadEstrategica: number | null;
+  idOperacion: number | null;
+  idTipoOperacionXEmpresa: number | null;
+  descripcionUnidadEstrategica: string;
+  principalUnidadEstrategica: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+export interface ListaUnidadEstrategicaResponse {
+  status: string;
+  message: string;
+  data: UnidadEstrategica[];
+}
 
 
