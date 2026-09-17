@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse} from '../interfaces/productos.interfaces';
+import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse} from '../interfaces/productos.interfaces';
 import { SavedRow } from '../interfaces/general.interface'
 
 @Injectable({
@@ -212,6 +212,35 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
        eliminaUnidadEstrategica(idUnidadEstrategica: number): Observable<SavedRow> {
     const params = new HttpParams().set('idUnidadEstrategica', idUnidadEstrategica);
     return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/unidadesestrategicas`, {
+      params,
+    });
+  }
+
+
+   listaTemporadas(): Observable<ListaTemporadasResponse> {
+      return this.http.get<ListaTemporadasResponse>(`${this.apiUrl}productos/temporadas`);
+    }
+
+   grabaTemporada(temporada: Temporadas, nuevaFila: boolean): Observable<SavedRow> {
+        if (nuevaFila) {
+          temporada.idTemporada = null;
+          return this.http.post<SavedRow>(
+            `${this.apiUrl}productos/${this.idUsuario}/temporadas`,
+            temporada,
+          );
+        } else {
+          const params = new HttpParams().set('idTemporada', temporada.idTemporada!);
+          return this.http.put<SavedRow>(
+            `${this.apiUrl}productos/${this.idUsuario}/temporadas`,
+            temporada,
+            { params },
+          );
+        }
+      }
+
+       eliminaTemporada(idTemporada: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idTemporada', idTemporada);
+    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/temporadas`, {
       params,
     });
   }

@@ -215,4 +215,22 @@ export interface ListaUnidadEstrategicaResponse {
   data: UnidadEstrategica[];
 }
 
+export interface Temporadas{
+  idTemporada: number | null;
+  descripcionTemporada: string;
+  fechaInicioTemporada: string;
+  fechaFinTemporada: string;
+  principalTemporada: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+export interface ListaTemporadasResponse {
+  status: string;
+  message: string;
+  data: Temporadas[];
+}
+
 
