@@ -153,8 +153,7 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
 
   // Asegúrate de importar Observable desde 'rxjs'
   eliminarItinerario(idItinerario: number, idUsuario: string): Observable<any> {
-    // La URL quedará algo así: http://localhost:8080/api/productos/tuUsuario/itinerarios?idItinerario=16
-    const url = `${this.apiUrl}/productos/${idUsuario}/itinerarios?idItinerario=${idItinerario}`;
+    const url = `${this.apiUrl}productos/${idUsuario}/itinerarios?idItinerario=${idItinerario}`;
     return this.http.delete(url);
   }
 
@@ -238,7 +237,7 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
         }
       }
 
-       eliminaTemporada(idTemporada: number): Observable<SavedRow> {
+  eliminaTemporada(idTemporada: number): Observable<SavedRow> {
     const params = new HttpParams().set('idTemporada', idTemporada);
     return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/temporadas`, {
       params,
