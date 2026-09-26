@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse} from '../interfaces/productos.interfaces';
+import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse, ListaPrecioProductoResponse} from '../interfaces/productos.interfaces';
 import { SavedRow } from '../interfaces/general.interface'
 
 @Injectable({
@@ -178,7 +178,7 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
         }
       }
 
-       eliminaOperacion(idOperacion: number): Observable<SavedRow> {
+    eliminaOperacion(idOperacion: number): Observable<SavedRow> {
     const params = new HttpParams().set('idOperacion', idOperacion);
     return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/operaciones`, {
       params,
@@ -208,7 +208,7 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
         }
       }
 
-       eliminaUnidadEstrategica(idUnidadEstrategica: number): Observable<SavedRow> {
+  eliminaUnidadEstrategica(idUnidadEstrategica: number): Observable<SavedRow> {
     const params = new HttpParams().set('idUnidadEstrategica', idUnidadEstrategica);
     return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/unidadesestrategicas`, {
       params,
@@ -243,6 +243,16 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
       params,
     });
   }
+
+  // En tu productos.service.ts
+  actualizarTipoPrecio(idProducto: string, payload: any, idUsuario: string): Observable<any> {
+  const url = `${this.apiUrl}productos/${idUsuario}?idProducto=${idProducto}`;
+  return this.http.put(url, payload);
+  }
+
+  listaPreciosProductos(): Observable<ListaPrecioProductoResponse> {
+  return this.http.get<ListaPrecioProductoResponse>(`${this.apiUrl}productos/precioproductos`);
+}
 
     }
 

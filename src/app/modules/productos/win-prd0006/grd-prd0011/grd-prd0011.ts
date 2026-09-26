@@ -1,7 +1,7 @@
 import { Component, computed, inject, Input, OnInit, OnChanges, SimpleChanges, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
-import { InsumoItinerario, TipoInsumo, ListaInsumo, ListaProveedores} from '../../../../interfaces/productos.interfaces';
+import { TarifaFila, ListaPrecioProductoResponse} from '../../../../interfaces/productos.interfaces';
 import { FuntionsService } from '../../../../services/functions.service';
 import { ProductosService } from '../../../../services/productos.service';
 import { StatusMessage } from '../../../../interfaces/general.interface';
@@ -17,10 +17,101 @@ import { FormsModule } from '@angular/forms';   // Necesario para [(ngModel)]
   templateUrl: './grd-prd0011.html',
   styles: ``,
 })
-export class GrdPrd0011  {
+export class GrdPrd0011 implements OnInit {
 
-  @Input()
-  idProducto!: string;
-
+  @Input() idProducto: string | null = null;
+  @Input() idTemporada: number | null = null;
   modeloCobro: number = 1;
+  fila = signal<TarifaFila[]>([]);
+  nombresTarifasSugeridos: string[] = [];
+
+    // 2. INYECTAMOS EL STATE SERVICE PARA SABER EL PRODUCTO ACTUAL
+  public stateService = inject(StateService);
+
+  // IDENTIFICADORES PRINCIPALES
+  idContenedor = signal<string>('WinPrd0006');
+  idObjeto = signal<string>('GrdPrd0006');
+  idTabla = signal<string>('206'); // TODO: Cambiar por el ID real de tu tabla de insumos
+  permiso = signal<string>('w');
+
+  // INJECTIONS PÚBLICAS Y PRIVADAS
+  funciones = inject(FuntionsService);
+  private confirmationService = inject(ConfirmationService);
+  private productosService = inject(ProductosService); // Cambiado a ProductosService
+  private toastService = inject(ToastService);
+  
+  
+  // MANEJO DE MENSAJES
+  messageService = inject(MessageService);
+  statusMessages = signal<Record<string, StatusMessage>>({});
+  barraMessage = computed(() =>
+    this.messageService.obtener(this.statusMessages, 'msgGrdPrd0006')
+  );
+
+  ngOnInit(): void {
+    this.cargarSugerenciasTarifas();
+    // this.cargaDatos(); 
+  }
+
+ insertarFila(): void {
+    
+    // Validación 1: Verificar que el producto exista
+    if (!this.idProducto) {
+      this.toastService.showMessage('warn', 'Aviso', 'Debe guardar el producto antes de agregar tarifas.');
+      return;
+    }
+
+    // Validación 2: Verificar que se haya seleccionado una temporada en el combo
+    if (!this.idTemporada) {
+      this.toastService.showMessage('warn', 'Aviso', 'Seleccione una temporada primero en la parte superior.');
+      return;
+    }
+
+    // Armamos el objeto con la estructura que necesita tu backend/tabla
+    // (Asegúrate de que las propiedades coincidan con tu DTO en Java)
+    const nuevaTarifa = {
+      idPrecioProducto: '0', // Será generado por la BD al guardar
+      idProducto: this.idProducto, 
+      idTemporada: this.idTemporada,
+      descripcionPrecioProducto: '', // Para "Nombre Tarifa"
+      paxMin: null,
+      paxMax: null,
+      costoBase: null,
+      tarifaRac: null,
+      pvpFinal: null
+    };
+
+    // Usamos tu función global insertRow tal como lo hacías en grd-prd0006
+    let mensaje = this.funciones.insertRow(
+      this.fila,              // Tu Signal que guarda la data de la tabla
+      nuevaTarifa,            // El objeto vacío que acabamos de armar
+      'idPrecioProducto',     // El nombre del campo clave (Primary Key)
+      true,                   // Para ponerlo en modo edición
+      'btnGrdPrd00110'         // El ID de tu botón en el HTML de esta tabla (ajusta si es necesario)
+    );
+
+    // Opcional: Si tu función insertRow devuelve algún mensaje de error, puedes mostrarlo
+     if (mensaje !== '') {
+      this.toastService.showMessage('error', 'Error', mensaje);
+    }
+    console.log('Filas actuales en memoria:', this.fila()); // <-- AGRÉGALO AQUÍ
+  }
+
+
+  cargarSugerenciasTarifas(): void {
+    this.productosService.listaPreciosProductos().subscribe({
+      next: (resp: ListaPrecioProductoResponse) => {
+        const listaCompleta = resp.data || [];
+        
+        // Al escribir item., TypeScript te sugerirá 'descripcionPrecioProducto' gracias a TarifaFila
+        const soloNombres = listaCompleta.map(item => item.descripcionPrecioProducto);
+        
+        // Limpiamos los duplicados
+        this.nombresTarifasSugeridos = [...new Set(soloNombres)];
+      },
+      error: (err) => {
+        this.toastService.showMessage('error', 'Error', 'No se pudieron cargar las sugerencias de tarifas');
+      }
+    });
+  }
 }

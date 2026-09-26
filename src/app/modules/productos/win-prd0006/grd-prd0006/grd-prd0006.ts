@@ -110,7 +110,7 @@ export class GrdPrd0006 implements OnInit, OnChanges {
       nueva,
       'idInsumoXItinerario', // <- Usamos la llave primaria correcta
       true, 
-      'btnGrdPrd00065'      // <- Usamos el botón del lápiz para que despierte en modo edición
+      'btnGrdPrd00060'      // <- Usamos el botón del lápiz para que despierte en modo edición
     );
 
     if (mensaje !== '') {

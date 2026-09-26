@@ -10,13 +10,13 @@
         class="mr-1"
         pTooltip="Auditoría del registro actual"
         tooltipPosition="bottom"
-   
+        (onClick)="funciones.muestraAuditoria(idProducto, idTabla(), currentData)"
       />
       <p-button
         icon="pi pi-info-circle"
         pTooltip="Información del objeto actual"
         tooltipPosition="bottom"
-       
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
       />
     </ng-template>
 
@@ -25,13 +25,13 @@
     </ng-template>
 
     <ng-template #end>
-       <!-- @if (productoMessage()?.visible) {
+       @if (productoMessage()?.visible) {
         <div class="message-container">
           <p-message [severity]="productoMessage()!.severity" [icon]="productoMessage()!.icon">
             {{ productoMessage()!.text }}
           </p-message>
         </div>
-      } -->
+      }
     </ng-template>
   </p-toolbar>
   <p-panel class="col-12">
@@ -52,23 +52,40 @@
         <div class="grid">
             <!-- Tarjeta Modelo 1 -->
             <div class="col-12 md:col-6">
-                <div class="p-3 border-round-xl border-2 cursor-pointer flex align-items-center gap-3 transition-colors transition-duration-200"
+                <!-- <div class="p-3 border-round-xl border-2 cursor-pointer flex align-items-center gap-3 transition-colors transition-duration-200"
                      [ngClass]="{'border-primary bg-blue-50': modeloCobro === 1, 'surface-border surface-card': modeloCobro !== 1}"
-                     (click)="modeloCobro = 1">
-                    <p-radioButton name="modelo" [value]="1" [(ngModel)]="modeloCobro"></p-radioButton>
+                     (click)="modeloCobro = 1" >
+                    <p-radioButton name="modelo" [value]="1" [(ngModel)]="modeloCobro" (ngModelChange)="autoguardarModelo($event)"></p-radioButton>
                     <div>
                         <div class="font-bold mb-1 text-900 text-sm">1. MODELO ESTACIONAL (POR RANGOS DE PAX)</div>
                         <div class="text-sm text-500">Varía por número de pasajeros y temporada.</div>
                     </div>
-                </div>
+                </div> -->
+                <div class="p-3 border-round-xl border-2 cursor-pointer flex align-items-center gap-3 transition-colors transition-duration-200"
+     [ngClass]="{'border-primary bg-blue-50': modeloCobro === 1, 'surface-border surface-card': modeloCobro !== 1}"
+     (click)="modeloCobro = 1; autoguardarModelo(1)">
+  
+  <!-- Cambiamos ngModelChange por el onClick nativo de PrimeNG -->
+  <p-radioButton 
+    name="modelo" 
+    [value]="1" 
+    [(ngModel)]="modeloCobro" 
+    (onClick)="autoguardarModelo(1)">
+  </p-radioButton>
+  
+  <div>
+    <div class="font-bold mb-1 text-900 text-sm">1. MODELO ESTACIONAL (POR RANGOS DE PAX)</div>
+    <div class="text-sm text-500">Varía por número de pasajeros y temporada.</div>
+  </div>
+</div>
             </div>
 
             <!-- Tarjeta Modelo 2 -->
             <div class="col-12 md:col-6">
                 <div class="p-3 border-round-xl border-2 cursor-pointer flex align-items-center gap-3 transition-colors transition-duration-200"
                      [ngClass]="{'border-primary bg-blue-50': modeloCobro === 2, 'surface-border surface-card': modeloCobro !== 2}"
-                     (click)="modeloCobro = 2">
-                    <p-radioButton name="modelo" [value]="2" [(ngModel)]="modeloCobro"></p-radioButton>
+                     (click)="modeloCobro = 2" >
+                    <p-radioButton name="modelo" [value]="2" [(ngModel)]="modeloCobro" (ngModelChange)="autoguardarModelo($event)"></p-radioButton>
                     <div>
                         <div class="font-bold mb-1 text-900 text-sm">2. MODELO DE TARIFA PLANA (PRECIO FIJO ANUAL)</div>
                         <div class="text-sm text-500">Valor único e invariable los 365 días del año.</div>
@@ -77,7 +94,24 @@
             </div>
         </div>
     </div>
-    <app-grd-prd0011></app-grd-prd0011>
+     <div class="col-12 md:col-4">
+        <div class="field mb-1">
+          <label>Temporadas</label>
+            <p-select 
+            class="w-full"
+            [options]="temporada()" 
+            optionLabel="descripcionTemporada" 
+            optionValue="idTemporada" 
+            [ngModel]="temporadaSeleccionada()"
+            (ngModelChange)="temporadaSeleccionada.set($event)"
+            >
+            </p-select>
+        </div>
+        </div>
+    <app-grd-prd0011 
+   [idProducto]="idProducto" 
+   [idTemporada]="temporadaSeleccionada()">
+</app-grd-prd0011>
 </p-panel>
  
 </div>

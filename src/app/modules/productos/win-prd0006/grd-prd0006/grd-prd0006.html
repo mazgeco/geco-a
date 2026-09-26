@@ -130,7 +130,7 @@
         <!-- 7. ACCIONES -->
         <td class="text-center">
           @if (!editing) {
-          <button pButton [id]="'btnGrdPrd00065' + rowData.idItinerarioInsumo" pInitEditableRow icon="pi pi-pencil" text
+          <button pButton [id]="'btnGrdPrd0006' + rowData.idInsumoXItinerario" pInitEditableRow icon="pi pi-pencil" text
             rounded severity="primary"></button>
           <button pButton [id]="'btnGrdPrd00066' + rowData.idItinerarioInsumo" icon="pi pi-trash" text rounded
             severity="danger" (click)="eliminarFila(rowData)"></button>

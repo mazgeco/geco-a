@@ -233,4 +233,24 @@ export interface ListaTemporadasResponse {
   data: Temporadas[];
 }
 
+export interface ActualizarTipoPrecioDTO {
+  tipoPrecio: string; // 'T' (Estacional) o 'F' (Plana)
+}
 
+export interface TarifaFila {
+    idPrecioProducto: string | null; 
+    idProducto: string;
+    idTemporada: number; 
+    descripcionPrecioProducto: string;
+    paxMin: number | null;
+    paxMax: number | null;
+    costoBase: number | null;
+    tarifaRac: number | null;
+    pvpFinal: number | null;
+}
+
+export interface ListaPrecioProductoResponse {
+  status: string;
+  message: string;
+  data: TarifaFila[]; 
+}

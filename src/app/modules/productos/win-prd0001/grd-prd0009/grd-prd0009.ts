@@ -15,7 +15,7 @@ import {
 } from '../../../../interfaces/general.interface';
 @Component({
   selector: 'app-grd-prd0009',
-  imports: [...PRIMENG_MODULES, NgClass],
+  imports: [...PRIMENG_MODULES],
    providers: [ConfirmationService],
   templateUrl: './grd-prd0009.html',
   styles: ``,
