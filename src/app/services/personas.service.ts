@@ -20,6 +20,7 @@ import {
   ListaPaisesResponse,
   ListaPersonasResponse,
   ListaTipoEmpresasResponse,
+  Nacionalidades,
   Paises,
   PersonaResponse,
   Personas,
@@ -109,10 +110,6 @@ export class PersonasService {
     return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/tipoidentificaciones`, {
       params,
     });
-  }
-
-  listaNacionalidades(): Observable<ListaNacionalidadesResponse> {
-    return this.http.get<ListaNacionalidadesResponse>(`${this.apiUrl}personas/nacionalidades`);
   }
 
   listaPaises(): Observable<ListaPaisesResponse> {
@@ -522,6 +519,33 @@ export class PersonasService {
   eliminaCiudad(idCiudad: number): Observable<SavedRow> {
     const params = new HttpParams().set('idCiudad', idCiudad!);
     return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/ciudades`, {
+      params,
+    });
+  }
+
+  listaNacionalidades(): Observable<ListaNacionalidadesResponse> {
+    return this.http.get<ListaNacionalidadesResponse>(`${this.apiUrl}personas/nacionalidades`);
+  }
+
+  grabaNacionalidad(nacionalidad: Nacionalidades, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/nacionalidades`,
+        nacionalidad,
+      );
+    } else {
+      const params = new HttpParams().set('idNacionalidad', nacionalidad.idNacionalidad!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/nacionalidades`,
+        nacionalidad,
+        { params },
+      );
+    }
+  }
+
+  eliminaNacionalidad(idNacionalidad: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idNacionalidad', idNacionalidad!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/nacionalidades`, {
       params,
     });
   }

@@ -32,7 +32,7 @@ export const routes: Routes = [
       { path: 'paises', component: Personas.WinPer0009 },
       { path: 'provincias', component: Personas.WinPer0010 },
       { path: 'ciudades', component: Personas.WinPer0011 },
-      //{ path: 'nacionalidades', component: Personas.WinPer0017 },
+      { path: 'nacionalidades', component: Personas.WinPer0017 },
       { path: '', redirectTo: 'dash', pathMatch: 'full' },
     ]
   },
