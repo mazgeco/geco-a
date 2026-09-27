@@ -8,4 +8,7 @@ export { WinPer0003 } from './win-per0003/win-per0003';
 export { WinPer0005 } from './win-per0005/win-per0005';
 export { WinPer0006 } from './win-per0006/win-per0006';
 export { WinPer0008 } from './win-per0008/win-per0008';
+export { WinPer0009 } from './win-per0009/win-per0009';
+export { WinPer0010 } from './win-per0010/win-per0010';
+export { WinPer0011 } from './win-per0011/win-per0011';
 export { WinPer0018 } from './win-per0018/win-per0018';

@@ -29,6 +29,10 @@ export const routes: Routes = [
       { path: 'tipo-denominacion', component: Personas.WinPer0003 },
       { path: 'tipo-identificacion', component: Personas.WinPer0005 },
       { path: 'tipo-caracteristicas', component: Personas.WinPer0006 },
+      { path: 'paises', component: Personas.WinPer0009 },
+      { path: 'provincias', component: Personas.WinPer0010 },
+      { path: 'ciudades', component: Personas.WinPer0011 },
+      //{ path: 'nacionalidades', component: Personas.WinPer0017 },
       { path: '', redirectTo: 'dash', pathMatch: 'full' },
     ]
   },

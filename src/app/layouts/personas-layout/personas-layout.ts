@@ -57,7 +57,7 @@ export class PersonasLayout implements OnInit {
               },
               {
                 label: 'Tipos de ficha médica',
-                routerLink: '/personas/duplicates/',
+                routerLink: '/personas/tipo-ficha-medica/',
               },
             ],
           },
@@ -66,21 +66,21 @@ export class PersonasLayout implements OnInit {
             items: [
               {
                 label: 'Paises',
-                routerLink: '/personas/duplicates/',
+                routerLink: '/personas/paises/',
               },
               {
                 label: 'Provincias/Estados',
-                routerLink: '/personas/duplicates/',
+                routerLink: '/personas/provincias/',
               },
               {
                 label: 'Ciudades',
-                routerLink: '/personas/duplicates/',
+                routerLink: '/personas/ciudades/',
               },
             ],
           },
           {
             label: 'Nacionalidades',
-            routerLink: '/personas/duplicates/',
+            routerLink: '/personas/nacionalidades/',
           }
         ],
       },

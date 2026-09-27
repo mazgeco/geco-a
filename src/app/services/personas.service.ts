@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import {
   Caracteristicas,
   CaracteristicasResponse,
+  Ciudades,
   CiudadesResponse,
   Denominaciones,
   Direcciones,
@@ -19,8 +20,11 @@ import {
   ListaPaisesResponse,
   ListaPersonasResponse,
   ListaTipoEmpresasResponse,
+  Paises,
   PersonaResponse,
   Personas,
+  Provincias,
+  ProvinciasResponse,
   Telefonos,
   TelefonosResponse,
   TipoCaracteristicas,
@@ -240,10 +244,6 @@ export class PersonasService {
     });
   }
 
-  listaCiudades(): Observable<CiudadesResponse> {
-    return this.http.get<CiudadesResponse>(`${this.apiUrl}personas/ciudades`);
-  }
-
   eliminaIdentificacion(idIdentificacion: number): Observable<SavedRow> {
     const params = new HttpParams().set('idIdentificacion', idIdentificacion!);
     return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/identificaciones`, {
@@ -445,6 +445,83 @@ export class PersonasService {
   eliminaFichaMedica(idFichaMedica: number): Observable<SavedRow> {
     const params = new HttpParams().set('idFichaMedica', idFichaMedica!);
     return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/fichasmedicas`, {
+      params,
+    });
+  }
+
+  grabaPais(pais: Paises, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/paises`,
+        pais,
+      );
+    } else {
+      const params = new HttpParams().set('idPais', pais.idPais!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/paises`,
+        pais,
+        { params },
+      );
+    }
+  }
+
+  eliminaPais(idPais: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idPais', idPais!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/paises`, {
+      params,
+    });
+  }
+
+  listaProvincias(): Observable<ProvinciasResponse> {
+    return this.http.get<ProvinciasResponse>(`${this.apiUrl}personas/provincias`);
+  }
+
+  grabaProvincia(provincia: Provincias, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/provincias`,
+        provincia,
+      );
+    } else {
+      const params = new HttpParams().set('idProvincia', provincia.idProvincia!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/provincias`,
+        provincia,
+        { params },
+      );
+    }
+  }
+
+  eliminaProvincia(idProvincia: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idProvincia', idProvincia!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/provincias`, {
+      params,
+    });
+  }
+
+  listaCiudades(): Observable<CiudadesResponse> {
+    return this.http.get<CiudadesResponse>(`${this.apiUrl}personas/ciudades`);
+  }
+
+  grabaCiudad(ciudad: Ciudades, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/ciudades`,
+        ciudad,
+      );
+    } else {
+      const params = new HttpParams().set('idCiudad', ciudad.idCiudad!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}personas/${this.idUsuario}/ciudades`,
+        ciudad,
+        { params },
+      );
+    }
+  }
+
+  eliminaCiudad(idCiudad: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idCiudad', idCiudad!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuario}/ciudades`, {
       params,
     });
   }

@@ -1,4 +1,4 @@
-import { EstadoFila } from "./general.interface";
+import { EstadoFila } from './general.interface';
 
 //PERSONAS
 export interface Personas {
@@ -93,8 +93,12 @@ export interface ListaNacionalidadesResponse {
 }
 
 export interface Nacionalidades {
-  idNacionalidad: number;
+  idNacionalidad: number | null;
   descripcionNacionalidad: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
 }
 
 //PAISES
@@ -105,12 +109,16 @@ export interface ListaPaisesResponse {
 }
 
 export interface Paises {
-  idPais: number;
-  descripcionPais: string;
+  idPais: number | null;
+  descripcionPais: string | null;
   codigoArea?: string | null;
   codigoAts?: string | null;
   codigoParaisoFiscal?: string | null;
   tipoRegimenFiscal?: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
 }
 
 //IDENTIFICACIONES
@@ -203,10 +211,28 @@ export interface Ciudades {
   idCiudad: number;
   idProvincia: number;
   descripcionCiudad: null | string;
-  idUsuarioCrea: null | string;
-  fechaCrea: null | string;
-  idUsuarioModifica: null | string;
-  fechaModifica: null | string;
+  idUsuarioCrea?: null | string;
+  fechaCrea?: null | string;
+  idUsuarioModifica?: null | string;
+  fechaModifica?: null | string;
+}
+
+//PROVINCIAS
+export interface ProvinciasResponse {
+  status: string;
+  message: string;
+  data: Provincias[];
+}
+
+export interface Provincias {
+  idProvincia: number | null;
+  idPais: null | number;
+  descripcionProvincia: null | string;
+  codigoArea: null | string;
+  idUsuarioCrea?: null | string;
+  fechaCrea?: null | string;
+  idUsuarioModifica?: null | string;
+  fechaModifica?: null | string;
 }
 
 //TELÉFONOS

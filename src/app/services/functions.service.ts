@@ -110,9 +110,12 @@ export class FuntionsService {
         );
       case 'tipoInsumo':
         return tipos.find((item) => item.idTipoInsumo === codigo)?.descripcionTipoInsumo ?? '';
-
       case 'insumo':
         return tipos.find((item) => item.idInsumo === codigo)?.descripcionInsumo ?? '';
+      case 'pais':
+        return tipos.find((item) => item.idPais === codigo)?.descripcionPais ?? '';
+      case 'provincia':
+        return tipos.find((item) => item.idProvincia === codigo)?.descripcionProvincia ?? '';
       case 'proveedor':
         return (
           tipos.find((item) => Number(item.idProveedor) === Number(codigo))?.nombrePersona ?? ''
