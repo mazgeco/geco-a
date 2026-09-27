@@ -3,6 +3,55 @@
 <p-confirmdialog />
 
 <div class="col-12">
+     <p-toolbar>
+    <ng-template #start>
+      <p-button
+          icon="pi pi-plus"
+          class="mr-1"
+          label="Agregar Día"
+          pTooltip="Agregar Día Secuencial al itinerario"
+          tooltipPosition="bottom"
+          (onClick)="agregarDiaSecuencial()"
+          
+        />
+      <p-button
+          icon="pi pi-trash"
+          class="mr-1"
+          label="Eliminar Día"
+          pTooltip="Eliminar día del itinerario"
+          tooltipPosition="bottom"
+          (onClick)="eliminarDia()"
+          
+        />
+      <p-button
+        icon="pi pi-user"
+        class="mr-1"
+        pTooltip="Auditoría del registro actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraAuditoria(idItinerarioActivo(), idTabla(), currentData)"
+      />
+      <p-button
+        icon="pi pi-info-circle"
+        pTooltip="Información del objeto actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
+      />
+    </ng-template>
+
+    <ng-template #center>
+      <span></span>
+    </ng-template>
+
+    <ng-template #end>
+       @if (productoMessage()?.visible) {
+        <div class="message-container">
+          <p-message [severity]="productoMessage()!.severity" [icon]="productoMessage()!.icon">
+            {{ productoMessage()!.text }}
+          </p-message>
+        </div>
+      }
+    </ng-template>
+  </p-toolbar>
 <form id="frmPrd0004" class="grid m-0" [formGroup]="frmPrd0004">
     
     <!-- CONTENEDOR PRINCIPAL ESTÁNDAR -->
@@ -16,7 +65,6 @@
                 <h3 class="m-0">Itinerario Secuencial y Recursos Operativos</h3>
                 <p class="text-color-secondary text-sm m-0 mt-1">Planificación de jornadas, comidas incluidas e insumos.</p>
             </div>
-            <p-button icon="pi pi-plus" class="mr-1" label="Agregar Día" pTooltip="Agregar Día Secuencial al itinerario" tooltipPosition="bottom" (click)="agregarDiaSecuencial()"></p-button>
         </div>
 
         <!-- ========================================== -->
@@ -24,23 +72,23 @@
         <!-- ========================================== -->
          <div class="flex align-items-center gap-3 mb-5 overflow-x-auto p-3 border-1 surface-border border-round surface-ground" 
      style="width: 0; min-width: 100%;">
-            @for (dia of dias(); track dia; let last = $last) {
+            @for (dia of listaCompletaDias(); track dia.diaItinerario; let last = $last) {
                 <!-- Tarjeta de Día (Ahora cuadrada: 80x80) -->
-                <div (click)="seleccionarDia(dia)" 
+                <div (click)="seleccionarDia(dia.diaItinerario)" 
                      class="flex flex-column align-items-center justify-content-center border-round cursor-pointer transition-colors transition-duration-150 flex-shrink-0"
-                     [class.bg-primary]="diaActivo() === dia"
-                     [class.border-1]="diaActivo() !== dia"
-                     [class.surface-border]="diaActivo() !== dia"
-                     [class.surface-card]="diaActivo() !== dia"
-                     [class.hover:surface-100]="diaActivo() !== dia"
+                     [class.bg-primary]="diaActivo() === dia.diaItinerario"
+                     [class.border-1]="diaActivo() !== dia.diaItinerario"
+                     [class.surface-border]="diaActivo() !== dia.diaItinerario"
+                     [class.surface-card]="diaActivo() !== dia.diaItinerario"
+                     [class.hover:surface-100]="diaActivo() !== dia.diaItinerario"
                      style="width: 80px; height: 80px;">
                     
                     <span class="text-xs font-bold mb-1" 
-                          [class.text-white]="diaActivo() === dia" 
-                          [class.text-500]="diaActivo() !== dia">DÍA</span>
+                          [class.text-white]="diaActivo() === dia.diaItinerario" 
+                          [class.text-500]="diaActivo() !== dia.diaItinerario">DÍA</span>
                     <span class="text-3xl font-bold" 
-                          [class.text-white]="diaActivo() === dia" 
-                          [class.text-900]="diaActivo() !== dia">{{ dia }}</span>
+                          [class.text-white]="diaActivo() === dia.diaItinerario" 
+                          [class.text-900]="diaActivo() !== dia.diaItinerario">{{ dia.diaItinerario}}</span>
                 </div>
                 
                 <!-- Flecha Separadora -->
@@ -58,13 +106,13 @@
         <div class="grid">
             
             <!-- COLUMNA IZQUIERDA: Ficha Operativa -->
-            <div class="col-12 md:col-5">
+            <div class="col-12 md:col-5" style="min-width: 0;">
                 <div class="border-1 surface-border border-round p-3 h-full surface-card">
                     
                     <!-- Título y Botón Eliminar -->
                     <div class="flex justify-content-between align-items-center mb-4 border-bottom-1 surface-border pb-2">
                         <h4 class="m-0 text-primary">Ficha Operativa - Día {{ diaActivo() }}</h4>
-                        <p-button icon="pi pi-trash" class="mr-1" label="Eliminar Día" pTooltip="Eliminar día del itinerario" tooltipPosition="bottom"  ></p-button>
+                        
                     </div>
 
                     <!-- Formulario Ficha -->
@@ -83,7 +131,7 @@
                         </div>
                         <div class="col-12 mb-3">
                             <label class="font-medium text-700 block mb-2">Descripción</label>
-                            <p-editor formControlName="descripcion" [style]="{'height': '250px'}">
+                            <p-editor formControlName="descripcionItinerario" [style]="{'height': '250px'}">
                             </p-editor>      
                         </div>
                         <div class="col-12 md:col-6 mb-3">
@@ -106,22 +154,22 @@
                             <label class="font-medium text-700 block mb-3">Comidas Incluidas</label>
                             <div class="flex flex-wrap gap-4">
                                 <div class="flex align-items-center">
-                                    <p-checkbox value="Desayuno" inputId="c-des" formControlName="comidasIncluidas"></p-checkbox>
+                                    <p-checkbox value="D" inputId="c-des" formControlName="tipoComidaIncluida"></p-checkbox>
                                     <label for="c-des" class="ml-2">Desayuno</label>
                                 </div>
                                 <div class="flex align-items-center">
-                                    <p-checkbox value="Almuerzo" inputId="c-alm" formControlName="comidasIncluidas"></p-checkbox>
+                                    <p-checkbox value="A" inputId="c-alm" formControlName="tipoComidaIncluida"></p-checkbox>
                                     <label for="c-alm" class="ml-2">Almuerzo</label>
                                 </div>
                                 <div class="flex align-items-center">
-                                    <p-checkbox value="Cena" inputId="c-cen" formControlName="comidasIncluidas"></p-checkbox>
+                                    <p-checkbox value="C" inputId="c-cen" formControlName="tipoComidaIncluida"></p-checkbox>
                                     <label for="c-cen" class="ml-2">Cena</label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-12 mb-3">
                             <label class="font-medium text-700 block mb-2">Observación</label>
-                            <p-editor formControlName="observacion" [style]="{'height': '250px'}">
+                            <p-editor formControlName="observaciones" [style]="{'height': '250px'}">
                             </p-editor>  
                         </div>
                        
@@ -131,7 +179,7 @@
             </div>
 
             <!-- COLUMNA DERECHA: Insumos -->
-            <div class="col-12 md:col-7">
+            <div class="col-12 md:col-7" style="min-width: 0;">
                 <div class="border-1 surface-border border-round p-3 h-full surface-card">
                     <div class="flex justify-content-between align-items-center mb-4 border-bottom-1 surface-border pb-2">
                         <div>

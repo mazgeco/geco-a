@@ -113,14 +113,15 @@ export interface ItinerarioResponse {
 }
 
 export interface IdiomaXItinerario {
-  idIdiomaXItinerario: number;
+  idIdiomaXItinerario: number | null;
   idIdioma: string;
-  idTipoInclusion: number;
+  // idTipoInclusion: number;
   idItinerario: number;
   descripcionItinerario: string;
   origen: string;
   destino: string;
   actividad: string;
+  tipoComidaIncluida?:  string | null;
   duracionItinerario: string;
   observaciones: string;
   idUsuarioCrea?: string;
@@ -155,9 +156,9 @@ export interface ListaProveedores {
 }
 
 export interface InsumoItinerario {
-  idItinerarioInsumo: number; // Llave primaria de esta fila
+  idInsumoXItinerario: number | null; // Llave primaria de esta fila
   idProducto: string;
-  diaItinerario: number;
+  idItinerario: number;
   
   // Campos de la imagen
   idTipoInsumo: number | null;
@@ -172,7 +173,7 @@ export interface InsumoItinerario {
   nombreProveedor?: string; 
   
   darAnticipo: boolean; 
-  observaciones: string;
+  observacionInsumoXItinerario: string;
   
   // Auditoría
   idUsuarioCrea?: string;
@@ -181,6 +182,75 @@ export interface InsumoItinerario {
   fechaModifica?: string;
 }
 
+export interface Operacion {
+  idOperacion: number | null;
+  descripcionOperacion: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
 
+export interface ListaOperacionResponse {
+  status: string;
+  message: string;
+  data: Operacion[];
+}
 
+export interface UnidadEstrategica {
+  idUnidadEstrategica: number | null;
+  idOperacion: number | null;
+  idTipoOperacionXEmpresa: number | null;
+  descripcionUnidadEstrategica: string;
+  principalUnidadEstrategica: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
 
+export interface ListaUnidadEstrategicaResponse {
+  status: string;
+  message: string;
+  data: UnidadEstrategica[];
+}
+
+export interface Temporadas{
+  idTemporada: number | null;
+  descripcionTemporada: string;
+  fechaInicioTemporada: string;
+  fechaFinTemporada: string;
+  principalTemporada: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+export interface ListaTemporadasResponse {
+  status: string;
+  message: string;
+  data: Temporadas[];
+}
+
+export interface ActualizarTipoPrecioDTO {
+  tipoPrecio: string; // 'T' (Estacional) o 'F' (Plana)
+}
+
+export interface TarifaFila {
+    idPrecioProducto: string | null; 
+    idProducto: string;
+    idTemporada: number; 
+    descripcionPrecioProducto: string;
+    paxMin: number | null;
+    paxMax: number | null;
+    costoBase: number | null;
+    tarifaRac: number | null;
+    pvpFinal: number | null;
+}
+
+export interface ListaPrecioProductoResponse {
+  status: string;
+  message: string;
+  data: TarifaFila[]; 
+}
