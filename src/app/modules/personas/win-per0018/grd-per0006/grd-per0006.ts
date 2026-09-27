@@ -11,7 +11,7 @@ import { ToastService } from '../../../../services/toast.service';
 @Component({
   selector: 'app-grd-per0006',
   imports: [...PRIMENG_MODULES, FormsModule],
-  templateUrl: './grd-per0006.html'
+  templateUrl: './grd-per0006.html',
 })
 export class GrdPer0006 implements OnInit {
   //LLAMADA AL idPersona
@@ -112,14 +112,16 @@ export class GrdPer0006 implements OnInit {
 
   saveDireccion(direccion: Direcciones): void {
     direccion.principalDireccion = direccion.preferida ? 'S' : 'N';
+    const sector = direccion.sector?.trim() || '';
+    const callePrincipal = direccion.callePrincipal?.trim() || '';
+    const nroCasaOEdificio = direccion.nroCasaOEdificio?.trim() || '';
+    const calleSecundaria = direccion.calleSecundaria?.trim() || '';
+    const datoAdicional = direccion.datoAdicional?.trim() || '';
+
     direccion.descripcionDireccion =
-      (direccion.sector ?? '') +
-      ' - ' +
-      (direccion.callePrincipal ?? '') +
-      ' ' +
-      (direccion.nroCasaOEdificio ?? '') +
-      ' y ' +
-      (direccion.calleSecundaria ?? '');
+      [sector, callePrincipal, nroCasaOEdificio].filter(Boolean).join(' ') +
+      (calleSecundaria ? ` y ${calleSecundaria}` : '') +
+      (datoAdicional ? ` Ref: ${datoAdicional}` : '');
 
     if (
       direccion.principalDireccion === 'S' &&
@@ -159,14 +161,16 @@ export class GrdPer0006 implements OnInit {
 
           aux.forEach((d) => {
             d.preferida = d.principalDireccion === 'S';
+            const sector = d.sector?.trim() || '';
+            const callePrincipal = d.callePrincipal?.trim() || '';
+            const nroCasaOEdificio = d.nroCasaOEdificio?.trim() || '';
+            const calleSecundaria = d.calleSecundaria?.trim() || '';
+            const datoAdicional = d.datoAdicional?.trim() || '';
+
             d.descripcionDireccion =
-              (d.sector ?? '') +
-              ' - ' +
-              (d.callePrincipal ?? '') +
-              ' ' +
-              (d.nroCasaOEdificio ?? '') +
-              ' y ' +
-              (d.calleSecundaria ?? '');
+              [sector, callePrincipal, nroCasaOEdificio].filter(Boolean).join(' ') +
+              (calleSecundaria ? ` y ${calleSecundaria}` : '') +
+              (datoAdicional ? ` Ref: ${datoAdicional}` : '');
           });
 
           this.direcciones.set(aux);
