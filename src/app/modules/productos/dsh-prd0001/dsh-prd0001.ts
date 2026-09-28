@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { PRIMENG_MODULES } from '../../../shared/primeng/primeng.imports';
 import { ChartModule } from 'primeng/chart';
+import { ProductosService } from '../../../services/productos.service';
+import { FuntionsService } from '../../../services/functions.service';
 
 @Component({
   selector: 'app-dsh-prd0001',
@@ -10,101 +12,136 @@ import { ChartModule } from 'primeng/chart';
 })
 export class DshPrd0001 implements OnInit {
 
-  data: any;
-  options: any;
+  pieData: any;
+  pieOptions: any;
+  isLoadingPie = signal<boolean>(false);
+
+  //Variables para estados de productos
   barData: any;
   barOptions: any;
+  isLoadingBar = signal<boolean>(false);
+
+  //Variables para productos por tipo de precio
+  barData1: any;
+  barOptions1: any;
+  isLoadingBar1 = signal<boolean>(false);
+
+  //Funtions service
+  functionsService = inject(FuntionsService);
+  //Servicio personas
+  productosService = inject(ProductosService);
 
   ngOnInit(): void {
-    this.initBarChartProductos();
-    this.initPieChartProductos();    
+    this.initBarProductosEstado();
+    this.initPieTipoProductos(); 
+    this.initBarProductosTipoPrecio(); 
   }
 
 
-  initPieChartProductos(): void {
-    this.data = {
-      labels: ['Java', 'Angular', 'Spring Boot', 'Docker'],
-      datasets: [
-        {
-          data: [40, 25, 20, 15],
-          backgroundColor: [
-            '#42A5F5',
-            '#66BB6A',
-            '#FFA726',
-            '#EF5350'
-          ],
-          hoverBackgroundColor: [
-            '#64B5F6',
-            '#81C784',
-            '#FFB74D',
-            '#E57373'
-          ]
-        }
-      ]
-    };
-
-    this.options = {
-      plugins: {
-        legend: {
-          labels: {
-            color: '#495057'
-          }
-        }
+  //Pie de tipo de productos
+  initPieTipoProductos(): void {
+    this.isLoadingPie.set(true);
+    this.productosService.graficoProductosTipoProducto().subscribe({
+      next: (resp) => {
+        this.pieData = this.functionsService.crearChart(resp.data);
+        this.isLoadingPie.set(false);
+      },
+      error: (err) => {
+        console.log(err.error.message);
+        this.isLoadingPie.set(false);
       }
-    };
-  }
-
-  initBarChartProductos(): void {
-    this.barData = {
-      labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
-      datasets: [
-        {
-          label: 'Ventas',
-          backgroundColor: '#42A5F5',
-          borderColor: '#1E88E5',
-          borderWidth: 1,
-          data: [120, 190, 300, 500, 200]
-        },
-        {
-          label: 'Compras',
-          backgroundColor: '#66BB6A',
-          borderColor: '#43A047',
-          borderWidth: 1,
-          data: [100, 150, 250, 400, 180]
-        }
-      ]
-    };
-
-    this.barOptions = {
+    });
+    this.pieOptions = {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          labels: {
-            color: '#495057'
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: {
-            color: '#495057'
-          },
-          grid: {
-            color: '#ebedef'
-          }
+          position: 'bottom'
         },
-        y: {
-          beginAtZero: true,
-          ticks: {
-            color: '#495057'
-          },
-          grid: {
-            color: '#ebedef'
+        title: {
+          display: true,
+          text: 'Tipo de Productos'
+        },
+        tooltip: {
+          callbacks: {
+            label: (context: any) => {
+              const label = context.label;
+              const value = context.raw;
+              return `${label}: ${value.toLocaleString()}`;
+            }
           }
         }
       }
     };
   }
 
+  initBarProductosEstado(): void {
+    this.isLoadingBar.set(true);
+
+    this.productosService.graficoProductosEstado().subscribe({
+      next: (resp) => {
+        this.barData = this.functionsService.crearChart(resp.data);
+        this.isLoadingBar.set(false);
+      },
+      error: (err) => {
+        console.error(err);
+        this.isLoadingBar.set(false);
+      }
+    });
+
+    this.barOptions = {
+      indexAxis: 'x', 
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        title: {
+          display: true,
+          text: 'Productos por Estado'
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true
+        }
+      }
+    };
+  }
+
+   initBarProductosTipoPrecio(): void {
+    this.isLoadingBar1.set(true);
+
+    this.productosService.graficoProductosTipoPrecio().subscribe({
+      next: (resp) => {
+        this.barData1 = this.functionsService.crearChart(resp.data);
+        this.isLoadingBar1.set(false);
+      },
+      error: (err) => {
+        console.error(err);
+        this.isLoadingBar1.set(false);
+      }
+    });
+
+    this.barOptions1 = {
+      indexAxis: 'y', 
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        title: {
+          display: true,
+          text: 'Productos por Tipo de Precio'
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true
+        }
+      }
+    };
+  }
 }

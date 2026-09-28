@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse, ListaPrecioProductoResponse} from '../interfaces/productos.interfaces';
+import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse, ListaPrecioProductoResponse, GraficosResponse} from '../interfaces/productos.interfaces';
 import { SavedRow } from '../interfaces/general.interface'
 
 @Injectable({
@@ -250,10 +250,22 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
   return this.http.put(url, payload);
   }
 
-  listaPreciosProductos(): Observable<ListaPrecioProductoResponse> {
-  return this.http.get<ListaPrecioProductoResponse>(`${this.apiUrl}productos/precioproductos`);
-}
+  listaPreciosProductos(idProducto: string): Observable<ListaPrecioProductoResponse> {
+  return this.http.get<ListaPrecioProductoResponse>(`${this.apiUrl}productos/preciosproductoxtemporada?idProducto=${idProducto}`);
+  }
 
+  graficoProductosEstado(): Observable<GraficosResponse> {
+      return this.http.get<GraficosResponse>(`${this.apiUrl}productos/grafico/estado`);
+  }
+
+  graficoProductosTipoPrecio(): Observable<GraficosResponse> {
+      return this.http.get<GraficosResponse>(`${this.apiUrl}productos/grafico/tipoprecio`);
     }
+  
+  graficoProductosTipoProducto(): Observable<GraficosResponse> {
+      return this.http.get<GraficosResponse>(`${this.apiUrl}productos/grafico/tipoproducto`);
+    }
+
+}
 
    

@@ -22,3 +22,8 @@ export interface Proveedores {
   idUsuarioModifica?: string;
   fechaModifica?: string;
 }
+
+export enum EstadoProveedor {
+    A = "A",
+    I = "I",
+}

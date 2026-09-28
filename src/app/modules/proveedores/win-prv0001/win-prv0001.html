@@ -1,1 +1,44 @@
-<p>win-prv0001 works!</p>
+<p-toast />
+<p-confirmdialog />
+
+<p-toolbar>
+  <ng-template #start>
+    <label class="font-bold">
+      COD. {{ idProveedor() }}
+    </label>
+  </ng-template>
+  <ng-template #center>
+    <label class="font-bold topName">
+      {{ stateService.nombre() }}
+    </label>
+  </ng-template>
+  <ng-template #end>
+    <label class="font-bold" [style.color]="stateService.estado() ? '#4caf50' : '#f44336'">
+      {{ stateService.estadoNombre() }}
+    </label>
+  </ng-template>
+</p-toolbar>
+
+<p-tabs value="0">
+  <p-tablist>
+    <p-tab value="0">Datos generales</p-tab>
+    <p-tab value="1">Direcciones</p-tab>
+    <p-tab value="2">Telefonos</p-tab>
+    <p-tab value="3">Ficha medica</p-tab>
+    <p-tab value="4">Identificaciones</p-tab>
+  </p-tablist>
+  <p-tabpanels>
+    <p-tabpanel value="0">
+      <app-frm-prv0002/>
+    </p-tabpanel>
+    <!-- <p-tabpanel value="1">
+      <app-frm-prd0004 [idProducto]="idProducto()" />
+    </p-tabpanel>
+    <p-tabpanel value="2">
+      <app-frm-prd0003 [idProducto]="idProducto()" />
+    </p-tabpanel>
+    <p-tabpanel value="3">
+      <app-frm-prd0005 [idProducto]="idProducto()" />
+    </p-tabpanel> -->
+  </p-tabpanels>
+</p-tabs>

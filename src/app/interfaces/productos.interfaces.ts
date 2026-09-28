@@ -238,19 +238,35 @@ export interface ActualizarTipoPrecioDTO {
 }
 
 export interface TarifaFila {
-    idPrecioProducto: string | null; 
-    idProducto: string;
-    idTemporada: number; 
-    descripcionPrecioProducto: string;
-    paxMin: number | null;
-    paxMax: number | null;
-    costoBase: number | null;
-    tarifaRac: number | null;
-    pvpFinal: number | null;
+  idPrecioProductoXTemporada: number;
+  idTemporada: number;
+  idProducto: string;
+  descripcionPrecioProductoXTemporada: string;
+  precio: number;
+  paxIni: number;
+  paxFin: number;
+  tarifaRac: number | null;     
+  idUsuarioCrea: string;
+  fechaCrea: string;           
+  idUsuarioModifica: string | null;
+  fechaModifica: string | null;
 }
+
 
 export interface ListaPrecioProductoResponse {
   status: string;
   message: string;
-  data: TarifaFila[]; 
+  data: TarifaFila[];
+}
+
+//GRÁFICOS
+export interface GraficosResponse {
+  status: string;
+  message: string;
+  data: Grafico[];
+}
+
+export interface Grafico {
+  descripcion: string;
+  cuantos: number;
 }

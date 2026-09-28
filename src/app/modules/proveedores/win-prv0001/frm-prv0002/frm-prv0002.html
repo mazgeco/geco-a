@@ -1,0 +1,55 @@
+<p-toast />
+<p-confirmdialog />
+
+<div class="col-12">
+  <p-toolbar>
+    <ng-template #start>
+      @if (esActivo()) {
+        <p-button
+          icon="pi pi-check"
+          class="mr-1"
+          label="Inactivar"
+          pTooltip="Inactiva al producto"
+          tooltipPosition="bottom"
+          
+        />
+      } @else {
+        <p-button
+          icon="pi pi-check"
+          class="mr-1"
+          label="Activar"
+          pTooltip="Activa al producto"
+          tooltipPosition="bottom"
+          
+        />
+      }
+      <p-button
+        icon="pi pi-user"
+        class="mr-1"
+        pTooltip="Auditoría del registro actual"
+        tooltipPosition="bottom"
+        
+      />
+      <p-button
+        icon="pi pi-info-circle"
+        pTooltip="Información del objeto actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
+      />
+    </ng-template>
+
+    <ng-template #center>
+      <span></span>
+    </ng-template>
+
+    <ng-template #end>
+       @if (proveedorMessage()?.visible) {
+        <div class="message-container">
+          <p-message [severity]="proveedorMessage()!.severity" [icon]="proveedorMessage()!.icon">
+            {{ proveedorMessage()!.text }}
+          </p-message>
+        </div>
+      }
+    </ng-template>
+  </p-toolbar>
+  </div>

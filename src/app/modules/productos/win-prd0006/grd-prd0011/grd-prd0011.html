@@ -53,10 +53,10 @@
 <td>
   <p-cellEditor>
     <ng-template pTemplate="input">
-      <input pInputText type="text" [(ngModel)]="rowData.descripcion" class="w-full">
+      <input pInputText type="text" [(ngModel)]="rowData.descripcionPrecioProductoXTemporada" class="w-full">
     </ng-template>
     <ng-template pTemplate="output">
-      {{ rowData.descripcion }}
+      {{ rowData.descripcionPrecioProductoXTemporada }}
     </ng-template>
   </p-cellEditor>
 </td>
@@ -65,10 +65,10 @@
 <td>
   <p-cellEditor>
     <ng-template pTemplate="input">
-      <p-inputNumber [(ngModel)]="rowData.paxMin" [useGrouping]="false" class="w-full"></p-inputNumber>
+      <p-inputNumber [(ngModel)]="rowData.paxIni" [useGrouping]="false" class="w-full"></p-inputNumber>
     </ng-template>
     <ng-template pTemplate="output">
-      {{ rowData.paxMin }}
+      {{ rowData.paxIni }}
     </ng-template>
   </p-cellEditor>
 </td>
@@ -77,10 +77,10 @@
 <td>
   <p-cellEditor>
     <ng-template pTemplate="input">
-      <p-inputNumber [(ngModel)]="rowData.paxMax" [useGrouping]="false" class="w-full"></p-inputNumber>
+      <p-inputNumber [(ngModel)]="rowData.paxFin" [useGrouping]="false" class="w-full"></p-inputNumber>
     </ng-template>
     <ng-template pTemplate="output">
-      {{ rowData.paxMax }}
+      {{ rowData.paxFin }}
     </ng-template>
   </p-cellEditor>
 </td>
@@ -89,10 +89,10 @@
 <td>
   <p-cellEditor>
     <ng-template pTemplate="input">
-      <p-inputNumber [(ngModel)]="rowData.costoBase" mode="decimal" [minFractionDigits]="2" class="w-full"></p-inputNumber>
+      <p-inputNumber [(ngModel)]="rowData.precio" mode="decimal" [minFractionDigits]="2" class="w-full"></p-inputNumber>
     </ng-template>
     <ng-template pTemplate="output">
-      {{ rowData.costoBase | number:'1.2-2' }}
+      {{ rowData.precio | number:'1.2-2' }}
     </ng-template>
   </p-cellEditor>
 </td>

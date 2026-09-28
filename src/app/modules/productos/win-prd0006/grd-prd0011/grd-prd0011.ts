@@ -49,8 +49,8 @@ export class GrdPrd0011 implements OnInit {
   );
 
   ngOnInit(): void {
-    this.cargarSugerenciasTarifas();
-    // this.cargaDatos(); 
+    //this.cargarSugerenciasTarifas();
+    this.cargaDatos(); 
   }
 
  insertarFila(): void {
@@ -69,23 +69,26 @@ export class GrdPrd0011 implements OnInit {
 
     // Armamos el objeto con la estructura que necesita tu backend/tabla
     // (Asegúrate de que las propiedades coincidan con tu DTO en Java)
-    const nuevaTarifa = {
-      idPrecioProducto: '0', // Será generado por la BD al guardar
-      idProducto: this.idProducto, 
+    const nueva: TarifaFila = {
+      idPrecioProductoXTemporada: 0,
       idTemporada: this.idTemporada,
-      descripcionPrecioProducto: '', // Para "Nombre Tarifa"
-      paxMin: null,
-      paxMax: null,
-      costoBase: null,
+      idProducto: this.idProducto,
+      descripcionPrecioProductoXTemporada: '', // Para "Nombre Tarifa"
+      precio: 0,
+      paxIni: 1,
+      paxFin: 1,
       tarifaRac: null,
-      pvpFinal: null
+      idUsuarioCrea: '',
+      fechaCrea: '',
+      idUsuarioModifica: '',
+      fechaModifica: '',
     };
 
     // Usamos tu función global insertRow tal como lo hacías en grd-prd0006
     let mensaje = this.funciones.insertRow(
       this.fila,              // Tu Signal que guarda la data de la tabla
-      nuevaTarifa,            // El objeto vacío que acabamos de armar
-      'idPrecioProducto',     // El nombre del campo clave (Primary Key)
+      nueva,            // El objeto vacío que acabamos de armar
+      'idPrecioProductoXTemporada',     // El nombre del campo clave (Primary Key)
       true,                   // Para ponerlo en modo edición
       'btnGrdPrd00110'         // El ID de tu botón en el HTML de esta tabla (ajusta si es necesario)
     );
@@ -98,20 +101,44 @@ export class GrdPrd0011 implements OnInit {
   }
 
 
-  cargarSugerenciasTarifas(): void {
-    this.productosService.listaPreciosProductos().subscribe({
-      next: (resp: ListaPrecioProductoResponse) => {
-        const listaCompleta = resp.data || [];
+  // cargarSugerenciasTarifas(): void {
+  //   this.productosService.listaPreciosProductos(this.idProducto).subscribe({
+  //     next: (resp: ListaPrecioProductoResponse) => {
+  //       const listaCompleta = resp.data || [];
         
-        // Al escribir item., TypeScript te sugerirá 'descripcionPrecioProducto' gracias a TarifaFila
-        const soloNombres = listaCompleta.map(item => item.descripcionPrecioProducto);
+  //       // Al escribir item., TypeScript te sugerirá 'descripcionPrecioProductoXTemporada' gracias a TarifaFila
+  //       const soloNombres = listaCompleta.map(item => item.descripcionPrecioProductoXTemporada);
         
-        // Limpiamos los duplicados
-        this.nombresTarifasSugeridos = [...new Set(soloNombres)];
-      },
-      error: (err) => {
-        this.toastService.showMessage('error', 'Error', 'No se pudieron cargar las sugerencias de tarifas');
-      }
-    });
+  //       // Limpiamos los duplicados
+  //       this.nombresTarifasSugeridos = [...new Set(soloNombres)];
+  //     },
+  //     error: (err) => {
+  //       this.toastService.showMessage('error', 'Error', 'No se pudieron cargar las sugerencias de tarifas');
+  //     }
+  //   });
+  // }
+
+  // READ DATOS DE LA TABLA DE TARIFAS
+  cargaDatos(): void {
+    this.fila.set([]); // Limpiamos la tabla primero
+
+    // Solo buscamos si tenemos un idProducto válido enviado por el componente padre
+    if (this.idProducto) {
+      this.productosService.listaPreciosProductos(this.idProducto).subscribe({
+        next: (resp) => {
+          console.log('DATOS REALES DE TARIFAS X TEMPORADA:', resp);
+          this.fila.set(resp.data);
+        },
+        error: (err) => {
+          if (err.status === 404) {
+            // Si es 404, limpiamos la señal de la tabla silenciosamente
+            this.fila.set([]);
+          } else {
+            this.toastService.showMessage('error', 'Error', 'Error al cargar tarifas: ' + err.error.message, err.error.status);
+          }
+        }
+      });
+    }
   }
+
 }
