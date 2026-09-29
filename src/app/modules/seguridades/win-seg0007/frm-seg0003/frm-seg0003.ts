@@ -13,8 +13,13 @@ import { StatusMessage } from '../../../../interfaces/general.interface';
 import { StateService } from '../state.service';
 import { CatalogService } from '../../../../services/catalog.service';
 import { CatalogDialogComponent } from '../../../../shared/catalog-dialog-component/catalog-dialog-component';
-import { EstadoUsuario, Usuarios } from '../../../../interfaces/seguridades.interface';
+import { EstadoUsuario, Perfiles, Usuarios } from '../../../../interfaces/seguridades.interface';
 import { SeguridadesService } from '../../../../services/seguridades.service';
+import { Personas } from '../../../../interfaces/personas.interfaces';
+import { PersonasService } from '../../../../services/personas.service';
+import { AutoCompleteCompleteEvent } from 'primeng/types/autocomplete';
+import { Operacion } from '../../../../interfaces/productos.interfaces';
+import { ProductosService } from '../../../../services/productos.service';
 
 @Component({
   selector: 'app-frm-seg0003',
@@ -46,6 +51,8 @@ export class FrmSeg0003 implements OnInit {
   stateService = inject(StateService);
   catalogService = inject(CatalogService);
   seguridadesService = inject(SeguridadesService);
+  personasService = inject(PersonasService);
+  productosService = inject(ProductosService);
 
   //INJECTIONS PRIVADAS
   private toastService = inject(ToastService);
@@ -62,6 +69,9 @@ export class FrmSeg0003 implements OnInit {
   loadingUsuario = signal(false);
   successfullySaved = signal(false);
   estadoUsuario = signal<string>('INACTIVO');
+  personas = signal<Personas[]>([]);
+  perfiles = signal<Perfiles[]>([]);
+  operaciones = signal<Operacion[]>([]);
   esActivo = signal<boolean>(false);
   opcionSN = signal<Combo[]>([
     {
@@ -81,35 +91,35 @@ export class FrmSeg0003 implements OnInit {
       idPerfil: [''],
       idPersona: [null as number | null],
       nombrePersona: [''],
-      superUsuario: [''],
+      superUsuario: ['N'],
       estadoUsuario: ['I'],
-      disparaAlerta1: [''],
-      disparaAlerta2: [''],
-      habilitaColores: [''],
+      disparaAlerta1: ['N'],
+      disparaAlerta2: ['N'],
+      habilitaColores: ['N'],
       fechaUltimoCambioClave: [null as Date | null],
-      cambiaClave: [''],
-      regeneraComponentes: [''],
+      cambiaClave: ['S'],
+      regeneraComponentes: ['N'],
       usuarioEmail: [''],
       passwordEmail: [''],
       firmaEmail: [''],
-      ejecutaKardexCompra: [''],
-      desmayoriza: [''],
-      modificaFormaPago: [''],
-      accesoColumna: [''],
-      soloProductosOperacion: [''],
+      ejecutaKardexCompra: ['N'],
+      desmayoriza: ['N'],
+      modificaFormaPago: ['N'],
+      accesoColumna: ['N'],
+      soloProductosOperacion: ['N'],
       token: [''],
-      saltaAprobacion: [''],
-      ingresarRubroPrefactura: [''],
-      generarPrefactura: [''],
-      reversarPrefactura: [''],
-      verRubroPrefactura: [''],
-      anulaComprobanteContable: [''],
+      saltaAprobacion: ['N'],
+      ingresarRubroPrefactura: ['N'],
+      generarPrefactura: ['N'],
+      reversarPrefactura: ['N'],
+      verRubroPrefactura: ['N'],
+      anulaComprobanteContable: ['N'],
       correoRespuesta: [''],
-      sobreescribeImportacion: [''],
-      accedeEstadoConfirmado: [''],
-      cambiaUsuarioCrea: [''],
-      registraAnticipo: [''],
-      cambiaImpuestoPorcentual: [''],
+      sobreescribeImportacion: ['N'],
+      accedeEstadoConfirmado: ['N'],
+      cambiaUsuarioCrea: ['N'],
+      registraAnticipo: ['N'],
+      cambiaImpuestoPorcentual: ['N'],
       idUsuarioCrea: [''],
       fechaCrea: [''],
       idUsuarioModifica: [''],
@@ -135,6 +145,7 @@ export class FrmSeg0003 implements OnInit {
    *******************************************************************************************/
 
   ngOnInit(): void {
+    this.cargaCombos();
     this.cargaDatos(this.idUsuario);
   }
 
@@ -182,5 +193,58 @@ export class FrmSeg0003 implements OnInit {
         },
       });
     }
+  }
+
+  cargaCombos(): void {
+    //Carga los perfiles
+    this.seguridadesService.listaPerfiles().subscribe({
+      next: (resp) => {
+        this.perfiles.set(resp.data);
+      },
+      error: (err) => {
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar las denominaciones: ' + err.error.message,
+          err.error.status,
+        );
+      },
+    });
+    //Carga operaciones
+    this.productosService.listaOperaciones().subscribe({
+      next: (resp) => {
+        this.operaciones.set(resp.data);
+      },
+      error: (err) => {
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar las denominaciones: ' + err.error.message,
+          err.error.status,
+        );
+      },
+    });
+  }
+
+  buscarPersonas(event: AutoCompleteCompleteEvent): void {
+    const nombre = event.query.trim();
+    if (nombre.length < 3) {
+      this.personas.set([]);
+      return;
+    }
+
+    this.personasService.buscaPersonaParaCrearUsuario(nombre).subscribe({
+      next: (resp) => {
+        this.personas.set(resp.data);
+      },
+      error: (err) => {
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar las personas: ' + err.error.message,
+          err.error.status,
+        );
+      },
+    });
   }
 }

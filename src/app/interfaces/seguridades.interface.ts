@@ -55,3 +55,24 @@ export enum EstadoUsuario {
   A = 'A',
   I = 'I',
 }
+
+export interface ListaPerfilesResponse {
+  status: string;
+  message: string;
+  data: Perfiles[];
+}
+
+export interface PerfilesResponse {
+  status: string;
+  message: string;
+  data: Perfiles;
+}
+
+export interface Perfiles {
+  idPerfil: null | string;
+  descripcionPerfil: null | string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
