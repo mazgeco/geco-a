@@ -50,8 +50,17 @@ export class GrdPrd0011 implements OnInit {
 
   ngOnInit(): void {
     //this.cargarSugerenciasTarifas();
-    this.cargaDatos(); 
+    //this.cargaDatos(); 
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+  // Esto se dispara solito cuando el padre le pasa o cambia los valores al hijo
+  if (this.idProducto && this.idTemporada) {
+    this.cargaDatos();
+  }
+
+   
+}
 
  insertarFila(): void {
     
@@ -121,10 +130,10 @@ export class GrdPrd0011 implements OnInit {
   // READ DATOS DE LA TABLA DE TARIFAS
   cargaDatos(): void {
     this.fila.set([]); // Limpiamos la tabla primero
-
+    console.log('VERIFICANDO IDs -> Producto:', this.idProducto, 'Temporada:', this.idTemporada);
     // Solo buscamos si tenemos un idProducto válido enviado por el componente padre
-    if (this.idProducto) {
-      this.productosService.listaPreciosProductos(this.idProducto).subscribe({
+    if (this.idProducto && this.idTemporada) {
+      this.productosService.listaPreciosProductos(this.idProducto, this.idTemporada).subscribe({
         next: (resp) => {
           console.log('DATOS REALES DE TARIFAS X TEMPORADA:', resp);
           this.fila.set(resp.data);

@@ -34,6 +34,7 @@ export class GrdPrd0015 implements OnInit{
   permiso = signal<string>('w');
   newRow: boolean = false;
   listaOperaciones = signal<any[]>([]);
+  listaTiposOperacionXempresa = signal<any[]>([]);
   campoId: 'idUnidadEstrategica' = 'idUnidadEstrategica';
   nuevaFila: UnidadEstrategica = {
     idUnidadEstrategica: 0,
@@ -75,6 +76,7 @@ export class GrdPrd0015 implements OnInit{
   ngOnInit(): void {
     this.cargaDatos();
     this.cargarCatalogoOperaciones();
+    this.cargarTipoOperaciones();
   }
 
   //MÉTODO QUE INSERTA UNA FILA EN EL GRID
@@ -132,6 +134,20 @@ export class GrdPrd0015 implements OnInit{
       }
     });
   }
+
+    cargarTipoOperaciones() {
+    this.productosService.listaTiposOperacionXempresa().subscribe({
+      next: (resp) => {
+        console.log('Tipos de Operación X Empresa cargados:', resp.data);
+        // Asignamos el catálogo al Signal que lee el p-select y el modo lectura
+        this.listaTiposOperacionXempresa.set(resp.data);
+      },
+      error: (err) => {
+        console.error('Error al cargar tipo de operaciones', err);
+      }
+    });
+  }
+
   //MÉTODO QUE CARGA TODAS LAS IDENTIFICACIONES EN EL GRID
   cargaDatos(): void {
     this.filas.set([]);
