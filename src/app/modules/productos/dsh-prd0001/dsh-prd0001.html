@@ -1,20 +1,37 @@
 <div class="grid w-full mt-1">
   <div class="col-12 md:col-6 lg:col-4">
+    @if(isLoadingPie()){
+    <div class="flex justify-center">
+      <p-progress-spinner ariaLabel="loading" />
+    </div>
+    } @else {
     <p-card class="h-full">
       <p-chart type="pie" [data]="pieData" [options]="pieOptions" width="400" height="400"> </p-chart>
     </p-card>
+    }
   </div>
   <div class="col-12 md:col-6 lg:col-4">
+    @if(isLoadingBar()){
+    <div class="flex justify-center">
+      <p-progress-spinner ariaLabel="loading" />
+    </div>
+    } @else {
     <p-card class="h-full">
-      <p-chart type="bar" [data]="barData" [options]="barOptions" height="300">
+      <p-chart type="bar" [data]="barData" [options]="barOptions">
       </p-chart>
     </p-card>
+    }
   </div>
   <div class="col-12 md:col-6 lg:col-4">
+    @if(isLoadingBar1()){
+    <div class="flex justify-center">
+      <p-progress-spinner ariaLabel="loading" />
+    </div>
+    } @else {
     <p-card class="h-full">
-        <p-chart type="bar" [data]="barData1" [options]="barOptions1" height="300">
-      </p-chart>
+      <p-chart type="bar" [data]="barData1" [options]="barOptions1" width="400" height="400"> </p-chart>
     </p-card>
+    }
   </div>
-  
+
 </div>
