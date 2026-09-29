@@ -63,7 +63,21 @@
         <div class="col-12 md:col-6">
           <div class="field mb-1">
             <label>Persona <span class="asterisco">*</span></label>
-            <input pInputText class="w-full" formControlName="idPersona" [readOnly]="esActivo()" />
+            @if (esActivo()) {
+              <input pInputText class="w-full" formControlName="nombrePersona" [readOnly]="true" />
+            } @else {
+              <p-autocomplete
+                class="w-full"
+                [fluid]="true"
+                formControlName="idPersona"
+                [suggestions]="personas()"
+                (completeMethod)="buscarPersonas($event)"
+                optionLabel="razonSocial"
+                optionValue="idPersona"
+                [minLength]="3"
+              >
+              </p-autocomplete>
+            }
           </div>
         </div>
 
@@ -71,12 +85,12 @@
           <div class="field mb-1">
             <label>Forzar cambio clave</label>
             <p-select
-                class="w-full"
-                [options]="opcionSN()"
-                formControlName="cambiaClave"
-                optionLabel="etiqueta"
-                optionValue="codigo"
-              ></p-select>
+              class="w-full"
+              [options]="opcionSN()"
+              formControlName="cambiaClave"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+            ></p-select>
           </div>
         </div>
 
@@ -95,30 +109,31 @@
           <div class="field mb-1">
             <label>Operación</label>
             <p-select
-                class="w-full"
-                [options]="opcionSN()"
-                formControlName="cambiaClave"
-                optionLabel="etiqueta"
-                optionValue="codigo"
-              ></p-select>
+              class="w-full"
+              [options]="operaciones()"
+              [filter]="true"
+              formControlName="idOperacion"
+              optionLabel="descripcionOperacion"
+              optionValue="idOperacion"
+            ></p-select>
           </div>
         </div>
 
         <!-- ======================= -->
         <!-- FILA 3 -->
-        <!-- ======================= -->  
-        
+        <!-- ======================= -->
+
         <div class="col-12 md:col-6">
           <div class="field mb-1">
             <label>Perfil <span class="asterisco">*</span></label>
             <p-select
-                class="w-full"
-                [options]="opcionSN()"
-                [disabled]="esActivo()"
-                formControlName="cambiaClave"
-                optionLabel="etiqueta"
-                optionValue="codigo"
-              ></p-select>
+              class="w-full"
+              [options]="perfiles()"
+              [filter]="true"
+              formControlName="idPerfil"
+              optionLabel="descripcionPerfil"
+              optionValue="idPerfil"
+            ></p-select>
           </div>
         </div>
 
@@ -126,17 +141,203 @@
           <div class="field mb-1">
             <label>Ver solo productos operación</label>
             <p-select
-                class="w-full"
-                [options]="opcionSN()"
-                formControlName="cambiaClave"
-                optionLabel="etiqueta"
-                optionValue="codigo"
-              ></p-select>
+              class="w-full"
+              [options]="opcionSN()"
+              formControlName="soloProductosOperacion"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+            ></p-select>
+          </div>
+        </div>
+      </div>
+    </p-panel>
+    <p-panel class="mt-2" header="Permisos">
+      <div class="grid">
+        <!-- ======================= -->
+        <!-- FILA 1 -->
+        <!-- ======================= -->
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Activa alerta (revisar itinerario)</label>
+            <p-select
+              class="w-full"
+              [options]="opcionSN()"
+              [disabled]="esActivo()"
+              formControlName="disparaAlerta1"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+            ></p-select>
           </div>
         </div>
 
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Activa alerta (revisar cantidad)</label>
+            <p-select
+              class="w-full"
+              [options]="opcionSN()"
+              formControlName="disparaAlerta2"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+            ></p-select>
+          </div>
+        </div>
 
+        <!-- ======================= -->
+        <!-- FILA 2 -->
+        <!-- ======================= -->
 
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Regenera componentes</label>
+            <p-select
+              class="w-full"
+              [options]="opcionSN()"
+              [disabled]="esActivo()"
+              formControlName="regeneraComponentes"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+            ></p-select>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Ejecuta kardex (compra)</label>
+            <p-select
+              class="w-full"
+              [options]="opcionSN()"
+              formControlName="ejecutaKardexCompra"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+            ></p-select>
+          </div>
+        </div>
+
+        <!-- ======================= -->
+        <!-- FILA 3 -->
+        <!-- ======================= -->
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Sobreescribe documento en importación</label>
+            <p-select
+              class="w-full"
+              [options]="opcionSN()"
+              [disabled]="esActivo()"
+              formControlName="sobreescribeImportacion"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+            ></p-select>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Cambia impuesto porcentual</label>
+            <p-select
+              class="w-full"
+              [options]="opcionSN()"
+              formControlName="cambiaImpuestoPorcentual"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+            ></p-select>
+          </div>
+        </div>
+
+        <!-- ======================= -->
+        <!-- FILA 4 -->
+        <!-- ======================= -->
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Sobreescribe documento en importación</label>
+            <p-select
+              class="w-full"
+              [options]="opcionSN()"
+              [disabled]="esActivo()"
+              formControlName="sobreescribeImportacion"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+            ></p-select>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Cambia impuesto porcentual</label>
+            <p-select
+              class="w-full"
+              [options]="opcionSN()"
+              formControlName="cambiaImpuestoPorcentual"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+            ></p-select>
+          </div>
+        </div>
+
+        <!-- ======================= -->
+        <!-- FILA 5 -->
+        <!-- ======================= -->
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Cambia usuario creador reserva</label>
+            <p-select
+              class="w-full"
+              [options]="opcionSN()"
+              [disabled]="esActivo()"
+              formControlName="cambiaUsuarioCrea"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+            ></p-select>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Desmayoriza</label>
+            <p-select
+              class="w-full"
+              [options]="opcionSN()"
+              formControlName="desmayoriza"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+            ></p-select>
+          </div>
+        </div>
+
+        <!-- ======================= -->
+        <!-- FILA 6 -->
+        <!-- ======================= -->
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Anula comprobante contable</label>
+            <p-select
+              class="w-full"
+              [options]="opcionSN()"
+              [disabled]="esActivo()"
+              formControlName="anulaComprobanteContable"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+            ></p-select>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Registra anticipo</label>
+            <p-select
+              class="w-full"
+              [options]="opcionSN()"
+              formControlName="registraAnticipo"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+            ></p-select>
+          </div>
+        </div>
       </div>
     </p-panel>
   </form>

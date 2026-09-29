@@ -34,9 +34,11 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToggleSwitch  } from 'primeng/toggleswitch'
 import { Editor, EditorModule } from 'primeng/editor'
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 
 export const PRIMENG_MODULES = [
+  AutoCompleteModule,
   ButtonModule,
   CardModule,
   CardModule,
