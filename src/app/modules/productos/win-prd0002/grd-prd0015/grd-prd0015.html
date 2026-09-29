@@ -79,6 +79,8 @@
     [rows]="10"
     showGridlines
     [size]="'small'"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Total de registros: {totalRecords}"
   >
     <!-- HEADER -->
     <ng-template pTemplate="header">
@@ -117,19 +119,14 @@
         </td>
          <!-- CODIGO -->
         <td>
-          <p-cellEditor>
-            <!-- INPUT -->
+           <p-cellEditor>
             <ng-template pTemplate="input">
-              <input
-                pInputText
-                type="text"
-                [(ngModel)]="rowData.idTipoRelacion"
-                class="w-full"
-              />
+              <p-select [options]="listaTiposOperacionXempresa()" optionLabel="nombreTipoOperacion"
+                optionValue="idTipoOperacionXEmpresa" [filter]="true" [(ngModel)]="rowData.idTipoOperacionXEmpresa"
+                placeholder="Seleccione" class="w-full" appendTo="body" />
             </ng-template>
-            <!-- OUTPUT -->
             <ng-template pTemplate="output">
-              {{ rowData.idTipoRelacion }}
+               {{ funciones.obtenerEtiqueta(listaTiposOperacionXempresa(), rowData.idTipoOperacionXEmpresa, 'tipoOperacionXempresa') }}
             </ng-template>
           </p-cellEditor>
         </td>

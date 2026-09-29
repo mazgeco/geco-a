@@ -270,3 +270,20 @@ export interface Grafico {
   descripcion: string;
   cuantos: number;
 }
+
+export interface TipoOperacionXEmpresa {
+  idTipoOperacionXempresa: number;
+  idEmpresa: number;
+  idTipoOperacion: string;
+  nombreTipoOperacion: string;
+  idUsuarioCrea?: number | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: number | null;
+  fechaModifica?: string | null;
+}
+
+export interface TipoOperacionResponse {
+  status: string;
+  message: string;
+  data: TipoOperacionXEmpresa[];
+}
