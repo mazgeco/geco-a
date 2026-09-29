@@ -53,10 +53,7 @@
     <ng-template #end>
       @if (barraMessage()?.visible) {
         <div class="message-container">
-          <p-message
-            [severity]="barraMessage()!.severity"
-            [icon]="barraMessage()!.icon"
-          >
+          <p-message [severity]="barraMessage()!.severity" [icon]="barraMessage()!.icon">
             {{ barraMessage()!.text }}
           </p-message>
         </div>
@@ -155,5 +152,7 @@
         </td>
       </tr>
     </ng-template>
+    <!-- FOOTER -->
+    <ng-template pTemplate="paginatorleft"> {{ filas().length }} ítems </ng-template>
   </p-table>
 </div>

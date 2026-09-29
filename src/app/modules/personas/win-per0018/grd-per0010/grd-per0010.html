@@ -1,17 +1,47 @@
 <div class="col-12">
   <p-toolbar>
     <ng-template #start>
-      <p-button id="btnGrdPer00101" icon="pi pi-plus" class="mr-1" label="Insertar" pTooltip="Inserta una fila"
-        tooltipPosition="bottom" (onClick)="insertarFila()" />
-      <p-button id="btnGrdPer00102" icon="pi pi-trash" class="mr-1" label="Eliminar"
-        pTooltip="Elimina varias filas seleccionadas" tooltipPosition="bottom" (onClick)="eliminarVarias()" />
-      <p-button id="btnGrdPer00103" icon="pi pi-refresh" class="mr-1" pTooltip="Refresca los datos del grid"
-        tooltipPosition="bottom" (onClick)="cargaDatos()" />
-      <p-button id="btnGrdPer00104" icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual"
-        tooltipPosition="bottom" (onClick)="muestraAuditoriaRegistro()" />
-      <p-button id="btnGrdPer00105" icon="pi pi-info-circle" pTooltip="Información del objeto actual"
+      <p-button
+        id="btnGrdPer00101"
+        icon="pi pi-plus"
+        class="mr-1"
+        label="Insertar"
+        pTooltip="Inserta una fila"
         tooltipPosition="bottom"
-        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())" />
+        (onClick)="insertarFila()"
+      />
+      <p-button
+        id="btnGrdPer00102"
+        icon="pi pi-trash"
+        class="mr-1"
+        label="Eliminar"
+        pTooltip="Elimina varias filas seleccionadas"
+        tooltipPosition="bottom"
+        (onClick)="eliminarVarias()"
+      />
+      <p-button
+        id="btnGrdPer00103"
+        icon="pi pi-refresh"
+        class="mr-1"
+        pTooltip="Refresca los datos del grid"
+        tooltipPosition="bottom"
+        (onClick)="cargaDatos()"
+      />
+      <p-button
+        id="btnGrdPer00104"
+        icon="pi pi-user"
+        class="mr-1"
+        pTooltip="Auditoría del registro actual"
+        tooltipPosition="bottom"
+        (onClick)="muestraAuditoriaRegistro()"
+      />
+      <p-button
+        id="btnGrdPer00105"
+        icon="pi pi-info-circle"
+        pTooltip="Información del objeto actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
+      />
     </ng-template>
 
     <ng-template #center>
@@ -20,21 +50,31 @@
 
     <ng-template #end>
       @if (barraMessage()?.visible) {
-      <div class="message-container">
-        <p-message [severity]="barraMessage()!.severity" [icon]="barraMessage()!.icon">
-          {{ barraMessage()!.text }}
-        </p-message>
-      </div>
+        <div class="message-container">
+          <p-message [severity]="barraMessage()!.severity" [icon]="barraMessage()!.icon">
+            {{ barraMessage()!.text }}
+          </p-message>
+        </div>
       }
     </ng-template>
-
   </p-toolbar>
   <!-- ===================================== -->
   <!-- LISTADO IDENTIFICACIONES -->
   <!-- ===================================== -->
-  <p-table id="grdPer0010" [value]="filas()" editMode="row" selectionMode="multiple"
-    [(selection)]="selectedRows" [metaKeySelection]="metaKey" dataKey="idIdentificacion" class="p-datatable-sm"
-    [paginator]="true" [rows]="10" showGridlines [size]="'small'">
+  <p-table
+    id="grdPer0010"
+    [value]="filas()"
+    editMode="row"
+    selectionMode="multiple"
+    [(selection)]="selectedRows"
+    [metaKeySelection]="metaKey"
+    dataKey="idIdentificacion"
+    class="p-datatable-sm"
+    [paginator]="true"
+    [rows]="10"
+    showGridlines
+    [size]="'small'"
+  >
     <!-- HEADER -->
     <ng-template pTemplate="header">
       <tr>
@@ -53,8 +93,15 @@
           <p-cellEditor>
             <!-- INPUT -->
             <ng-template pTemplate="input">
-              <p-select [options]="tiposIdentificacion()" optionLabel="etiqueta" optionValue="codigo"
-                [(ngModel)]="rowData.idTipoIdentificacion" placeholder="Seleccione" class="w-full" appendTo="body" />
+              <p-select
+                [options]="tiposIdentificacion()"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+                [(ngModel)]="rowData.idTipoIdentificacion"
+                placeholder="Seleccione"
+                class="w-full"
+                appendTo="body"
+              />
             </ng-template>
             <!-- OUTPUT -->
             <ng-template pTemplate="output">
@@ -66,7 +113,12 @@
         <td>
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <input pInputText type="text" [(ngModel)]="rowData.descripcionIdentificacion" class="w-full" />
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="rowData.descripcionIdentificacion"
+                class="w-full"
+              />
             </ng-template>
             <ng-template pTemplate="output">
               {{ rowData.descripcionIdentificacion }}
@@ -77,10 +129,15 @@
         <td>
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <p-datepicker [(ngModel)]="rowData.fechaCaducidad" appendTo="body" dateFormat="yy-mm-dd" class="w-full" />
+              <p-datepicker
+                [(ngModel)]="rowData.fechaCaducidad"
+                appendTo="body"
+                dateFormat="yy-mm-dd"
+                class="w-full"
+              />
             </ng-template>
             <ng-template pTemplate="output">
-              {{ rowData.fechaCaducidad | date:'yyyy-MM-dd' }}
+              {{ rowData.fechaCaducidad | date: 'yyyy-MM-dd' }}
             </ng-template>
           </p-cellEditor>
         </td>
@@ -88,13 +145,22 @@
         <td class="text-center">
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <p-checkbox [binary]="true" [ngModel]="rowData.principalIdentificacion === 'S'"
-                (ngModelChange)="rowData.principalIdentificacion = $event ? 'S' : 'N'">
+              <p-checkbox
+                [binary]="true"
+                [ngModel]="rowData.principalIdentificacion === 'S'"
+                (ngModelChange)="rowData.principalIdentificacion = $event ? 'S' : 'N'"
+              >
               </p-checkbox>
             </ng-template>
             <ng-template pTemplate="output">
-              <i class="pi"
-                [ngClass]="rowData.principalIdentificacion == 'S' ? 'pi-check-circle text-green-500' : 'pi-circle'"></i>
+              <i
+                class="pi"
+                [ngClass]="
+                  rowData.principalIdentificacion == 'S'
+                    ? 'pi-check-circle text-green-500'
+                    : 'pi-circle'
+                "
+              ></i>
             </ng-template>
           </p-cellEditor>
         </td>
@@ -102,20 +168,52 @@
         <td class="text-center">
           <!-- EDITAR -->
           @if (!editing) {
-          <button pButton [id]="'btnGrdPer00106' + rowIndex" pInitEditableRow icon="pi pi-pencil" text
-            rounded severity="primary"></button>
-          <button pButton [id]="'btnGrdPer00107' + rowIndex" icon="pi pi-trash" text rounded
-            severity="danger" (click)="eliminarFila(rowData)"></button>
+            <button
+              pButton
+              [id]="'btnGrdPer00106' + rowIndex"
+              pInitEditableRow
+              icon="pi pi-pencil"
+              text
+              rounded
+              severity="primary"
+            ></button>
+            <button
+              pButton
+              [id]="'btnGrdPer00107' + rowIndex"
+              icon="pi pi-trash"
+              text
+              rounded
+              severity="danger"
+              (click)="eliminarFila(rowData)"
+            ></button>
           }
           <!-- GUARDAR / CANCELAR -->
           @if (editing) {
-          <button pButton [id]="'btnGrdPer00108' + rowIndex" pSaveEditableRow icon="pi pi-check" text
-            rounded severity="success" class="mr-1" (click)="saveRow(rowData)"></button>
-          <button pButton [id]="'btnGrdPer00109' + rowIndex" pCancelEditableRow icon="pi pi-times" text
-            rounded severity="danger"></button>
+            <button
+              pButton
+              [id]="'btnGrdPer00108' + rowIndex"
+              pSaveEditableRow
+              icon="pi pi-check"
+              text
+              rounded
+              severity="success"
+              class="mr-1"
+              (click)="saveRow(rowData)"
+            ></button>
+            <button
+              pButton
+              [id]="'btnGrdPer00109' + rowIndex"
+              pCancelEditableRow
+              icon="pi pi-times"
+              text
+              rounded
+              severity="danger"
+            ></button>
           }
         </td>
       </tr>
     </ng-template>
+    <!-- FOOTER -->
+    <ng-template pTemplate="paginatorleft"> {{ filas().length }} ítems </ng-template>
   </p-table>
 </div>

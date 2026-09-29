@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-import { SavedRow } from '../interfaces/general.interface';
+import { GraficosResponse, SavedRow } from '../interfaces/general.interface';
 import { UsuariosResponse, ListaUsuariosResponse, ListaPerfilesResponse} from '../interfaces/seguridades.interface';
 
 @Injectable({
@@ -26,6 +26,16 @@ export class SeguridadesService {
     return this.http.get<ListaPerfilesResponse>(`${this.apiUrl}seguridades/perfiles`);
   }
 
+  graficoLogeoUsuarios(): Observable<GraficosResponse>{
+    return this.http.get<GraficosResponse>(`${this.apiUrl}seguridades/usuarios/grafico/logeo`);
+  }
 
+  graficoNroUsuariosXPerfil(): Observable<GraficosResponse>{
+    return this.http.get<GraficosResponse>(`${this.apiUrl}seguridades/usuarios/grafico/nrousrxperfil`);
+  }
+
+  graficoNroPermisosXPerfil():Observable<GraficosResponse>{
+    return this.http.get<GraficosResponse>(`${this.apiUrl}seguridades/usuarios/grafico/nropermisoxperfil`);
+  }
 
 }

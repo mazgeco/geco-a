@@ -12,7 +12,6 @@ import {
   DireccionesResponse,
   FichasMedicas,
   FichasMedicasResponse,
-  GraficosResponse,
   Identificaciones,
   IdentificacionesResponse,
   ListaDenominacionesResponse,
@@ -40,7 +39,7 @@ import {
   TipoTelefonos,
   TipoTelefonosResponse,
 } from '../interfaces/personas.interfaces';
-import { SavedRow } from '../interfaces/general.interface';
+import { GraficosResponse, SavedRow } from '../interfaces/general.interface';
 
 @Injectable({
   providedIn: 'root',

@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 
 import { SavedRow } from '../interfaces/general.interface';
 import { ProveedoresResponse } from '../interfaces/proveedores.interfaces';
-import { GraficosResponse } from '../interfaces/personas.interfaces';
+import { GraficosResponse } from '../interfaces/general.interface';
 
 @Injectable({
   providedIn: 'root',

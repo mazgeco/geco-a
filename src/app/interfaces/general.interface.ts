@@ -31,3 +31,15 @@ export type EstadoFila = 'NUEVA' | 'NORMAL';
 export type FilaTabla<T> = T & {
   _estadoFila?: EstadoFila;
 }
+
+//GRÁFICOS
+export interface GraficosResponse {
+  status: string;
+  message: string;
+  data: Grafico[];
+}
+
+export interface Grafico {
+  descripcion: string;
+  cuantos: number;
+}

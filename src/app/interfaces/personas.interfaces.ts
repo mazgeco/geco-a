@@ -141,18 +141,6 @@ export interface IdentificacionesResponse {
   data: Identificaciones[];
 }
 
-//GRÁFICOS
-export interface GraficosResponse {
-  status: string;
-  message: string;
-  data: Grafico[];
-}
-
-export interface Grafico {
-  descripcion: string;
-  cuantos: number;
-}
-
 //DIRECCIONES
 export interface Direcciones {
   idDireccion: number | null;

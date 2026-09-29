@@ -1,17 +1,47 @@
 <div class="col-12">
   <p-toolbar>
     <ng-template #start>
-      <p-button id="btnGrdPer00061" icon="pi pi-plus" class="mr-1" label="Insertar" pTooltip="Activa a la persona"
-        tooltipPosition="bottom" (onClick)="insertarDireccion()" />
-      <p-button id="btnGrdPer00062" icon="pi pi-trash" class="mr-1" label="Eliminar"
-        pTooltip="Elimina varias filas seleccionadas" tooltipPosition="bottom" (onClick)="eliminarVarias()" />
-      <p-button id="btnGrdPer00063" icon="pi pi-refresh" class="mr-1" pTooltip="Refresca los datos del grid"
-        tooltipPosition="bottom" (onClick)="cargaDirecciones()" />
-      <p-button id="btnGrdPer00064" icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual"
-        tooltipPosition="bottom" (onClick)="muestraAuditoriaRegistro()" />
-      <p-button id="btnGrdPer00065" icon="pi pi-info-circle" pTooltip="Información del objeto actual"
+      <p-button
+        id="btnGrdPer00061"
+        icon="pi pi-plus"
+        class="mr-1"
+        label="Insertar"
+        pTooltip="Activa a la persona"
         tooltipPosition="bottom"
-        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())" />
+        (onClick)="insertarDireccion()"
+      />
+      <p-button
+        id="btnGrdPer00062"
+        icon="pi pi-trash"
+        class="mr-1"
+        label="Eliminar"
+        pTooltip="Elimina varias filas seleccionadas"
+        tooltipPosition="bottom"
+        (onClick)="eliminarVarias()"
+      />
+      <p-button
+        id="btnGrdPer00063"
+        icon="pi pi-refresh"
+        class="mr-1"
+        pTooltip="Refresca los datos del grid"
+        tooltipPosition="bottom"
+        (onClick)="cargaDirecciones()"
+      />
+      <p-button
+        id="btnGrdPer00064"
+        icon="pi pi-user"
+        class="mr-1"
+        pTooltip="Auditoría del registro actual"
+        tooltipPosition="bottom"
+        (onClick)="muestraAuditoriaRegistro()"
+      />
+      <p-button
+        id="btnGrdPer00065"
+        icon="pi pi-info-circle"
+        pTooltip="Información del objeto actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
+      />
     </ng-template>
 
     <ng-template #center>
@@ -21,14 +51,24 @@
     <ng-template #end>
       <span></span>
     </ng-template>
-
   </p-toolbar>
   <!-- ===================================== -->
   <!-- LISTADO DIRECCIONES -->
   <!-- ===================================== -->
-  <p-table id="grdPer0006" [value]="direcciones()" editMode="row" selectionMode="multiple" [(selection)]="selectedRows"
-    [metaKeySelection]="metaKey" dataKey="idDireccion" class="p-datatable-sm" [paginator]="true" [rows]="10"
-    showGridlines [size]="'small'">
+  <p-table
+    id="grdPer0006"
+    [value]="direcciones()"
+    editMode="row"
+    selectionMode="multiple"
+    [(selection)]="selectedRows"
+    [metaKeySelection]="metaKey"
+    dataKey="idDireccion"
+    class="p-datatable-sm"
+    [paginator]="true"
+    [rows]="10"
+    showGridlines
+    [size]="'small'"
+  >
     <!-- HEADER -->
     <ng-template pTemplate="header">
       <tr>
@@ -42,148 +82,212 @@
     <ng-template pTemplate="body" let-rowData let-editing="editing" let-rowIndex="rowIndex">
       <tr [pEditableRow]="rowData" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
         <td>{{ rowData.idTipoDireccion === 'D' ? 'Domicilio' : 'Oficina' }}</td>
-        <td> {{ rowData.descripcionDireccion }} </td>
+        <td>{{ rowData.descripcionDireccion }}</td>
         <td>{{ rowData.principalDireccion === 'S' ? 'Si' : 'No' }}</td>
         <!-- ACCIONES -->
         <td class="text-center">
           <!-- EDITAR -->
           @if (!editing) {
-          <button pButton [id]="'btnGrdPer00065' + rowData.idIdentificacion" pInitEditableRow icon="pi pi-pencil" text
-            rounded severity="primary"></button>
-          <button pButton [id]="'btnGrdPer00066' + rowData.idIdentificacion" icon="pi pi-trash" text rounded
-            severity="danger" (click)="eliminarDireccion(rowData)"></button>
+            <button
+              pButton
+              [id]="'btnGrdPer00065' + rowData.idIdentificacion"
+              pInitEditableRow
+              icon="pi pi-pencil"
+              text
+              rounded
+              severity="primary"
+            ></button>
+            <button
+              pButton
+              [id]="'btnGrdPer00066' + rowData.idIdentificacion"
+              icon="pi pi-trash"
+              text
+              rounded
+              severity="danger"
+              (click)="eliminarDireccion(rowData)"
+            ></button>
           }
           <!-- GUARDAR / CANCELAR -->
           @if (editing) {
-          <button pButton [id]="'btnGrdPer00067' + rowData.idDireccion" pSaveEditableRow icon="pi pi-check" text rounded
-            severity="success" class="mr-1" (click)="saveDireccion(rowData)"></button>
-          <button pButton [id]="'btnGrdPer00068' + rowData.idDireccion" pCancelEditableRow icon="pi pi-times" text
-            rounded severity="danger" (click)="cancelarGrabado(rowData)"></button>
+            <button
+              pButton
+              [id]="'btnGrdPer00067' + rowData.idDireccion"
+              pSaveEditableRow
+              icon="pi pi-check"
+              text
+              rounded
+              severity="success"
+              class="mr-1"
+              (click)="saveDireccion(rowData)"
+            ></button>
+            <button
+              pButton
+              [id]="'btnGrdPer00068' + rowData.idDireccion"
+              pCancelEditableRow
+              icon="pi pi-times"
+              text
+              rounded
+              severity="danger"
+              (click)="cancelarGrabado(rowData)"
+            ></button>
           }
         </td>
       </tr>
       @if (editing) {
-      <tr>
-        <td colspan="4">
-          <form>
-            <p-panel class="col-12">
-              <div class="grid">
-                <!-- ======================= -->
-                <!-- FILA 1 -->
-                <!-- ======================= -->
-                <div class="col-12 md:col-6">
-                  <div class="field mb-1">
-                    <label>Tipo de dirección <span class="asterisco">*</span></label>
-                    <p-select
-                      [options]="tiposDireccion()"
-                      optionLabel="descripcionTipoDireccion"
-                      optionValue="idTipoDireccion"
-                      [(ngModel)]="rowData.idTipoDireccion"
-                      [name]="'idTipoDireccion' + rowData.idDireccion"
-                      class="w-full">
-                    </p-select>
+        <tr>
+          <td colspan="4">
+            <form>
+              <p-panel class="col-12">
+                <div class="grid">
+                  <!-- ======================= -->
+                  <!-- FILA 1 -->
+                  <!-- ======================= -->
+                  <div class="col-12 md:col-6">
+                    <div class="field mb-1">
+                      <label>Tipo de dirección <span class="asterisco">*</span></label>
+                      <p-select
+                        [options]="tiposDireccion()"
+                        optionLabel="descripcionTipoDireccion"
+                        optionValue="idTipoDireccion"
+                        [(ngModel)]="rowData.idTipoDireccion"
+                        [name]="'idTipoDireccion' + rowData.idDireccion"
+                        class="w-full"
+                      >
+                      </p-select>
+                    </div>
                   </div>
-                </div>
-                <div class="col-12 md:col-6 flex justify-end">
-                  <div class="flex items-center mt-5 gap-2">
-                    <label>Dirección preferida</label>
-                    <p-toggleswitch
+                  <div class="col-12 md:col-6 flex justify-end">
+                    <div class="flex items-center mt-5 gap-2">
+                      <label>Dirección preferida</label>
+                      <p-toggleswitch
                         [(ngModel)]="rowData.preferida"
-                        [name]="'preferida' + rowData.idDireccion">
-                    </p-toggleswitch>
+                        [name]="'preferida' + rowData.idDireccion"
+                      >
+                      </p-toggleswitch>
+                    </div>
+                  </div>
+                  <!-- ======================= -->
+                  <!-- FILA 2 -->
+                  <!-- ======================= -->
+                  <div class="col-12 md:col-6">
+                    <div class="field mb-1">
+                      <label>Ciudad <span class="asterisco">*</span></label>
+                      <p-select
+                        [options]="ciudades()"
+                        optionLabel="descripcionCiudad"
+                        optionValue="idCiudad"
+                        [(ngModel)]="rowData.idCiudadDireccion"
+                        [filter]="true"
+                        [name]="'idCiudadDireccion' + rowData.idDireccion"
+                        class="w-full"
+                      >
+                      </p-select>
+                    </div>
+                  </div>
+                  <div class="col-12 md:col-6">
+                    <div class="field mb-1">
+                      <label>Sector <span class="asterisco">*</span></label>
+                      <input
+                        pInputText
+                        class="w-full"
+                        [(ngModel)]="rowData.sector"
+                        name="sector{{ rowData.idDireccion }}"
+                      />
+                    </div>
+                  </div>
+                  <!-- ======================= -->
+                  <!-- FILA 3 -->
+                  <!-- ======================= -->
+                  <div class="col-12 md:col-6">
+                    <div class="field mb-1">
+                      <label>Código alfanumérico <span class="asterisco">*</span></label>
+                      <input
+                        pInputText
+                        class="w-full"
+                        [(ngModel)]="rowData.nroCasaOEdificio"
+                        name="nroCasaOEdificio{{ rowData.idDireccion }}"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-12 md:col-6">
+                    <div class="field mb-1">
+                      <label>#Predio</label>
+                      <input pInputText class="w-full" />
+                    </div>
+                  </div>
+                  <!-- ======================= -->
+                  <!-- FILA 4 -->
+                  <!-- ======================= -->
+                  <div class="col-12 md:col-6">
+                    <div class="field mb-1">
+                      <label>Calle principal <span class="asterisco">*</span></label>
+                      <input
+                        pInputText
+                        class="w-full"
+                        [(ngModel)]="rowData.callePrincipal"
+                        name="callePrincipal{{ rowData.idDireccion }}"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-12 md:col-6">
+                    <div class="field mb-1">
+                      <label>Calle secundaria</label>
+                      <input
+                        pInputText
+                        class="w-full"
+                        [(ngModel)]="rowData.calleSecundaria"
+                        name="calleSecundaria{{ rowData.idDireccion }}"
+                      />
+                    </div>
+                  </div>
+                  <!-- ======================= -->
+                  <!-- FILA 5 -->
+                  <!-- ======================= -->
+                  <div class="col-12 md:col-6">
+                    <div class="field mb-1">
+                      <label>Edificio</label>
+                      <input
+                        pInputText
+                        class="w-full"
+                        [value]="rowData.nombreEdificio"
+                        name="nombreEdificio{{ rowData.idDireccion }}"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-12 md:col-6">
+                    <div class="field mb-1">
+                      <label>#Departamento</label>
+                      <input
+                        pInputText
+                        class="w-full"
+                        [value]="rowData.nroDepartamento"
+                        name="nroDepartamento{{ rowData.idDireccion }}"
+                      />
+                    </div>
+                  </div>
+                  <!-- ======================= -->
+                  <!-- FILA 6 -->
+                  <!-- ======================= -->
+                  <div class="col-12">
+                    <div class="field mb-1">
+                      <label>Dato adicional</label>
+                      <textarea
+                        rows="3"
+                        pTextarea
+                        class="w-full"
+                        [(ngModel)]="rowData.datoAdicional"
+                        name="datoAdicional{{ rowData.idDireccion }}"
+                      ></textarea>
+                    </div>
                   </div>
                 </div>
-                <!-- ======================= -->
-                <!-- FILA 2 -->
-                <!-- ======================= -->
-                <div class="col-12 md:col-6">
-                  <div class="field mb-1">
-                    <label>Ciudad <span class="asterisco">*</span></label>
-                    <p-select
-                      [options]="ciudades()"
-                      optionLabel="descripcionCiudad"
-                      optionValue="idCiudad"
-                      [(ngModel)]="rowData.idCiudadDireccion"
-                      [filter]="true" 
-                      [name]="'idCiudadDireccion' + rowData.idDireccion"
-                      class="w-full">
-                    </p-select>
-                  </div>
-                </div>
-                <div class="col-12 md:col-6">
-                  <div class="field mb-1">
-                    <label>Sector <span class="asterisco">*</span></label>
-                    <input pInputText class="w-full" [(ngModel)]="rowData.sector" name="sector{{rowData.idDireccion}}">
-                  </div>
-                </div>
-                <!-- ======================= -->
-                <!-- FILA 3 -->
-                <!-- ======================= -->
-                <div class="col-12 md:col-6">
-                  <div class="field mb-1">
-                    <label>Código alfanumérico <span class="asterisco">*</span></label>
-                    <input pInputText class="w-full" [(ngModel)]="rowData.nroCasaOEdificio"
-                      name="nroCasaOEdificio{{rowData.idDireccion}}">
-                  </div>
-                </div>
-                <div class="col-12 md:col-6">
-                  <div class="field mb-1">
-                    <label>#Predio</label>
-                    <input pInputText class="w-full">
-                  </div>
-                </div>
-                <!-- ======================= -->
-                <!-- FILA 4 -->
-                <!-- ======================= -->
-                <div class="col-12 md:col-6">
-                  <div class="field mb-1">
-                    <label>Calle principal <span class="asterisco">*</span></label>
-                    <input pInputText class="w-full" [(ngModel)]="rowData.callePrincipal"
-                      name="callePrincipal{{rowData.idDireccion}}">
-                  </div>
-                </div>
-                <div class="col-12 md:col-6">
-                  <div class="field mb-1">
-                    <label>Calle secundaria</label>
-                    <input pInputText class="w-full" [(ngModel)]="rowData.calleSecundaria"
-                      name="calleSecundaria{{rowData.idDireccion}}">
-                  </div>
-                </div>
-                <!-- ======================= -->
-                <!-- FILA 5 -->
-                <!-- ======================= -->
-                <div class="col-12 md:col-6">
-                  <div class="field mb-1">
-                    <label>Edificio</label>
-                    <input pInputText class="w-full" [value]="rowData.nombreEdificio"
-                      name="nombreEdificio{{rowData.idDireccion}}">
-                  </div>
-                </div>
-                <div class="col-12 md:col-6">
-                  <div class="field mb-1">
-                    <label>#Departamento</label>
-                    <input pInputText class="w-full" [value]="rowData.nroDepartamento"
-                      name="nroDepartamento{{rowData.idDireccion}}">
-                  </div>
-                </div>
-                <!-- ======================= -->
-                <!-- FILA 6 -->
-                <!-- ======================= -->
-                <div class="col-12">
-                  <div class="field mb-1">
-                    <label>Dato adicional</label>
-                    <textarea rows="3" pTextarea class="w-full" [(ngModel)]="rowData.datoAdicional"
-                      name="datoAdicional{{rowData.idDireccion}}"></textarea>
-                  </div>
-                </div>
-              </div>
-            </p-panel>
-          </form>
-        </td>
-      </tr>
+              </p-panel>
+            </form>
+          </td>
+        </tr>
       }
     </ng-template>
-
+    <!-- FOOTER -->
+    <ng-template pTemplate="paginatorleft"> {{ direcciones().length }} ítems </ng-template>
   </p-table>
-
 </div>

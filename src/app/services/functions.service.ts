@@ -1,7 +1,7 @@
 import { inject, Injectable, WritableSignal } from '@angular/core';
 import { ToastService } from './toast.service';
 import { FilaTabla } from './../interfaces/general.interface';
-import { Grafico } from '../interfaces/personas.interfaces';
+import { Grafico } from '../interfaces/general.interface';
 
 @Injectable({
   providedIn: 'root',
