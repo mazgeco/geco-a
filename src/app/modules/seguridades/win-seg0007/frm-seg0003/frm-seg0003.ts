@@ -2,6 +2,7 @@
 import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { debounceTime } from 'rxjs';
 //Imports generales
 import { Combo } from '../../../../interfaces/general.interface';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
@@ -134,10 +135,10 @@ export class FrmSeg0003 implements OnInit {
    * GETTERS
    *******************************************************************************************/
 
-  //GETTER PARA TRAER LOS DATOS ACTUALES DE LA PESONA
+  //GETTER PARA TRAER LOS DATOS ACTUALES DEL REGISTRO
   get currentData(): Usuarios {
-    const persona = this.frmSeg0003.getRawValue() as Usuarios;
-    return persona;
+    const usuario = this.frmSeg0003.getRawValue() as Usuarios;
+    return usuario;
   }
 
   /******************************************************************************************
@@ -147,6 +148,18 @@ export class FrmSeg0003 implements OnInit {
   ngOnInit(): void {
     this.cargaCombos();
     this.cargaDatos(this.idUsuario);
+    //Activa la revisión de cambios en el formulario para disparar el grabado en cada cambio
+    this.frmSeg0003.valueChanges.pipe(debounceTime(300)).subscribe((usuario) => {
+      if (this.loadingUsuario()) {
+        return;
+      }
+      if (usuario.idPerfil !== '' && usuario.idPerfil !== null) {
+        this.stateService.usuario.update((p) => ({
+          ...p!,
+        }));
+        this.saveForm(usuario as Usuarios);
+      }
+    });
   }
 
   cambiarEstado(estado: EstadoUsuario): void {}
@@ -247,4 +260,37 @@ export class FrmSeg0003 implements OnInit {
       },
     });
   }
+
+  //SAVE FORM
+  saveForm(usuario: Usuarios): void {
+    this.seguridadesService.grabaUsuario(usuario)?.subscribe({
+      next: (resp) => {
+        this.idUsuario = resp.idNoSecuencial!;
+        this.frmSeg0003.patchValue({ idUsuario: resp.idNoSecuencial! }, { emitEvent: false });
+        usuario.idUsuario = resp.idNoSecuencial!;
+        this.stateService.usuario.set(usuario);
+        this.messageService.mostrar(
+          this.statusMessages,
+          'msgFrmPer0001',
+          'success',
+          'Dato grabado correctamente.',
+        );
+      },
+      error: (err) => {
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al grabar: ' + err.error.message,
+        );
+      }
+    });
+  }
+
+  seleccionarPersona(event: any): void {
+  const persona = event.value;
+
+  this.frmSeg0003.patchValue({
+    nombrePersona: persona.razonSocial
+  });
+}
 }

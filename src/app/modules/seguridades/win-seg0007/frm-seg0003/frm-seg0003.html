@@ -63,7 +63,7 @@
         <div class="col-12 md:col-6">
           <div class="field mb-1">
             <label>Persona <span class="asterisco">*</span></label>
-            @if (esActivo()) {
+            @if (currentData.idUsuario !== '') {
               <input pInputText class="w-full" formControlName="nombrePersona" [readOnly]="true" />
             } @else {
               <p-autocomplete
@@ -72,6 +72,7 @@
                 formControlName="idPersona"
                 [suggestions]="personas()"
                 (completeMethod)="buscarPersonas($event)"
+                (onSelect)="seleccionarPersona($event)"
                 optionLabel="razonSocial"
                 optionValue="idPersona"
                 [minLength]="3"

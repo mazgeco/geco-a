@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 import { GraficosResponse, SavedRow } from '../interfaces/general.interface';
-import { UsuariosResponse, ListaUsuariosResponse, ListaPerfilesResponse} from '../interfaces/seguridades.interface';
+import { UsuariosResponse, ListaUsuariosResponse, ListaPerfilesResponse, Usuarios} from '../interfaces/seguridades.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -34,8 +34,12 @@ export class SeguridadesService {
     return this.http.get<GraficosResponse>(`${this.apiUrl}seguridades/usuarios/grafico/nrousrxperfil`);
   }
 
-  graficoNroPermisosXPerfil():Observable<GraficosResponse>{
+  graficoNroPermisosXPerfil(): Observable<GraficosResponse>{
     return this.http.get<GraficosResponse>(`${this.apiUrl}seguridades/usuarios/grafico/nropermisoxperfil`);
+  }
+
+  grabaUsuario(usuario: Usuarios): Observable<SavedRow>{
+    return this.http.post<SavedRow>(`${this.apiUrl}seguridades/${this.idUsuario}/usuarios`, usuario);
   }
 
 }
