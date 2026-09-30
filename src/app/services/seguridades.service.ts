@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 import { GraficosResponse, SavedRow } from '../interfaces/general.interface';
-import { UsuariosResponse, ListaUsuariosResponse, ListaPerfilesResponse, Usuarios} from '../interfaces/seguridades.interface';
+import { UsuariosResponse, ListaUsuariosResponse, ListaPerfilesResponse, Usuarios, ListaObjetosResponse} from '../interfaces/seguridades.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ import { UsuariosResponse, ListaUsuariosResponse, ListaPerfilesResponse, Usuario
 export class SeguridadesService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
-  private idUsuario = 'mgzapata';
+  private idUsuarioSistema = 'mgzapata';
 
   buscaUsuario(nombre: string): Observable<ListaUsuariosResponse> {
     return this.http.get<ListaUsuariosResponse>(`${this.apiUrl}seguridades/usuarios/busqueda?nombre=${nombre}`);
@@ -39,7 +39,18 @@ export class SeguridadesService {
   }
 
   grabaUsuario(usuario: Usuarios): Observable<SavedRow>{
-    return this.http.post<SavedRow>(`${this.apiUrl}seguridades/${this.idUsuario}/usuarios`, usuario);
+    return this.http.post<SavedRow>(`${this.apiUrl}seguridades/${this.idUsuarioSistema}/usuarios`, usuario);
+  }
+
+  actualizaEstadoUsuario(idUsuario: string, estado: string): Observable<SavedRow> {
+    const params = new HttpParams()
+    .set('idUsuario', idUsuario)
+    .set('estado', estado);
+    return this.http.put<SavedRow>(`${this.apiUrl}seguridades/${this.idUsuarioSistema}/usuarios/estado`, null, { params });
+  }
+
+  listaObjetos(): Observable<ListaObjetosResponse>{
+    return this.http.get<ListaObjetosResponse>(`${this.apiUrl}seguridades/objetos`);
   }
 
 }

@@ -91,6 +91,7 @@ export class FrmSeg0003 implements OnInit {
       idUsuario: [''],
       idPerfil: [''],
       idPersona: [null as number | null],
+      idOperacion: [''],
       nombrePersona: [''],
       superUsuario: ['N'],
       estadoUsuario: ['I'],
@@ -162,8 +163,7 @@ export class FrmSeg0003 implements OnInit {
     });
   }
 
-  cambiarEstado(estado: EstadoUsuario): void {}
-
+  //Carga los datos del usuario 
   cargaDatos(idUsuario: string): void {
     if (idUsuario !== '' && idUsuario !== null) {
       this.loadingUsuario.set(true);
@@ -282,15 +282,47 @@ export class FrmSeg0003 implements OnInit {
           'Error',
           'Ha ocurrido un error al grabar: ' + err.error.message,
         );
-      }
+      },
     });
   }
 
   seleccionarPersona(event: any): void {
-  const persona = event.value;
+    const persona = event.value;
 
-  this.frmSeg0003.patchValue({
-    nombrePersona: persona.razonSocial
-  });
-}
+    this.frmSeg0003.patchValue({
+      nombrePersona: persona.razonSocial,
+    });
+  }
+
+  //MÉTODO QUE CAMBIA EL ESTADO DE LA PERSONA
+  cambiarEstado(estado: EstadoUsuario): void {
+    this.confirmationService.confirm({
+      message: '¿Realmente desea cambiar el estado de este usuario?',
+      header: 'Cambio de estado',
+      acceptLabel: 'Aceptar',
+      rejectLabel: 'Cancelar',
+      accept: () => {
+        this.seguridadesService.actualizaEstadoUsuario(this.idUsuario, estado).subscribe({
+          next: (resp) => {
+            this.esActivo.set(estado === 'A' ? true : false);
+            this.estadoUsuario.set(estado === 'A' ? 'ACTIVO' : 'INACTIVO');
+            this.frmSeg0003.patchValue({
+              estadoUsuario: estado,
+            });
+            this.stateService.usuario.update((p) => ({
+              ...p!,
+              estadoUsuario: estado,
+            }));
+          },
+          error: (err) => {
+            this.toastService.showMessage(
+              'error',
+              'Error',
+              'Ha ocurrido un error al grabar: ' + err.error.message,
+            );
+          },
+        });
+      },
+    });
+  }
 }

@@ -11,7 +11,7 @@
     </label>
   </ng-template>
   <ng-template #end>
-    <label class="font-bold">
+    <label class="font-bold" [style.color]="stateService.estado() ? '#4caf50' : '#f44336'">
       {{ stateService.estadoNombre() }}
     </label>
   </ng-template>

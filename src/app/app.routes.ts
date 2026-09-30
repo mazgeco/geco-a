@@ -77,6 +77,7 @@ export const routes: Routes = [
       { path: 'dash', component: Seguridades.DshSeg0001 },
       { path: 'search', component: Seguridades.BsqSeg0001 },
       { path: 'usuario/:id', component: Seguridades.WinSeg0007 },
+      { path: 'objetos', component: Seguridades.WinSeg0008 },
       { path: '', redirectTo: 'dash', pathMatch: 'full' },
     ]
   },

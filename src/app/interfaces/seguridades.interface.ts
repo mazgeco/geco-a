@@ -11,10 +11,10 @@ export interface UsuariosResponse {
 }
 
 export interface Usuarios {
-  idUsuario: string | null;
+  idUsuario?: string | null;
   idPersona: number;
-  idPerfil: string | null;
-  idOperacion: number | null;
+  idPerfil?: string | null;
+  idOperacion?: string | null;
   nombrePersona?: string | null;
   superUsuario?: string | null;
   estadoUsuario: string | null;
@@ -75,4 +75,31 @@ export interface Perfiles {
   fechaCrea?: string | null;
   idUsuarioModifica?: string | null;
   fechaModifica?: string | null;
+}
+
+export interface ListaObjetosResponse {
+  status: string;
+  message: string;
+  data: Objetos[];
+}
+
+export interface ObjetosResponse {
+  status: string;
+  message: string;
+  data: Objetos;
+}
+
+export interface Objetos {
+  idObjeto?: number | null;
+  idModulo?: string | null;
+  idOpcionMenu?: string | null;
+  idTabla?: number | null;
+  descripcionObjeto?: string | null;
+  tipoObjeto?: string | null;
+  nombreArchivo?: string | null;
+  tituloObjeto?: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: Date | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: Date | null;
 }

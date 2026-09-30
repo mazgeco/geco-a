@@ -27,12 +27,38 @@ export class SeguridadesLayout implements OnInit {
         routerLink: '/seguridades/dash'
       },
       {
+        label: 'Accesos y permisos',
+        icon: 'pi pi-lock',
+        items: [
+          {
+            label: 'Accesos a los módulos',
+            routerLink: '/seguridades/accmodulos'
+          },
+          {
+            label: 'Accesos a los objetos',
+            routerLink: '/seguridades/accobjetos'
+          },
+          {
+            label: 'Accesos a los menús',
+            routerLink: '/seguridades/accmenus'
+          }
+        ]
+      },
+      {
         label: 'Seguridades',
         icon: 'pi pi-shield',
         items: [
           {
             label: 'Usuarios (búsqueda/creación)',
             routerLink: '/seguridades/search'
+          },
+          {
+            label: 'Objetos',
+            routerLink: '/seguridades/objetos'
+          },
+          {
+            label: 'Perfiles',
+            routerLink: '/seguridades/perfiles'
           }
         ]
       },
