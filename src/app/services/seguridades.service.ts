@@ -13,6 +13,8 @@ import {
   Usuarios,
   ListaObjetosResponse,
   UsuarioValidadoResponse,
+  Objetos,
+  Perfiles,
 } from '../interfaces/seguridades.interface';
 
 @Injectable({
@@ -32,7 +34,10 @@ export class SeguridadesService {
       pseudoPass: pseudo,
     };
 
-    return this.http.post<UsuarioValidadoResponse>(`${this.apiUrl}seguridades/usuarios/check`, body);
+    return this.http.post<UsuarioValidadoResponse>(
+      `${this.apiUrl}seguridades/usuarios/check`,
+      body,
+    );
   }
 
   usuarioXToken(token: string): Observable<UsuariosResponse> {
@@ -50,10 +55,6 @@ export class SeguridadesService {
     return this.http.get<UsuariosResponse>(
       `${this.apiUrl}seguridades/usuarios/usuario/${idUsuario}`,
     );
-  }
-
-  listaPerfiles(): Observable<ListaPerfilesResponse> {
-    return this.http.get<ListaPerfilesResponse>(`${this.apiUrl}seguridades/perfiles`);
   }
 
   graficoLogeoUsuarios(): Observable<GraficosResponse> {
@@ -90,5 +91,40 @@ export class SeguridadesService {
 
   listaObjetos(): Observable<ListaObjetosResponse> {
     return this.http.get<ListaObjetosResponse>(`${this.apiUrl}seguridades/objetos`);
+  }
+
+  grabaObjeto(objeto: Objetos): Observable<SavedRow> {
+    return this.http.post<SavedRow>(
+      `${this.apiUrl}seguridades/${this.idUsuarioSistema}/objetos`,
+      objeto,
+    );
+  }
+
+  eliminaObjeto(idObjeto: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idObjeto', idObjeto!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuarioSistema}/objetos`, {
+      params,
+    });
+  }
+
+  listaPerfiles(): Observable<ListaPerfilesResponse> {
+    return this.http.get<ListaPerfilesResponse>(`${this.apiUrl}seguridades/perfiles`);
+  }
+
+  grabaPerfil(perfiles: Perfiles): Observable<SavedRow> {
+    return this.http.post<SavedRow>(
+      `${this.apiUrl}seguridades/${this.idUsuarioSistema}/perfiles`,
+      perfiles,
+    );
+  }
+
+  eliminaPerfil(idPerfil: string): Observable<SavedRow> {
+    const params = new HttpParams().set('idPerfil', idPerfil!);
+    return this.http.delete<SavedRow>(
+      `${this.apiUrl}seguridades/${this.idUsuarioSistema}/perfiles`,
+      {
+        params,
+      },
+    );
   }
 }
