@@ -3,27 +3,31 @@ import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { PRIMENG_MODULES } from '../../shared/primeng/primeng.imports';
 import { Modulo } from '../../interfaces/general.interface';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-main-layout',
   imports: [...PRIMENG_MODULES],
   templateUrl: './main-layout.html',
-  styleUrl: './main-layout.css'
+  styleUrl: './main-layout.css',
 })
 export class MainLayout implements OnInit {
+  private authService = inject(AuthService);
+  nombreUsuario = signal<string>('');
 
   menuItems: MenuItem[] | undefined;
   router = inject(Router);
   modulos = signal<Modulo[]>([]);
 
   ngOnInit(): void {
+    this.nombreUsuario.set(this.authService.nombrePersona());
 
     this.menuItems = [
       {
-        label: "Salir",
-        icon: "pi pi-power-off",
-        routerLink: '/login/'
-      }
+        label: 'Salir',
+        icon: 'pi pi-power-off',
+        command: () => this.logout(),
+      },
     ];
 
     this.modulos.set([
@@ -32,47 +36,55 @@ export class MainLayout implements OnInit {
         descripcion: 'Administración de las personas del sistema',
         ruta: '/personas',
         icono: 'pi pi-users',
-        color:'#3b82f6'
+        color: '#3b82f6',
       },
       {
         nombre: 'Productos',
         descripcion: 'Administración de todos los productos para la venta',
         ruta: '/productos',
         icono: 'pi pi-box',
-        color: '#22c55e'
+        color: '#22c55e',
       },
       {
         nombre: 'Proveedores',
         descripcion: 'Control de proveedores e insumos',
         ruta: '/proveedores',
         icono: 'pi pi-truck',
-        color: '#f59e0b'
+        color: '#f59e0b',
       },
       {
         nombre: 'Reservas',
         descripcion: 'Gestión de reservas',
         ruta: '/reservas',
         icono: 'pi pi-calendar-plus',
-        color: '#8b5cf6'
+        color: '#8b5cf6',
       },
       {
         nombre: 'Seguridades',
         descripcion: 'Roles y permisos',
         ruta: '/seguridades',
         icono: 'pi pi-shield',
-        color: '#ef4444'
+        color: '#ef4444',
       },
       {
         nombre: 'Configuración',
         descripcion: 'Parámetros generales',
         ruta: '/configuracion',
         icono: 'pi pi-cog',
-        color: '#14b8a6'
-      }
+        color: '#14b8a6',
+      },
     ]);
   }
 
   abrirModulo(modulo: Modulo): void {
     this.router.navigate([modulo.ruta]);
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']).then(
+      (result) => console.log('NAVEGACIÓN LOGOUT:', result),
+      (error) => console.error('ERROR NAVEGACIÓN LOGOUT:', error),
+    );
   }
 }

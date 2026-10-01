@@ -103,3 +103,23 @@ export interface Objetos {
   idUsuarioModifica?: string | null;
   fechaModifica?: Date | null;
 }
+
+export interface UsuarioValidadoResponse {
+  status: string;
+  message: string;
+  data: UsuarioValidado;
+}
+
+export interface UsuarioValidado {
+  nombre: string;
+  token: string
+}
+
+export interface UsuarioSesion {
+  idUsuario?: string | null;
+  idPersona: number;
+  idPerfil?: string | null;
+  nombrePersona?: string | null;
+  estadoUsuario: string | null;
+  superUsuario?: string | null;
+}
