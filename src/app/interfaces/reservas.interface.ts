@@ -60,7 +60,7 @@ export enum EstadoReserva {
   ING = 'ING',
   ALM = 'ALM',
   PAG = 'PAG',
-  MAN = 'MAN'
+  MAN = 'MAN',
 }
 
 export const EstadoReservaNombre: Record<EstadoReserva, string> = {
@@ -71,5 +71,36 @@ export const EstadoReservaNombre: Record<EstadoReserva, string> = {
   [EstadoReserva.ING]: 'Ingresada',
   [EstadoReserva.ALM]: 'Almacenada',
   [EstadoReserva.PAG]: 'Pagada',
-  [EstadoReserva.MAN]: 'Mantenimiento'
+  [EstadoReserva.MAN]: 'Mantenimiento',
 };
+
+export interface GraficoVentasAnioResponse {
+  status: string;
+  message: string;
+  data: GraficoVentasAnio[];
+}
+
+export interface GraficoVentasAnio {
+  mes: string;
+  anio1: number;
+  ventasAnio1: number | null;
+  anio2: number;
+  ventasAnio2: number | null;
+  anio3: number;
+  ventasAnio3: number | null;
+}
+
+export interface TipoHabitacionResponse {
+  status: string;
+  message: string;
+  data: TipoHabitacion[];
+}
+
+export interface TipoHabitacion {
+  idTipoHabitacion?: number | null;
+  descripcionTipoHabitacion?: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}

@@ -17,8 +17,8 @@ export class BsqPer0001 {
   router = inject(Router);
   toastService = inject(ToastService);
   loading = signal<boolean>(false);
-  notificacion = signal<string>("");
-  
+  notificacion = signal<string>('');
+
   personasService = inject(PersonasService);
   personas = signal<Personas[]>([]);
 
@@ -26,12 +26,11 @@ export class BsqPer0001 {
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
   busquedaMessage = computed(() =>
-    this.messageService.obtener(this.statusMessages, 'msgBsqPer0001')
+    this.messageService.obtener(this.statusMessages, 'msgBsqPer0001'),
   );
 
-
   buscarPersona(nombre: string): void {
-    this.loading.set(true),
+    (this.loading.set(true),
       this.personasService.buscaPersona(nombre).subscribe({
         next: (resp) => {
           this.personas.set([]);
@@ -40,21 +39,25 @@ export class BsqPer0001 {
             this.statusMessages,
             'msgBsqPer0001',
             'success',
-            `${resp.data.length} registros encontrados`
+            `${resp.data.length} registros encontrados`,
           );
           this.loading.set(false);
         },
         error: (err) => {
           this.personas.set([]);
           this.loading.set(false);
-          if (err.error.status === "NOT_FOUND") {
-            this.notificacion.set("0 registos encontrados");
+          if (err.error.status === 'NOT_FOUND') {
+            this.notificacion.set('0 registos encontrados');
           } else {
-            this.notificacion.set("");
-            this.toastService.showMessage("error", "Error", "Ha ocurrido un error: " + err.error.message);
+            this.notificacion.set('');
+            this.toastService.showMessage(
+              'error',
+              'Error',
+              'Ha ocurrido un error: ' + err.error.message,
+            );
           }
-        }
-      });
+        },
+      }));
   }
 
   openPersona(): void {

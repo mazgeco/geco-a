@@ -111,6 +111,7 @@ export interface UsuarioValidadoResponse {
 }
 
 export interface UsuarioValidado {
+  idUsuario: string;
   nombre: string;
   token: string
 }

@@ -31,6 +31,36 @@ export class ReservasLayout implements OnInit {
         routerLink: '/reservas/dash'
       },
       {
+        label: 'Parametrización',
+        icon: 'pi pi-cog',
+        items: [
+          {
+            label: 'Rooming list',
+            routerLink: '/reservas/roominglist'
+          },
+          {
+            label: 'Motivos',
+            routerLink: '/reservas/motivos'
+          },
+          {
+            label: 'Tipo reserva',
+            routerLink: '/reservas/tiporeserva'
+          },
+          {
+            label: 'Parámetros orden de servicios',
+            routerLink: '/reservas/parmorden'
+          },
+          {
+            label: 'Exclusión de componentes',
+            routerLink: '/reservas/search'
+          },
+          {
+            label: 'Usuario por default',
+            routerLink: '/reservas/usuariodefault'
+          }
+        ]
+      },
+      {
         label: 'Reservas',
         icon: 'pi pi-calendar',
         items: [

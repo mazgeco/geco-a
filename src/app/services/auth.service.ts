@@ -1,5 +1,5 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { Usuarios, UsuarioValidado } from '../interfaces/seguridades.interface';
+import { UsuarioValidado } from '../interfaces/seguridades.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +27,10 @@ export class AuthService {
 
   readonly nombrePersona = computed(() => {
     return this._usuario()?.nombre ?? '';
+  });
+
+  readonly idUsuario = computed(() => {
+    return this._usuario()?.idUsuario ?? '';
   });
 
 

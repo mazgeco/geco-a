@@ -1,0 +1,159 @@
+<p-toast />
+<p-confirmdialog />
+<div class="col-12">
+  <p-toolbar>
+    <ng-template #start>
+      <p-button
+        id="btnGrdRes00091"
+        icon="pi pi-plus"
+        class="mr-1"
+        label="Insertar"
+        pTooltip="Inserta una fila"
+        tooltipPosition="bottom"
+        (onClick)="insertarFila()"
+      />
+      <p-button
+        id="btnGrdRes00092"
+        icon="pi pi-trash"
+        class="mr-1"
+        label="Eliminar"
+        pTooltip="Elimina varias filas seleccionadas"
+        tooltipPosition="bottom"
+        (onClick)="eliminarVarias()"
+      />
+      <p-button
+        id="btnGrdRes00093"
+        icon="pi pi-refresh"
+        class="mr-1"
+        pTooltip="Refresca los datos del grid"
+        tooltipPosition="bottom"
+        (onClick)="cargaDatos()"
+      />
+      <p-button
+        id="btnGrdRes00094"
+        icon="pi pi-user"
+        class="mr-1"
+        pTooltip="Auditoría del registro actual"
+        tooltipPosition="bottom"
+        (onClick)="muestraAuditoriaRegistro()"
+      />
+      <p-button
+        id="btnGrdRes00095"
+        icon="pi pi-info-circle"
+        pTooltip="Información del objeto actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
+      />
+    </ng-template>
+
+    <ng-template #center>
+      <span></span>
+    </ng-template>
+
+    <ng-template #end>
+      @if (barraMessage()?.visible) {
+        <div class="message-container">
+          <p-message [severity]="barraMessage()!.severity" [icon]="barraMessage()!.icon">
+            {{ barraMessage()!.text }}
+          </p-message>
+        </div>
+      }
+    </ng-template>
+  </p-toolbar>
+  <!-- ===================================== -->
+  <!-- LISTADO DE DATOS -->
+  <!-- ===================================== -->
+  <p-table
+    id="grdRes0009"
+    [value]="filas()"
+    editMode="row"
+    selectionMode="multiple"
+    [(selection)]="selectedRows"
+    [metaKeySelection]="metaKey"
+    dataKey="_rowId"
+    class="p-datatable-sm"
+    [paginator]="true"
+    [rows]="10"
+    showGridlines
+    [size]="'small'"
+  >
+    <!-- HEADER -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 90%">Tipo Habitacion</th>
+        <th style="width: 10%"></th>
+      </tr>
+    </ng-template>
+    <!-- BODY -->
+    <ng-template pTemplate="body" let-rowData let-editing="editing" let-rowIndex="rowIndex">
+      <tr [pEditableRow]="rowData" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+        <!-- DESCRIPCIÓN -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input type="hidden" [(ngModel)]="rowData.idTipoHabitacion">
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="rowData.descripcionTipoHabitacion"
+                class="w-full"
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ rowData.descripcionTipoHabitacion }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- ACCIONES -->
+        <td class="text-center">
+          <!-- EDITAR -->
+          @if (!editing) {
+            <button
+              pButton
+              [id]="'btnGrdRes00096' + rowIndex"
+              pInitEditableRow
+              icon="pi pi-pencil"
+              text
+              rounded
+              severity="primary"
+            ></button>
+            <button
+              pButton
+              [id]="'btnGrdRes00097' + rowIndex"
+              icon="pi pi-trash"
+              text
+              rounded
+              severity="danger"
+              (click)="eliminarFila(rowData)"
+            ></button>
+          }
+          <!-- GUARDAR / CANCELAR -->
+          @if (editing) {
+            <button
+              pButton
+              [id]="'btnGrdRes00098' + rowIndex"
+              pSaveEditableRow
+              icon="pi pi-check"
+              text
+              rounded
+              severity="success"
+              class="mr-1"
+              (click)="saveRow(rowData)"
+            ></button>
+            <button
+              pButton
+              [id]="'btnGrdRes00099' + rowIndex"
+              pCancelEditableRow
+              icon="pi pi-times"
+              text
+              rounded
+              severity="danger"
+            ></button>
+          }
+        </td>
+      </tr>
+    </ng-template>
+    <!-- FOOTER -->
+    <ng-template pTemplate="paginatorleft"> {{ filas().length }} ítems </ng-template>
+  </p-table>
+</div>

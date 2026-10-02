@@ -16,6 +16,7 @@ import {
   Objetos,
   Perfiles,
 } from '../interfaces/seguridades.interface';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,8 @@ import {
 export class SeguridadesService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
-  private idUsuarioSistema = 'mgzapata';
+  private authService = inject(AuthService)
+  private idUsuarioSistema = this.authService.usuario;
 
   validaUsuario(idUsuario: string, pass: string): Observable<UsuarioValidadoResponse> {
     const md5 = CryptoJS.MD5(pass);

@@ -69,6 +69,7 @@ export const routes: Routes = [
           { path: 'dash', component: Reservas.DshRes0001 },
           { path: 'search', component: Reservas.BsqRes0001 },
           { path: 'reserva/:id', component: Reservas.WinRes0003 },
+          { path: 'roominglist', component: Reservas.WinRes0032 },
           { path: '', redirectTo: 'dash', pathMatch: 'full' },
         ],
       },
