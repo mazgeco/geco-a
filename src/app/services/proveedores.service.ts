@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 import { SavedRow } from '../interfaces/general.interface';
-import { ProveedoresResponse } from '../interfaces/proveedores.interfaces';
+import { InsumosResponse, ProveedoresResponse, SuperTipoInsumo, SuperTipoInsumoResponse } from '../interfaces/proveedores.interfaces';
 import { GraficosResponse } from '../interfaces/general.interface';
 import { AuthService } from './auth.service';
 
@@ -16,12 +16,21 @@ export class ProveedoresService {
   private apiUrl = environment.apiUrl;
   private authService = inject(AuthService);
 
+  //BÚSQUEDA PROVEEDOR
   buscaProveedor(nombre: string): Observable<ProveedoresResponse> {
     return this.http.get<ProveedoresResponse>(
       `${this.apiUrl}proveedores/busqueda?nombre=${nombre}`,
     );
   }
 
+  //BÚSQUEDA INSUMO
+  buscaInsumos(nombre: string): Observable<InsumosResponse> {
+    return this.http.get<InsumosResponse>(
+      `${this.apiUrl}proveedores/insumos/busqueda?nombre=${nombre}`,
+    );
+  }
+
+  //GRÁFICOS DEL DASHBOARD
   graficoProveedorPorClasificador(): Observable<GraficosResponse> {
     return this.http.get<GraficosResponse>(`${this.apiUrl}proveedores/grafico/clasificador`);
   }
@@ -32,5 +41,36 @@ export class ProveedoresService {
 
   graficoProveedorPorAnio(): Observable<GraficosResponse> {
     return this.http.get<GraficosResponse>(`${this.apiUrl}proveedores/grafico/anio`);
+  }
+
+  //SÚPER TIPO DE INSUMO
+  listaSuperTipoInsumo(): Observable<SuperTipoInsumoResponse> {
+    return this.http.get<SuperTipoInsumoResponse>(`${this.apiUrl}proveedores/supertipoinsumos`);
+  }
+
+  grabaSuperTipoInsumo(superTipoInsumo: SuperTipoInsumo, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}proveedores/${this.authService.idUsuario()}/supertipoinsumos`,
+        superTipoInsumo,
+      );
+    } else {
+      const params = new HttpParams().set('idSuperTipoInsumo', superTipoInsumo.idSuperTipoInsumo!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}proveedores/${this.authService.idUsuario()}/supertipoinsumos`,
+        superTipoInsumo,
+        { params },
+      );
+    }
+  }
+
+  eliminaSuperTipoInsumo(idSuperTipoInsumo: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idSuperTipoInsumo', idSuperTipoInsumo!);
+    return this.http.delete<SavedRow>(
+      `${this.apiUrl}proveedores/${this.authService.idUsuario()}/supertipoinsumos`,
+      {
+        params,
+      },
+    );
   }
 }

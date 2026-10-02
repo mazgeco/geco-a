@@ -48,7 +48,7 @@ export class ReservasLayout implements OnInit {
           },
           {
             label: 'Parámetros orden de servicios',
-            routerLink: '/reservas/parmorden'
+            routerLink: '/reservas/paramorden'
           },
           {
             label: 'Exclusión de componentes',

@@ -104,3 +104,37 @@ export interface TipoHabitacion {
   idUsuarioModifica?: string | null;
   fechaModifica?: string | null;
 }
+
+export interface ClasificacionResponse {
+  status: string;
+  message: string;
+  data: Clasificacion[];
+}
+
+export interface Clasificacion {
+  idClasificacion?: number | null;
+  descripcionClasificacion?: string | null;
+  tipoClasificacion?: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+export interface OrdenServicioResponse {
+  status: string;
+  message: string;
+  data: OrdenServicio[];
+}
+
+export interface OrdenServicio {
+  idOrdenServicio?: number | null;
+  idSuperTipoInsumo?: number | null;
+  nroColumna?: string | null;
+  imprimeObservaciones?: string | null;
+  imprimeCantidad?: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}

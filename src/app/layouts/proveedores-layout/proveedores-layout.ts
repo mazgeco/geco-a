@@ -4,7 +4,6 @@ import { MenuItem } from 'primeng/api';
 import { PRIMENG_MODULES } from '../../shared/primeng/primeng.imports';
 import { AuthService } from '../../services/auth.service';
 
-
 @Component({
   selector: 'app-proveedoreslayout',
   imports: [...PRIMENG_MODULES, RouterOutlet],
@@ -12,9 +11,8 @@ import { AuthService } from '../../services/auth.service';
   styles: ``,
 })
 export class ProveedoresLayout implements OnInit {
-
   private authService = inject(AuthService);
-  nombreUsuario = signal<string>("");
+  nombreUsuario = signal<string>('');
   router = inject(Router);
   menuItems: MenuItem[] | undefined;
 
@@ -24,12 +22,12 @@ export class ProveedoresLayout implements OnInit {
       {
         label: 'Módulos',
         icon: 'pi pi-angle-double-left',
-        routerLink: '/main/'
+        routerLink: '/main/',
       },
       {
         label: 'Dashboard',
         icon: 'pi pi-chart-bar',
-        routerLink: '/proveedores/dash'
+        routerLink: '/proveedores/dash',
       },
       {
         label: 'Proveedores',
@@ -37,19 +35,37 @@ export class ProveedoresLayout implements OnInit {
         items: [
           {
             label: 'Proveedores (búsqueda/creación)',
-            routerLink: '/proveedores/search'
+            routerLink: '/proveedores/search',
+          },
+        ],
+      },
+      {
+        label: 'Insumos',
+        icon: 'pi pi-cog',
+        items: [
+          {
+            label: 'Insumo (búsqueda/creación)',
+            routerLink: '/proveedores/searchinsumo'
+          },          
+          {
+            label: 'Clasificadores',
+            routerLink: '/proveedores/clasificadores'
+          },
+          {
+            label: 'Tipos de insumo',
+            routerLink: '/proveedores/tiposinsumo'
           }
-        ]
+        ],
       },
       {
         label: 'Reportes',
         icon: 'pi pi-file',
         items: [
           {
-            label: 'Reporte proveedores'
-          }
-        ]
-      }
+            label: 'Reporte proveedores',
+          },
+        ],
+      },
     ];
   }
 }

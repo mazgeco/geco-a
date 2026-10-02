@@ -1,0 +1,239 @@
+<p-toast />
+<p-confirmdialog />
+<div class="col-12">
+  <p-toolbar>
+    <ng-template #start>
+      <p-button
+        id="btnGrdRes00941"
+        icon="pi pi-plus"
+        class="mr-1"
+        label="Insertar"
+        pTooltip="Inserta una fila"
+        tooltipPosition="bottom"
+        (onClick)="insertarFila()"
+      />
+      <p-button
+        id="btnGrdRes00942"
+        icon="pi pi-trash"
+        class="mr-1"
+        label="Eliminar"
+        pTooltip="Elimina varias filas seleccionadas"
+        tooltipPosition="bottom"
+        (onClick)="eliminarVarias()"
+      />
+      <p-button
+        id="btnGrdRes00943"
+        icon="pi pi-refresh"
+        class="mr-1"
+        pTooltip="Refresca los datos del grid"
+        tooltipPosition="bottom"
+        (onClick)="cargaDatos()"
+      />
+      <p-button
+        id="btnGrdRes00944"
+        icon="pi pi-user"
+        class="mr-1"
+        pTooltip="Auditoría del registro actual"
+        tooltipPosition="bottom"
+        (onClick)="muestraAuditoriaRegistro()"
+      />
+      <p-button
+        id="btnGrdRes00945"
+        icon="pi pi-info-circle"
+        pTooltip="Información del objeto actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
+      />
+    </ng-template>
+
+    <ng-template #center>
+      <span></span>
+    </ng-template>
+
+    <ng-template #end>
+      @if (barraMessage()?.visible) {
+        <div class="message-container">
+          <p-message [severity]="barraMessage()!.severity" [icon]="barraMessage()!.icon">
+            {{ barraMessage()!.text }}
+          </p-message>
+        </div>
+      }
+    </ng-template>
+  </p-toolbar>
+  <!-- ===================================== -->
+  <!-- LISTADO DE DATOS -->
+  <!-- ===================================== -->
+  <p-table
+    id="grdRes0094"
+    [value]="filas()"
+    editMode="row"
+    selectionMode="multiple"
+    [(selection)]="selectedRows"
+    [metaKeySelection]="metaKey"
+    dataKey="_rowId"
+    class="p-datatable-sm"
+    [paginator]="true"
+    [rows]="10"
+    showGridlines
+    [size]="'small'"
+  >
+    <!-- HEADER -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 35%">#Columna</th>
+        <th style="width: 35%">Clasificador</th>
+        <th style="width: 10%">Imprime<br />observaciones</th>
+        <th style="width: 10%">Imprime<br />cantidad</th>
+        <th style="width: 10%"></th>
+      </tr>
+    </ng-template>
+    <!-- BODY -->
+    <ng-template pTemplate="body" let-rowData let-editing="editing" let-rowIndex="rowIndex">
+      <tr [pEditableRow]="rowData" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+        <!-- COLUMNA -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input type="hidden" [(ngModel)]="rowData.idOrdenServicio" />
+              <p-select
+                class="w-full"
+                [options]="columnas()"
+                [(ngModel)]="rowData.nroColumna"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{
+                rowData.nroColumna === '1'
+                  ? 'Columna 1'
+                  : rowData.nroColumna === '2'
+                    ? 'Columna 2'
+                    : rowData.nroColumna === '3'
+                      ? 'Descripción'
+                      : rowData.nroColumna === '4'
+                        ? 'Guía principal'
+                        : rowData.nroColumna === '5'
+                          ? 'Guía auxiliar'
+                          : rowData.nroColumna === '6'
+                            ? 'Conductor'
+                            : ''
+              }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- CLASIFICADOR -->
+        <td>
+          <p-cellEditor>
+            <!-- INPUT -->
+            <ng-template pTemplate="input">
+              <p-select
+                [options]="clasificadores()"
+                optionLabel="descripcionSuperTipoInsumo"
+                optionValue="idSuperTipoInsumo"
+                [(ngModel)]="rowData.idSuperTipoInsumo"
+                [filter]="true"
+                placeholder="Seleccione"
+                class="w-full"
+                appendTo="body"
+              />
+            </ng-template>
+            <!-- OUTPUT -->
+            <ng-template pTemplate="output">
+              {{ funciones.obtenerEtiqueta(clasificadores(), rowData.idSuperTipoInsumo, 'clasificador') }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- IMPRIME OBSERVACIONES -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input type="hidden" [(ngModel)]="rowData.imprimeObservaciones" />
+              <p-select
+                class="w-full"
+                [options]="opcionSN()"
+                [(ngModel)]="rowData.imprimeObservaciones"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{
+                rowData.imprimeObservaciones === 'S' ? 'Si' : rowData.imprimeObservaciones === 'N' ? 'No' : ''
+              }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- IMPRIME CANTIDAD -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input type="hidden" [(ngModel)]="rowData.imprimeCantidad" />
+              <p-select
+                class="w-full"
+                [options]="opcionSN()"
+                [(ngModel)]="rowData.imprimeCantidad"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{
+                rowData.imprimeCantidad === 'S' ? 'Si' : rowData.imprimeCantidad === 'N' ? 'No' : ''
+              }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- ACCIONES -->
+        <td class="text-center">
+          <!-- EDITAR -->
+          @if (!editing) {
+            <button
+              pButton
+              [id]="'btnGrdRes00946' + rowIndex"
+              pInitEditableRow
+              icon="pi pi-pencil"
+              text
+              rounded
+              severity="primary"
+            ></button>
+            <button
+              pButton
+              [id]="'btnGrdRes00947' + rowIndex"
+              icon="pi pi-trash"
+              text
+              rounded
+              severity="danger"
+              (click)="eliminarFila(rowData)"
+            ></button>
+          }
+          <!-- GUARDAR / CANCELAR -->
+          @if (editing) {
+            <button
+              pButton
+              [id]="'btnGrdRes00948' + rowIndex"
+              pSaveEditableRow
+              icon="pi pi-check"
+              text
+              rounded
+              severity="success"
+              class="mr-1"
+              (click)="saveRow(rowData)"
+            ></button>
+            <button
+              pButton
+              [id]="'btnGrdRes00949' + rowIndex"
+              pCancelEditableRow
+              icon="pi pi-times"
+              text
+              rounded
+              severity="danger"
+            ></button>
+          }
+        </td>
+      </tr>
+    </ng-template>
+    <!-- FOOTER -->
+    <ng-template pTemplate="paginatorleft"> {{ filas().length }} ítems </ng-template>
+  </p-table>
+</div>

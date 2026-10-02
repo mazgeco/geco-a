@@ -122,10 +122,11 @@ export class FuntionsService {
         );
       case 'operacion':
         return tipos.find((item) => item.idOperacion === codigo)?.descripcionOperacion ?? '';
+      case 'clasificador':
+        return tipos.find((item) => item.idSuperTipoInsumo === codigo)?.descripcionSuperTipoInsumo ?? '';
       case 'tipoOperacionXempresa':
         return (
-          tipos.find((item) => item.idTipoOperacionXEmpresa === codigo)
-            ?.nombreTipoOperacion?? ''
+          tipos.find((item) => item.idTipoOperacionXEmpresa === codigo)?.nombreTipoOperacion ?? ''
         );
       default:
         return tipos.find((item) => item.codigo === codigo)?.etiqueta ?? '';
