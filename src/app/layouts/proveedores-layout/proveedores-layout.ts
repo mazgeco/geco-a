@@ -41,7 +41,7 @@ export class ProveedoresLayout implements OnInit {
       },
       {
         label: 'Insumos',
-        icon: 'pi pi-cog',
+        icon: 'pi pi-barcode',
         items: [
           {
             label: 'Insumo (búsqueda/creación)',
