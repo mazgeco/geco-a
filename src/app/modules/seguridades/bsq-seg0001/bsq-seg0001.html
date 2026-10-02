@@ -5,7 +5,13 @@
   <ng-template #center>
     <p-iconfield iconPosition="left">
       <p-inputicon class="pi pi-search" />
-      <input type="text" pInputText placeholder="Search" #searchInput (change)="buscarUsuario(searchInput.value)" />
+      <input
+        type="text"
+        pInputText
+        placeholder="Search"
+        #searchInput
+        (change)="buscarUsuario(searchInput.value)"
+      />
     </p-iconfield>
   </ng-template>
   <ng-template #end>
@@ -39,7 +45,13 @@
               {{ usuario.idUsuario }}
             </div>
             <div>
-              {{ usuario.estadoUsuario === 'A' ? 'Activo' : 'Inactivo' }}
+              <span class="font-semibold">Estado:</span>
+              <span
+                class="font-semibold"
+                [style.color]="usuario.estadoUsuario === 'A' ? '#4caf50' : '#f44336'"
+              >
+                {{ usuario.estadoUsuario === 'A' ? 'ACTIVO' : 'INACTIVO' }}
+              </span>
             </div>
           </div>
         </p-card>

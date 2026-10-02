@@ -38,17 +38,12 @@ export class AuthLayout {
 
     this.seguridadService.validaUsuario(username, password).subscribe({
       next: (response) => {
-        console.log(response.status);
-        console.log(response.data.token);
         if (response.status !== 'OK' || !response.data?.token) {
           this.invalidLogin.set(true);
           return;
         }
         this.authService.login(response.data);
-        this.router.navigate(['/main']).then(
-          (result) => console.log('NAVEGACIÓN LOGIN:', result),
-          (error) => console.error('ERROR NAVEGACIÓN LOGIN:', error),
-        );
+        this.router.navigate(['/main']);
       },
       error: () => {
         this.invalidLogin.set(true);

@@ -27,7 +27,7 @@ export class GrdSeg0003 implements OnInit {
   idTabla = signal<string>('197');
   permiso = signal<string>('w');
   newRow: boolean = false;
-  campoId: keyof Objetos = 'idObjeto';
+  campoId: 'idObjeto' = 'idObjeto';
   nuevaFila: Objetos = {
     idObjeto: 0,
     idModulo: '',
@@ -150,7 +150,7 @@ export class GrdSeg0003 implements OnInit {
 
   //MÉTODO QUE ELIMINA UNA FILA DEL GRID
   eliminarFila(rowData: Objetos): void {
-    /*if (rowData[this.campoId] === '0') {
+    if (rowData[this.campoId] === 0) {
       this.filas.set(this.filas().filter((item) => item[this.campoId] != rowData[this.campoId]));
     } else {
       this.confirmationService.confirm({
@@ -159,7 +159,7 @@ export class GrdSeg0003 implements OnInit {
         acceptLabel: 'Aceptar',
         rejectLabel: 'Cancelar',
         accept: () => {
-          this.seguridadesService.eliminaTipoEmpresa(rowData[this.campoId]!).subscribe({
+          this.seguridadesService.eliminaObjeto(rowData[this.campoId]!).subscribe({
             next: (resp) => {
               this.filas.set(
                 this.filas().filter((item) => item[this.campoId] != resp.idNoSecuencial),
@@ -190,13 +190,13 @@ export class GrdSeg0003 implements OnInit {
           });
         },
       });
-    }*/
+    }
   }
 
   //MÉTODO QUE ELIMINA VARIAS FILAS SELECCIONADAS DEL GRID
   eliminarVariasFilas(): void {
     const selected = this.selectedRows;
-    /*if (selected.length > 0) {
+    if (selected.length > 0) {
       this.confirmationService.confirm({
         message: '¿Desea eliminar todas las filas seleccionadas?',
         header: 'Eliminar',
@@ -205,7 +205,7 @@ export class GrdSeg0003 implements OnInit {
         accept: () => {
           for (let i = 0; i < selected.length; i++) {
             let idFila = selected[i][this.campoId];
-            this.seguridadesService.eliminaTipoEmpresa(idFila!).subscribe({
+            this.seguridadesService.eliminaObjeto(idFila!).subscribe({
               next: (resp) => {
                 this.filas.set(
                   this.filas().filter((item) => item[this.campoId] != resp.idNoSecuencial),
@@ -240,7 +240,7 @@ export class GrdSeg0003 implements OnInit {
       });
     } else {
       this.toastService.showMessage('error', 'Error', 'Seleccione varias filas');
-    }*/
+    }
   }
 
   //MÉTODO QUE MUESTRA LA AUDITORÍA DEL REGISTRO SELECCIONADO

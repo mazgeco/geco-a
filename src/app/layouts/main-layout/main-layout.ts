@@ -82,9 +82,6 @@ export class MainLayout implements OnInit {
 
   logout(): void {
     this.authService.logout();
-    this.router.navigate(['/login']).then(
-      (result) => console.log('NAVEGACIÓN LOGOUT:', result),
-      (error) => console.error('ERROR NAVEGACIÓN LOGOUT:', error),
-    );
+    this.router.navigate(['/login']);
   }
 }

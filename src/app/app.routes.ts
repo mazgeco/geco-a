@@ -80,6 +80,7 @@ export const routes: Routes = [
           { path: 'search', component: Seguridades.BsqSeg0001 },
           { path: 'usuario/:id', component: Seguridades.WinSeg0007 },
           { path: 'objetos', component: Seguridades.WinSeg0008 },
+          { path: 'perfiles', component: Seguridades.WinSeg0009 },
           { path: '', redirectTo: 'dash', pathMatch: 'full' },
         ],
       },
