@@ -25,7 +25,6 @@ export class SeguridadesService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
   private authService = inject(AuthService)
-  private idUsuarioSistema = this.authService.usuario;
 
   validaUsuario(idUsuario: string, pass: string): Observable<UsuarioValidadoResponse> {
     const md5 = CryptoJS.MD5(pass);
@@ -77,7 +76,7 @@ export class SeguridadesService {
 
   grabaUsuario(usuario: Usuarios): Observable<SavedRow> {
     return this.http.post<SavedRow>(
-      `${this.apiUrl}seguridades/${this.idUsuarioSistema}/usuarios`,
+      `${this.apiUrl}seguridades/${this.authService.idUsuario()}/usuarios`,
       usuario,
     );
   }
@@ -85,7 +84,7 @@ export class SeguridadesService {
   actualizaEstadoUsuario(idUsuario: string, estado: string): Observable<SavedRow> {
     const params = new HttpParams().set('idUsuario', idUsuario).set('estado', estado);
     return this.http.put<SavedRow>(
-      `${this.apiUrl}seguridades/${this.idUsuarioSistema}/usuarios/estado`,
+      `${this.apiUrl}seguridades/${this.authService.idUsuario()}/usuarios/estado`,
       null,
       { params },
     );
@@ -97,14 +96,14 @@ export class SeguridadesService {
 
   grabaObjeto(objeto: Objetos): Observable<SavedRow> {
     return this.http.post<SavedRow>(
-      `${this.apiUrl}seguridades/${this.idUsuarioSistema}/objetos`,
+      `${this.apiUrl}seguridades/${this.authService.idUsuario()}/objetos`,
       objeto,
     );
   }
 
   eliminaObjeto(idObjeto: number): Observable<SavedRow> {
     const params = new HttpParams().set('idObjeto', idObjeto!);
-    return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.idUsuarioSistema}/objetos`, {
+    return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.authService.idUsuario()}/objetos`, {
       params,
     });
   }
@@ -115,7 +114,7 @@ export class SeguridadesService {
 
   grabaPerfil(perfiles: Perfiles): Observable<SavedRow> {
     return this.http.post<SavedRow>(
-      `${this.apiUrl}seguridades/${this.idUsuarioSistema}/perfiles`,
+      `${this.apiUrl}seguridades/${this.authService.idUsuario()}/perfiles`,
       perfiles,
     );
   }
@@ -123,7 +122,7 @@ export class SeguridadesService {
   eliminaPerfil(idPerfil: string): Observable<SavedRow> {
     const params = new HttpParams().set('idPerfil', idPerfil!);
     return this.http.delete<SavedRow>(
-      `${this.apiUrl}seguridades/${this.idUsuarioSistema}/perfiles`,
+      `${this.apiUrl}seguridades/${this.authService.idUsuario()}/perfiles`,
       {
         params,
       },

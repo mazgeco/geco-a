@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { SavedRow } from '../interfaces/general.interface';
 import { ProveedoresResponse } from '../interfaces/proveedores.interfaces';
 import { GraficosResponse } from '../interfaces/general.interface';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ import { GraficosResponse } from '../interfaces/general.interface';
 export class ProveedoresService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
-  private idUsuario = 'mgzapata';
+  private authService = inject(AuthService);
 
   buscaProveedor(nombre: string): Observable<ProveedoresResponse> {
     return this.http.get<ProveedoresResponse>(
