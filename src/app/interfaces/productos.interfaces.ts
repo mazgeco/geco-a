@@ -233,6 +233,33 @@ export interface ListaTemporadasResponse {
   data: Temporadas[];
 }
 
+export interface Impuesto {
+  idImpuesto: string;
+  descripcionImpuesto: string;
+  cantidadImpuesto: number;
+  tipoImpuesto: string;
+  tipoValor: string;
+  obligatoriedad: string;
+  fechaDesdeAts?: string | null;
+  fechaHastaAts?: string | null;
+  tipoAts?: string | null;
+  codigoPorcentaje?: string | null;
+  codigoImpuestoRetencion?: string | null;
+  estadoImpuesto: string;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+// Interfaz para la respuesta estándar de la API que trae la lista
+export interface ImpuestoResponse {
+  status: string;
+  message: string;
+  data: Impuesto[];
+}
+  
+
 export interface ActualizarTipoPrecioDTO {
   tipoPrecio: string; // 'T' (Estacional) o 'F' (Plana)
 }

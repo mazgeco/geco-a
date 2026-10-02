@@ -79,8 +79,6 @@
     [rows]="10"
     showGridlines
     [size]="'small'"
-    [showCurrentPageReport]="true"
-    currentPageReportTemplate="Total de registros: {totalRecords}"
   >
     <!-- HEADER -->
     <ng-template pTemplate="header">
@@ -218,5 +216,7 @@
         </td>
       </tr>
     </ng-template>
+     <!-- FOOTER -->
+    <ng-template pTemplate="paginatorleft"> {{ filas().length }} ítems </ng-template>
   </p-table>
 </div>

@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse, ListaPrecioProductoResponse, GraficosResponse, TipoOperacionResponse} from '../interfaces/productos.interfaces';
+import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse, ListaPrecioProductoResponse, GraficosResponse, TipoOperacionResponse, Impuesto, ImpuestoResponse} from '../interfaces/productos.interfaces';
 import { SavedRow } from '../interfaces/general.interface'
 
 @Injectable({
@@ -269,6 +269,34 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
   listaTiposOperacionXempresa(): Observable<TipoOperacionResponse> {
     return this.http.get<TipoOperacionResponse>(`${this.apiUrl}productos/tiposoperacionxempresa`);
   }
+
+  cargaImpuestos(): Observable<ImpuestoResponse> {
+    return this.http.get<ImpuestoResponse>(`${this.apiUrl}productos/impuestos`);
+  }
+
+  grabaImpuesto(impuesto: Impuesto, nuevaFila: boolean): Observable<SavedRow> {
+        if (nuevaFila) {
+         // impuesto.idImpuesto = '';
+          return this.http.post<SavedRow>(
+            `${this.apiUrl}productos/${this.idUsuario}/impuestos`,
+            impuesto,
+          );
+        } else {
+          const params = new HttpParams().set('idImpuesto', impuesto.idImpuesto!);
+          return this.http.put<SavedRow>(
+            `${this.apiUrl}productos/${this.idUsuario}/impuestos`,
+            impuesto,
+            { params },
+          );
+        }
+      }
+  eliminaImpuesto(idImpuesto: string): Observable<SavedRow> {
+    const params = new HttpParams().set('idImpuesto', idImpuesto!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/impuestos`, {
+      params,
+    });
+  }
+
 
 }
 
