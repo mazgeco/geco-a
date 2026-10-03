@@ -1,7 +1,13 @@
-export interface ReservasResponse {
+export interface ListaReservasResponse {
   status: string;
   message: string;
   data: Reservas[];
+}
+
+export interface ReservasResponse {
+  status: string;
+  message: string;
+  data: Reservas;
 }
 
 export interface Reservas {
@@ -10,6 +16,7 @@ export interface Reservas {
   idProveedor?: null;
   idPersonaContacto?: number | null;
   nombrePersona: string;
+  nombrePersonaContacto: string;
   estadoReserva: EstadoReserva;
   codigoAgencia?: string | null;
   observacionReserva?: string | null;

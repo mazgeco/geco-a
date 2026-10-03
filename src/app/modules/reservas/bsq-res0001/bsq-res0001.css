@@ -1,0 +1,23 @@
+.buscador-reservas {
+  display: flex;
+  align-items: stretch;
+}
+
+.buscador-reservas .p-iconfield {
+  flex: 1;
+}
+
+.buscador-reservas input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+:host ::ng-deep .filtro-busqueda .p-select-label {
+  font-size: 0.75rem;
+  padding-left: 0.5rem;
+  padding-right: 0.25rem;
+}
+
+:host ::ng-deep .filtro-busqueda .p-select-dropdown {
+  width: 1.75rem;
+}

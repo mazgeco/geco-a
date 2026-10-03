@@ -1,1 +1,206 @@
-<p>Id. reserva: {{ idReserva }}</p>
+<p-toast />
+<p-confirmdialog />
+<app-catalog-dialog />
+
+<div class="col-12">
+  <p-toolbar>
+    <ng-template #start>
+      @if (esActivo()) {
+        <p-button
+          icon="pi pi-check"
+          class="mr-1"
+          label="Inactivar"
+          pTooltip="Cambiar el estado a INGRESADO"
+          tooltipPosition="bottom"
+          (onClick)="cambiarEstado(EstadoReserva.ING)"
+        />
+      } @else {
+        <p-button
+          icon="pi pi-check"
+          class="mr-1"
+          label="Confirmar"
+          pTooltip="Confirmar la reserva"
+          tooltipPosition="bottom"
+          (onClick)="cambiarEstado(EstadoReserva.CNF)"
+        />
+      }
+      <p-button
+        icon="pi pi-user"
+        class="mr-1"
+        pTooltip="Auditoría del registro actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraAuditoria(idReserva, idTabla(), currentData)"
+      />
+      <p-button
+        icon="pi pi-info-circle"
+        pTooltip="Información del objeto actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
+      />
+    </ng-template>
+
+    <ng-template #center>
+      <span></span>
+    </ng-template>
+
+    <ng-template #end>
+      @if (reservaMessage()?.visible) {
+        <div class="message-container">
+          <p-message [severity]="reservaMessage()!.severity" [icon]="reservaMessage()!.icon">
+            {{ reservaMessage()!.text }}
+          </p-message>
+        </div>
+      }
+    </ng-template>
+  </p-toolbar>
+  <form id="frmRes0003" class="grid m-0" [formGroup]="frmRes0003">
+    <!-- ====================================================== -->
+    <!-- PANEL SUPERIOR -->
+    <!-- ====================================================== -->
+    <p-panel class="col-12">
+      <div class="grid">
+        <!-- ======================= -->
+        <!-- FILA 1 -->
+        <!-- ======================= -->
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label for="codigoAgencia"> Código agencia <span class="asterisco">*</span></label>
+            <input
+              id="codigoAgencia"
+              type="text"
+              pInputText
+              class="w-full"
+              [disabled]="esActivo()"
+              formControlName="codigoAgencia"
+            />
+          </div>
+        </div>
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Estado</label>
+            <p-select
+              class="w-full"
+              [options]="estado()"
+              [disabled]="esActivo()"
+              formControlName="estadoReserva"
+              pTooltip="Estado de la reserva"
+              tooltipPosition="bottom"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+            ></p-select>
+          </div>
+        </div>
+        <!-- ======================= -->
+        <!-- FILA 2 -->
+        <!-- ======================= -->
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Cliente</label>
+            @if (currentData.idReserva !== 0) {
+              <input pInputText class="w-full" formControlName="nombrePersona" [readOnly]="true" />
+            } @else {
+              <p-autocomplete
+                class="w-full"
+                [fluid]="true"
+                formControlName="idPersona"
+                [suggestions]="personas()"
+                (completeMethod)="buscarPersonas($event)"
+                (onSelect)="seleccionarPersona('CLI', $event)"
+                optionLabel="razonSocial"
+                optionValue="idPersona"
+                [minLength]="3"
+              >
+              </p-autocomplete>
+            }
+          </div>
+        </div>
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Persona contacto</label>
+            @if (currentData.idReserva !== 0) {
+              <input
+                pInputText
+                class="w-full"
+                formControlName="nombrePersonaContacto"
+                [readOnly]="true"
+              />
+            } @else {
+              <p-autocomplete
+                class="w-full"
+                [fluid]="true"
+                formControlName="idPersonaContacto"
+                [suggestions]="personas()"
+                (completeMethod)="buscarPersonas($event)"
+                (onSelect)="seleccionarPersona('CNT', $event)"
+                optionLabel="razonSocial"
+                optionValue="idPersona"
+                [minLength]="3"
+              >
+              </p-autocomplete>
+            }
+          </div>
+        </div>
+        <!-- ======================= -->
+        <!-- FILA 3 -->
+        <!-- ======================= -->
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>#Pax</label>
+            <p-inputnumber class="w-full" inputId="integeronly" formControlName="nroPax" />
+          </div>
+        </div>
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Fecha generación</label>
+            <p-datepicker class="w-full" formControlName="fechaGeneracion" dateFormat="yy-mm-dd" />
+          </div>
+        </div>
+        <!-- ======================= -->
+        <!-- FILA 4 -->
+        <!-- ======================= -->
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Importado de</label>
+            <input pInputText class="w-full" formControlName="importadoDe" [readOnly]="true" />
+          </div>
+        </div>
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Código importado</label>
+            <input pInputText class="w-full" formControlName="idImportadoDe" [readOnly]="true" />
+          </div>
+        </div>
+        <!-- ======================= -->
+        <!-- FILA 5 -->
+        <!-- ======================= -->
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>#Factura local</label>
+            <input pInputText class="w-full" formControlName="nroFacturaLocal" />
+          </div>
+        </div>
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Fecha facturación</label>
+            <p-datepicker class="w-full" formControlName="fechaFacturacion" dateFormat="yy-mm-dd" />
+          </div>
+        </div>
+        <!-- ======================= -->
+        <!-- FILA 6 -->
+        <!-- ======================= -->
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Observaciones públicas</label>
+            <textarea class="w-full" rows="5" cols="30" pTextarea formControlName="observacionReserva"></textarea>
+          </div>
+        </div>
+        <div class="col-12 md:col-6">
+          <div class="field mb-1">
+            <label>Observaciones privadas</label>
+            <textarea class="w-full" rows="5" cols="30" pTextarea formControlName="observacionPrivada"></textarea>
+          </div>
+        </div>
+      </div>
+    </p-panel>
+  </form>
+</div>

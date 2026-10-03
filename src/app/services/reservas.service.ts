@@ -7,6 +7,7 @@ import {
   Clasificacion,
   ClasificacionResponse,
   GraficoVentasAnioResponse,
+  ListaReservasResponse,
   OrdenServicio,
   OrdenServicioResponse,
   ReservasResponse,
@@ -39,8 +40,12 @@ export class ReservasService {
   }
 
   //BÚSQUEDA DE RESERVAS
-  buscaReservas(nombre: string): Observable<ReservasResponse> {
-    return this.http.get<ReservasResponse>(`${this.apiUrl}reservas/busqueda?cliente=${nombre}`);
+  buscaReservas(tipoFiltro: string, filtro: string): Observable<ListaReservasResponse> {
+    return this.http.get<ListaReservasResponse>(`${this.apiUrl}reservas/busqueda/filtro?tipoFiltro=${tipoFiltro}&filtro=${filtro}`);
+  }
+
+  reservaPorId(idReserva: number): Observable<ReservasResponse>{
+    return this.http.get<ReservasResponse>(`${this.apiUrl}reservas/${idReserva}`);
   }
 
   //TIPO HABITACIÓN

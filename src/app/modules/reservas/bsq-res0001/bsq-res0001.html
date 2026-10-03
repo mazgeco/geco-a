@@ -3,16 +3,26 @@
     <p-button label="Nuevo" (onClick)="openReserva()"></p-button>
   </ng-template>
   <ng-template #center>
-    <p-iconfield iconPosition="left">
-      <p-inputicon class="pi pi-search" />
-      <input
-        type="text"
-        pInputText
-        placeholder="Search"
-        #searchInput
-        (change)="buscaReservas(searchInput.value)"
+    <div class="buscador-reservas">
+      <p-iconfield iconPosition="left">
+        <p-inputicon class="pi pi-search" />
+        <input
+          type="text"
+          pInputText
+          placeholder="Search"
+          #searchInput
+          (change)="buscaReservas(searchInput.value)"
+        />
+      </p-iconfield>
+      <p-select
+        [options]="filtrosBusqueda"
+        [(ngModel)]="filtroSeleccionado"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Buscar por"
+        class="filtro-busqueda"
       />
-    </p-iconfield>
+    </div>
   </ng-template>
   <ng-template #end>
     @if (busquedaMessage()?.visible) {

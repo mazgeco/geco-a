@@ -22,10 +22,18 @@ export class BsqRes0001 {
   toastService = inject(ToastService);
   loading = signal<boolean>(false);
   notificacion = signal<string>('');
-  
+
   private reservasService = inject(ReservasService);
   reservas = signal<Reservas[]>([]);
   readonly estadoReservaNombre = EstadoReservaNombre;
+
+  filtrosBusqueda = [
+    { label: 'Cliente', value: 'NOM' },
+    { label: 'Código', value: 'ID' },
+    { label: 'Agencia', value: 'AGE' },
+  ];
+
+  filtroSeleccionado: string = "NOM";
 
   //Variables para manejo de mensajes
   messageService = inject(MessageService);
@@ -34,9 +42,9 @@ export class BsqRes0001 {
     this.messageService.obtener(this.statusMessages, 'msgBsqRes0001'),
   );
 
-  buscaReservas(nombre: string): void {
+  buscaReservas(filtro: string): void {
     (this.loading.set(true),
-      this.reservasService.buscaReservas(nombre).subscribe({
+      this.reservasService.buscaReservas(this.filtroSeleccionado, filtro).subscribe({
         next: (resp) => {
           this.reservas.set([]);
           this.reservas.set(resp.data);
