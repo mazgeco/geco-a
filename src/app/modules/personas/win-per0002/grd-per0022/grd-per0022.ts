@@ -12,7 +12,7 @@ import { TipoEmpresas } from '../../../../interfaces/personas.interfaces';
 
 @Component({
   selector: 'app-grd-per0022',
-  imports: [...PRIMENG_MODULES, NgClass],
+  imports: [...PRIMENG_MODULES],
   providers: [ConfirmationService],
   templateUrl: './grd-per0022.html',
 })

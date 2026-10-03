@@ -12,7 +12,7 @@ import { Perfiles } from '../../../../interfaces/seguridades.interface';
 
 @Component({
   selector: 'app-grd-seg0013',
-  imports: [...PRIMENG_MODULES, NgClass],
+  imports: [...PRIMENG_MODULES],
   providers: [ConfirmationService],
   templateUrl: './grd-seg0013.html',
 })

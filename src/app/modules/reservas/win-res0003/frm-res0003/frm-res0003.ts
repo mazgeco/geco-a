@@ -11,7 +11,7 @@ import { CatalogService } from '../../../../services/catalog.service';
 import { StateService } from '../../state-service';
 @Component({
   selector: 'app-frm-res0003',
-  imports: [...PRIMENG_MODULES, CatalogDialogComponent, ReactiveFormsModule],
+  imports: [...PRIMENG_MODULES, ReactiveFormsModule],
   providers: [ConfirmationService, ReactiveFormsModule, CatalogDialogComponent],
   templateUrl: './frm-res0003.html',
   styleUrl: './frm-res0003.css',
