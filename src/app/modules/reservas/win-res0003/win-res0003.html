@@ -1,1 +1,19 @@
-<p>win-res0003 works!</p>
+<p-toolbar>
+  <ng-template #start>
+    <label class="font-bold">
+      {{ stateService.codigo() }}
+    </label>
+  </ng-template>
+  <ng-template #center>
+    <label class="font-bold topName">
+      {{ stateService.nombre() }}
+    </label>
+  </ng-template>
+  <ng-template #end>
+    <label class="font-bold" [style.color]="stateService.estado() ? '#4caf50' : '#f44336'">
+      {{ stateService.estadoNombre() }}
+    </label>
+  </ng-template>
+</p-toolbar>
+
+<app-frm-res0003 [idReserva]="idReserva()"></app-frm-res0003>
