@@ -2,6 +2,7 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { PRIMENG_MODULES } from '../../../shared/primeng/primeng.imports';
+//Imports propios
 import { FrmSeg0003 } from './frm-seg0003/frm-seg0003';
 import { StateService } from './state.service';
 
