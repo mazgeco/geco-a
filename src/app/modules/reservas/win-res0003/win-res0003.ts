@@ -4,11 +4,12 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { PRIMENG_MODULES } from '../../../shared/primeng/primeng.imports';
 //Imports propios
 import { FrmRes0003 } from './frm-res0003/frm-res0003';
+import { GrdRes0021 } from './grd-res0021/grd-res0021';
 import { StateService } from '../state-service';
 
 @Component({
   selector: 'app-win-res0003',
-  imports: [...PRIMENG_MODULES, FrmRes0003],
+  imports: [...PRIMENG_MODULES, FrmRes0003, GrdRes0021],
   templateUrl: './win-res0003.html',
   styleUrl: './win-res0003.css',
 })

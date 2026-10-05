@@ -5,7 +5,7 @@ import {
   EstadoReserva,
   EstadoReservaNombre,
   Reservas,
-} from '../../../interfaces/reservas.interface';
+} from '../../../interfaces/reservas.interfaces';
 import { ReservasService } from '../../../services/reservas.service';
 import { StatusMessage } from '../../../interfaces/general.interface';
 import { MessageService } from '../../../services/message.service';

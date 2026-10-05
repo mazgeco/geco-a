@@ -48,10 +48,11 @@ export class GrdPer0025 implements OnInit {
   private personasService = inject(PersonasService);
   private toastService = inject(ToastService);
   //VARIABLES PARA EL MANEJO DE LOS MENSAJES
+  msgName: string = 'msg' + this.idObjeto;
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
   barraMessage = computed(() =>
-    this.messageService.obtener(this.statusMessages, 'msg' + this.idObjeto()),
+    this.messageService.obtener(this.statusMessages, this.msgName),
   );
   //Declaración de variables
   selectedRows!: TipoTelefonos[];
@@ -101,7 +102,7 @@ export class GrdPer0025 implements OnInit {
         //Envía un mensaje de grabación exitosa
         this.messageService.mostrar(
           this.statusMessages,
-          'msg' + this.idObjeto(),
+          this.msgName,
           'success',
           'Fila grabada correctamente.',
         );
@@ -135,7 +136,7 @@ export class GrdPer0025 implements OnInit {
         //Envía un mensaje de carga exitosa
         this.messageService.mostrar(
           this.statusMessages,
-          'msg' + this.idObjeto(),
+          this.msgName,
           'success',
           'Datos cargados correctamente.',
         );
@@ -150,7 +151,7 @@ export class GrdPer0025 implements OnInit {
         //Envía un mensaje de carga exitosa
         this.messageService.mostrar(
           this.statusMessages,
-          'msg' + this.idObjeto(),
+          this.msgName,
           'error',
           'Hubo un error al cargar los datos.',
         );
@@ -174,10 +175,10 @@ export class GrdPer0025 implements OnInit {
               this.filas.set(
                 this.filas().filter((item) => item[this.campoId] != resp.idNoSecuencial),
               );
-              //Envía un mensaje de carga exitosa
+              //Envía un mensaje
               this.messageService.mostrar(
                 this.statusMessages,
-                'msg' + this.idObjeto(),
+                this.msgName,
                 'success',
                 'Fila eliminada correctamente.',
               );
@@ -192,7 +193,7 @@ export class GrdPer0025 implements OnInit {
               //Envía un mensaje de carga exitosa
               this.messageService.mostrar(
                 this.statusMessages,
-                'msg' + this.idObjeto(),
+                this.msgName,
                 'error',
                 'Hubo un error al eliminar la fila.',
               );
@@ -231,7 +232,7 @@ export class GrdPer0025 implements OnInit {
                 //Envía un mensaje de carga exitosa
                 this.messageService.mostrar(
                   this.statusMessages,
-                  'msg' + this.idObjeto(),
+                  this.msgName,
                   'error',
                   'Hubo un error al eliminar una fila.',
                 );
@@ -242,7 +243,7 @@ export class GrdPer0025 implements OnInit {
           //Envía un mensaje de carga exitosa
           this.messageService.mostrar(
             this.statusMessages,
-            'msg' + this.idObjeto(),
+            this.msgName,
             'success',
             'Filas eliminadas correctamente.',
           );

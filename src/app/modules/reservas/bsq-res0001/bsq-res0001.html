@@ -56,7 +56,10 @@
             </div>
             <div>
               <span class="font-semibold">Estado:</span>
-              {{ estadoReservaNombre[reserva.estadoReserva] }}
+              <span class="font-semibold" [style.color]="(reserva.estadoReserva === 'PAG' || reserva.estadoReserva === 'XXX')  ? '#f44336' : '#4caf50'">
+                {{ estadoReservaNombre[reserva.estadoReserva!] }}
+              </span>
+              
             </div>
             <div>
               <span class="font-semibold">Código Agencia:</span>

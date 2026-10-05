@@ -12,7 +12,7 @@ import { ToastService } from '../../../../services/toast.service';
 @Component({
   selector: 'app-grd-per0019',
   imports: [...PRIMENG_MODULES, NgClass],
-  templateUrl: './grd-per0019.html'
+  templateUrl: './grd-per0019.html',
 })
 export class GrdPer0019 implements OnInit {
   //LLAMADA AL ID Master
@@ -32,16 +32,18 @@ export class GrdPer0019 implements OnInit {
   private personasService = inject(PersonasService);
   private toastService = inject(ToastService);
   //VARIABLES PARA EL MANEJO DE LOS MENSAJES
+  msgName: string = 'msg' + this.idObjeto;
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
   telefonoMessage = computed(() =>
-    this.messageService.obtener(this.statusMessages, 'msgGrdPer0019'),
+    this.messageService.obtener(this.statusMessages, this.msgName),
   );
   //Declaración de variables
   selectedRows!: Telefonos[];
   metaKey: boolean = true;
   telefonos = signal<Telefonos[]>([]);
   tipoTelefonos = signal<TipoTelefonos[]>([]);
+
 
   //FUNCIÓN QUE SE DISPARA EN EL EVENTO INIT DEL OBJETO
   ngOnInit(): void {
@@ -158,6 +160,13 @@ export class GrdPer0019 implements OnInit {
               this.telefonos.set(
                 this.telefonos().filter((item) => item.idTelefono != resp.idSecuencial),
               );
+              //Envía un mensaje de éxito
+              this.messageService.mostrar(
+                this.statusMessages,
+                this.msgName,
+                'success',
+                'Fila eliminada correctamente.',
+              );
             },
             error: (err) => {
               this.toastService.showMessage(
@@ -189,6 +198,13 @@ export class GrdPer0019 implements OnInit {
               next: (resp) => {
                 this.telefonos.set(
                   this.telefonos().filter((item) => item.idTelefono != resp.idSecuencial),
+                );
+                //Envía un mensaje de éxito
+                this.messageService.mostrar(
+                  this.statusMessages,
+                  this.msgName,
+                  'success',
+                  'Filas eliminadas correctamente.',
                 );
               },
               error: (err) => {

@@ -32,8 +32,6 @@ export class GrdPer0010 implements OnInit {
   idTabla = signal<string>('185');
   permiso = signal<string>('w');
   newRow: boolean = false;
-  campoId: 'idIdentificacion' = 'idIdentificacion';
-  msgName: string = 'msg' + this.idObjeto;
 
   //INJECTIONS PÚBLICAS
   funciones = inject(FuntionsService);
@@ -42,6 +40,7 @@ export class GrdPer0010 implements OnInit {
   private personasService = inject(PersonasService);
   private toastService = inject(ToastService);
   //VARIABLES PARA EL MANEJO DE LOS MENSAJES
+  msgName: string = 'msg' + this.idObjeto;
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
   barraMessage = computed(() => this.messageService.obtener(this.statusMessages, this.msgName));
@@ -93,7 +92,7 @@ export class GrdPer0010 implements OnInit {
     }
   }
 
-  //MÉTODO QUE GRABA LA IDENTIFICACIÓN (FILA COMPLETA)
+  //MÉTODO QUE GRABA LA FILA COMPLETA
   saveRow(fila: Identificaciones): void {
     if (
       fila.principalIdentificacion === 'S' &&
@@ -189,7 +188,7 @@ export class GrdPer0010 implements OnInit {
                 this.statusMessages,
                 this.msgName,
                 'success',
-                'Identificación eliminada correctamente.',
+                'Fila eliminada correctamente.',
               );
             },
             error: (err) => {
@@ -229,6 +228,13 @@ export class GrdPer0010 implements OnInit {
               next: (resp) => {
                 this.filas.set(
                   this.filas().filter((item) => item.idIdentificacion != resp.idSecuencial),
+                );
+                //Envía un mensaje de carga exitosa
+                this.messageService.mostrar(
+                  this.statusMessages,
+                  this.msgName,
+                  'success',
+                  'Filas eliminadas correctamente.',
                 );
               },
               error: (err) => {

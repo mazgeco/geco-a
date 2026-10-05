@@ -7,7 +7,7 @@ import { ReservasService } from '../../../../services/reservas.service';
 import { ToastService } from '../../../../services/toast.service';
 import { MessageService } from '../../../../services/message.service';
 import { FilaTabla, StatusMessage } from '../../../../interfaces/general.interface';
-import { Clasificacion } from '../../../../interfaces/reservas.interface';
+import { Clasificacion } from '../../../../interfaces/reservas.interfaces';
 
 @Component({
   selector: 'app-grd-res0072',

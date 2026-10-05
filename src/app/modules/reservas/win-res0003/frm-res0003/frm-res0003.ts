@@ -1,4 +1,4 @@
-import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, Input, OnInit, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { AutoCompleteCompleteEvent } from 'primeng/types/autocomplete';
@@ -11,7 +11,11 @@ import { CatalogDialogComponent } from '../../../../shared/catalog-dialog-compon
 import { FuntionsService } from '../../../../services/functions.service';
 import { CatalogService } from '../../../../services/catalog.service';
 import { StateService } from '../../state-service';
-import { EstadoReserva, Reservas } from '../../../../interfaces/reservas.interface';
+import {
+  EstadoReserva,
+  EstadoReservaNombre,
+  Reservas,
+} from '../../../../interfaces/reservas.interfaces';
 import { MessageService } from '../../../../services/message.service';
 import { Personas } from '../../../../interfaces/personas.interfaces';
 import { PersonasService } from '../../../../services/personas.service';
@@ -60,47 +64,42 @@ export class FrmRes0003 implements OnInit {
   );
 
   //DECLARACIÓN DE VARIABLES VARIAS
+  hoy = new Date().toISOString().split('T')[0];
   loadingReserva = signal<boolean>(false);
   personas = signal<Personas[]>([]);
-  esActivo = signal<boolean>(false);
-  estado = signal<Combo[]>([
-    { codigo: 'CNF', etiqueta: 'Confirmada' },
-    { codigo: 'RSV', etiqueta: 'Reservada' },
-    { codigo: 'BLQ', etiqueta: 'Bloqueada' },
-    { codigo: 'XXX', etiqueta: 'Anulada' },
-    { codigo: 'ING', etiqueta: 'Ingresada' },
-    { codigo: 'ALM', etiqueta: 'Almacenada' },
-    { codigo: 'PAG', etiqueta: 'Pagada' },
-    { codigo: 'MAN', etiqueta: 'Mantenimiento' },
-  ]);
+  esActivo = signal(false);
+  estado: Combo[] = Object.values(EstadoReserva).map((codigo) => ({
+    codigo,
+    etiqueta: EstadoReservaNombre[codigo],
+  }));
 
   //DECLARACIÓN DE LA VARIABLE PARA FORMULARIO
   public frmRes0003 = this.fb.group(
     {
       idReserva: [0],
       idTipoReserva: [0],
-      idPersona: [''],
-      idPersonaContacto: [''],
-      idClasificacion: [null],
-      nombrePersona: [''],
-      nombrePersonaContacto: [''],
-      estadoReserva: ['ING'],
-      codigoAgencia: [''],
-      observacionReserva: [''],
-      observacionPrivada: [''],
-      fechaGeneracion: [''],
-      nroPax: [null],
-      importadoDe: [''],
-      idImportadoDe: [null],
-      idUsuarioResponsable: [''],
-      itinerarioEnviado: [''],
-      nroFacturaLocal: [''],
-      facturada: [''],
-      fechaFacturacion: [''],
-      idUsuarioCrea: [''],
-      fechaCrea: [''],
-      idUsuarioModifica: [''],
-      fechaModifica: [''],
+      idPersona: [0],
+      idPersonaContacto: [0],
+      idClasificacion: [0],
+      idImportadoDe: [null as string | null],
+      idUsuarioResponsable: [null as string | null],
+      nombrePersona: [null as string | null],
+      nombrePersonaContacto: [null as string | null],
+      estadoReserva: [EstadoReserva.ING],
+      codigoAgencia: [null as string | null],
+      observacionReserva: [null as string | null],
+      observacionPrivada: [null as string | null],
+      fechaGeneracion: [new Date()],
+      nroPax: [1],
+      importadoDe: [null as string | null],
+      itinerarioEnviado: [null as string | null],
+      facturada: [null as string | null],
+      nroFacturaLocal: [null as string | null],
+      fechaFacturacion: [new Date()],
+      idUsuarioCrea: [null as string | null],
+      fechaCrea: [null as string | null],
+      idUsuarioModifica: [null as string | null],
+      fechaModifica: [null as string | null],
     },
     {
       updateOn: 'blur',
@@ -169,11 +168,22 @@ export class FrmRes0003 implements OnInit {
 
   //CARGA LOS DATOS DE LA RESERVA
   cargaDatos(idReserva: number): void {
-    if(idReserva !== 0 && idReserva !== null){
-      this.loadingReserva.set(false);
+    if (idReserva !== 0 && idReserva !== null) {
+      this.loadingReserva.set(true);
       this.reservasService.reservaPorId(idReserva).subscribe({
         next: (resp) => {
-            
+          //PEGA LOS DATOS EN EL FORMULARIO
+          this.frmRes0003.reset(resp.data);
+          this.reservaActiva(resp.data.estadoReserva!);
+          this.loadingReserva.set(false);
+          this.stateService.reserva.set(resp.data);
+          //Muestra un mensaje en la barra indicando que la pesona se cargó correctamente
+          this.messageService.mostrar(
+            this.statusMessages,
+            'msgFrmRes0003',
+            'success',
+            'Reserva cargada correctamente.',
+          );
         },
         error: (err) => {
           this.loadingReserva.set(false);
@@ -190,9 +200,34 @@ export class FrmRes0003 implements OnInit {
             'Ha ocurrido un error al cargar los datos de la reserva: ' + err.error.message,
             err.error.status,
           );
-        }
+        },
       });
     }
+  }
+
+  //FUNCIÓN PARA VER SI UNA RESERVA ES ACTIVA O NO
+  reservaActiva(estado: EstadoReserva): void {
+    const deshabilitar = estado === EstadoReserva.XXX || estado === EstadoReserva.PAG;
+    const controles = [
+      'codigoAgencia',
+      'nroPax',
+      'fechaGeneracion',
+      'nroFacturaLocal',
+      'fechaFacturacion',
+      'observacionReserva',
+      'observacionPrivada',
+    ];
+    let control = null;
+    controles.forEach((element) => {
+      control = this.frmRes0003.get(element);
+      if (deshabilitar) {
+        control?.disable({ emitEvent: false });
+        control?.disable({ emitEvent: false });
+      } else {
+        control?.enable({ emitEvent: false });
+        control?.enable({ emitEvent: false });
+      }
+    });
   }
 
   //GRABA LA RESERVA

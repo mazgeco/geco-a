@@ -12,12 +12,18 @@ export interface ReservasResponse {
 
 export interface Reservas {
   idReserva: number | null;
-  idPersona: number;
-  idProveedor?: null;
+  idPersona?: number | null;
+  idProveedor?: number | null;
+  idTipoReserva?: number | null;
   idPersonaContacto?: number | null;
-  nombrePersona: string;
-  nombrePersonaContacto: string;
-  estadoReserva: EstadoReserva;
+  idClasificacion?: number | null;
+  idImportadoDe?: string | null;
+  idUsuarioResponsable?: string | null;
+  idMotivoDescuento?: string | null;
+  idUsuarioRp?: string | null;
+  nombrePersona?: string | null;
+  nombrePersonaContacto?: string;
+  estadoReserva?: EstadoReserva;
   codigoAgencia?: string | null;
   observacionReserva?: string | null;
   observacionPrivada?: string | null;
@@ -26,17 +32,14 @@ export interface Reservas {
   observacionReporte3?: string | null | string;
   observacionFacturacion?: string | null;
   rutaArchivoReferencia?: string | null;
-  fechaGeneracion?: Date | string | null;
+  fechaGeneracion?: Date | null;
   fechaPago?: Date | null;
   nroPax?: number | null;
   importadoDe?: string | null;
-  idImportadoDe?: string | null;
   fechaPagoProximo?: Date | null;
   fechaPagoFinal?: Date | null;
   timeLimit?: string | null;
-  idUsuarioResponsable?: string | null;
   porcentajeDsctoAdicional?: string | null;
-  idMotivoDescuento?: string | null;
   descuentoEnValor?: number | null;
   prioridadDescuento?: string | null;
   valorPagoProximo?: number | null;
@@ -45,7 +48,6 @@ export interface Reservas {
   nroEncuestaFaltante?: number | null;
   porcentajeSatisfaccion?: number | null;
   tipoGeneracion?: string | null;
-  idUsuarioRp?: string | null;
   itinerarioEnviado?: string;
   nroFacturaLocal?: string | null;
   facturada?: string | null;
@@ -140,6 +142,70 @@ export interface OrdenServicio {
   nroColumna?: string | null;
   imprimeObservaciones?: string | null;
   imprimeCantidad?: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+export interface ListaDetalleReservaResponse {
+  status: string;
+  message: string;
+  data: DetalleReserva[];
+}
+
+export interface DetalleReservaResponse {
+  status: string;
+  message: string;
+  data: DetalleReserva;
+}
+
+export interface DetalleReserva {
+  idDetalleReserva?: number | null;
+  idProductoXPrecioProducto?: number | null;
+  idPrecioXTemporada?: number | null;
+  idReserva?: number | null;
+  idProducto?: string | null;
+  idPerXRsrvXPrdCargo?: number | null;
+  idPersonaMesero?: number | null;
+  idMotivoDescuento?: number | null;
+  idMotivoIngresoManual?: number | null;
+  idDetalleReservaSs?: number | null;
+  idCasoRelacionado?: number | null;
+  idLugar?: number | null;
+  idLugar2?: number | null;
+  idVuelo?: number | null;
+  cargado?: string | null;
+  fechaInicio?: string | null;
+  fechaFin?: string | null;
+  horaEjecucion?: string | null;
+  nroPax?: number | null;
+  nroUnidades?: number | null;
+  precioUnitario?: number | null;
+  totalImpuestoPorcentaje?: number | null;
+  totalImpuestoValor?: number | null;
+  totalImpuestoNeto?: number | null;
+  porcentajeDescuento?: number | null;
+  descuentoEnValor?: number | null;
+  prioridadDescuento?: string | null;
+  precioTotal?: number | null;
+  individualGeneral?: string | null;
+  medidaCalculoPrecio?: string | null;
+  seReserva?: string | null;
+  tipoPrecio?: string | null;
+  observacionDetalle?: string | null;
+  esSingleSuplement?: string | null;
+  comisionFija?: number | null;
+  porcentajeUtilidad?: number | null;
+  cantidadParcial?: number | null;
+  cantidadTotal?: number | null;
+  ejecutado?: number | null;
+  blankCopy?: string | null;
+  weWelcomeMessage?: string | null;
+  weFeesPay?: string | null;
+  weIdImage?: string | null;
+  wePublicPrivate?: string | null;
+  weIdParagraph?: string | null;
   idUsuarioCrea?: string | null;
   fechaCrea?: string | null;
   idUsuarioModifica?: string | null;
