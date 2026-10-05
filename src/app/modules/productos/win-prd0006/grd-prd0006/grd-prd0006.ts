@@ -62,13 +62,6 @@ export class GrdPrd0006 implements OnInit, OnChanges {
     
   }
 
-  // 4. EL TIMBRE DE ALARMA: SE EJECUTA CADA VEZ QUE EL PADRE CAMBIA EL DÍA
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   if (changes['idItinerario']&& this.idItinerario) {
-  //     this.cargaDatos();
-  //   }
-  // }
-
   ngOnChanges(changes: SimpleChanges): void {
   // Verificamos si idItinerario tiene un valor (ya sea que acaba de cambiar o que acaba de llegar por primera vez)
   if (this.idItinerario) {

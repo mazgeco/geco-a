@@ -2,7 +2,6 @@
 import { Component, Input, signal, inject, computed, OnInit, ChangeDetectorRef, OnChanges, SimpleChanges} from '@angular/core';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { GrdPrd0006 } from '../grd-prd0006/grd-prd0006';
-import {  FormGroup, FormArray } from '@angular/forms';
 import { ConfirmationService } from 'primeng/api';
 import { ProductosService } from '../../../../services/productos.service';
 //Imports generales
@@ -39,8 +38,8 @@ export class FrmPrd0004 implements OnInit, OnChanges {
   permiso = signal<string>("w");
 
  //INJECTIONS PUBLICAS
-     funciones = inject(FuntionsService);
-     stateService = inject(StateService);
+  funciones = inject(FuntionsService);
+  stateService = inject(StateService);
 
   //INJECTIONS PRIVADAS
   private fb = inject(FormBuilder);
@@ -49,15 +48,15 @@ export class FrmPrd0004 implements OnInit, OnChanges {
   private confirmationService = inject(ConfirmationService);
   private cdr = inject(ChangeDetectorRef);
 
-   //VARIABLES PARA EL MANEJO DE LOS MENSAJES
-    messageService = inject(MessageService);
-    statusMessages = signal<Record<string, StatusMessage>>({});
-    productoMessage = computed(() =>
-      this.messageService.obtener(this.statusMessages, 'msgFrmPrd0004'),
-    );
+  //VARIABLES PARA EL MANEJO DE LOS MENSAJES
+  messageService = inject(MessageService);
+  statusMessages = signal<Record<string, StatusMessage>>({});
+  productoMessage = computed(() =>
+    this.messageService.obtener(this.statusMessages, 'msgFrmPrd0004'),
+  );
 
-//DECLARACIÓN DE VARIABLES
-// Controladores de la interfaz (Días)
+  //DECLARACIÓN DE VARIABLES
+  // Controladores de la interfaz (Días)
   dias = signal<number[]>([1, 2]); // Empezamos con 2 días base
   diaActivo = signal<number>(1);      // Dejamos el día 1 activo 
   listaCompletaDias = signal<DiaItinerario[]>([]);
@@ -392,41 +391,6 @@ public frmPrd0004 = this.fb.group({
     });
   }
 
-  // eliminarDia(): void {
-  //   const idParaBorrar = this.idItinerarioActivo();
-  //   // 1. Validar que haya un día seleccionado (que el ID no sea nulo ni 0)
-  //   if (!idParaBorrar || idParaBorrar === 0) {
-  //     this.toastService.showMessage('warn', 'Atención', 'Seleccione un día válido ya guardado para eliminar.', '');
-  //     return;
-  //   }
-  //   // 2. Preguntar si está seguro
-  //   this.confirmationService.confirm({
-  //     message: '¿Está seguro que desea eliminar este día y todos sus insumos?',
-  //     header: 'Confirmar Eliminación',
-  //     icon: 'pi pi-exclamation-triangle',
-  //     acceptLabel: 'Sí, eliminar',
-  //     rejectLabel: 'Cancelar',
-  //     acceptButtonStyleClass: 'p-button-danger',
-  //     accept: () => {
-  //     // 3. Llamar al servicio usando el ID correcto
-  //     this.productosService.eliminarItinerario(idParaBorrar, 'ADMIN').subscribe({
-  //       next: (resp) => {
-  //         // Ojo: Si messageService te sigue dando rojo, usa toastService como abajo
-  //         this.toastService.showMessage('success', 'Éxito', 'El día del itinerario se eliminó correctamente.', '');
-  //         // 4. Limpiar selección (hacemos exactamente lo que tienes en tu línea 324)
-  //         this.idItinerarioActivo.set(0); 
-  //         this.cargarItinerarioDesdeBD();
-  //         // NOTA: Aquí debes llamar a la función que hace el GET para traer los cuadritos de nuevo
-  //         // Ejemplo: this.cargarListaDias(); o this.ngOnInit();
-  //       },
-  //       error: (err) => {
-  //         this.toastService.showMessage('error', 'Error', 'No se pudo eliminar el día: ' + err.error.message, err.error.status);
-  //       }
-  //     });
-  //     }
-  //   });
-  // }
-
   eliminarDia(): void {
   const idParaBorrar = this.idItinerarioActivo();
   const numeroDiaActual = this.diaActivo(); // Necesitamos el número del día (ej. 4)
@@ -453,24 +417,26 @@ public frmPrd0004 = this.fb.group({
     }, { emitEvent: false });
 
     // Opcional: mostrar un mensaje de que se quitó
-    this.toastService.showMessage('success', 'Éxito', 'El día se eliminó correctamente.', '');
+    //this.toastService.showMessage('success', 'Éxito', 'El día se eliminó correctamente.', '');
+    this.messageService.mostrar(this.statusMessages, 'msgFrmPrd0004', 'success', 'El día se eliminó correctamente.');
     return; // Detenemos la ejecución aquí, no llamamos al backend
   }
 
   // ESCENARIO 2: El día ya existe en la base de datos
   this.confirmationService.confirm({
     message: '¿Está seguro que desea eliminar este día y todos sus insumos?',
-    header: 'Confirmar Eliminación',
-    icon: 'pi pi-exclamation-triangle',
-    acceptLabel: 'Sí, eliminar',
+    header: 'Eliminar',
+    //icon: 'pi pi-exclamation-triangle',
+    acceptLabel: 'Aceptar',
     rejectLabel: 'Cancelar',
-    acceptButtonStyleClass: 'p-button-danger',
+    //acceptButtonStyleClass: 'p-button-danger',
     accept: () => {
       // Tu código actual de borrado en base de datos
       this.productosService.eliminarItinerario(idParaBorrar, 'ADMIN').subscribe({
         next: (resp) => {
-          this.toastService.showMessage('success', 'Éxito', 'El día del itinerario se eliminó correctamente.', '');
-          this.idItinerarioActivo.set(0); 
+         // this.toastService.showMessage('success', 'Éxito', 'El día del itinerario se eliminó correctamente.', '');
+         this.messageService.mostrar(this.statusMessages, 'msgFrmPrd0004', 'success', 'El día del itinerario se eliminó correctamente.');
+         this.idItinerarioActivo.set(0); 
           this.cargarItinerarioDesdeBD(); // Asegúrate de que este sea el nombre correcto de tu método
         },
         error: (err) => {

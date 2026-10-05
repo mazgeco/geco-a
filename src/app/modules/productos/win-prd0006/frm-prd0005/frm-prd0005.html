@@ -9,13 +9,12 @@
         class="mr-1"
         pTooltip="Auditoría del registro actual"
         tooltipPosition="bottom"
-        
       />
       <p-button
         icon="pi pi-info-circle"
         pTooltip="Información del objeto actual"
         tooltipPosition="bottom"
-        
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
       />
     </ng-template>
 
