@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse, ListaPrecioProductoResponse, GraficosResponse, TipoOperacionResponse, Impuesto, ImpuestoResponse} from '../interfaces/productos.interfaces';
+import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse, ListaPrecioProductoResponse, GraficosResponse, TipoOperacionResponse, Impuesto, ImpuestoResponse, ImpuestoProducto, ImpuestosProductoResponse} from '../interfaces/productos.interfaces';
 import { SavedRow } from '../interfaces/general.interface'
 
 @Injectable({
@@ -12,7 +12,7 @@ export class ProductosService {
 
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
-  private idUsuario = "mgzapata";
+  private idUsuario = "mparraga";
  
     // buscaProducto(nombre: string): Observable<ListaProductosResponse> {
     // return this.http.get<ListaProductosResponse>(`${this.apiUrl}productos/busqueda?nombre=${nombre}`)
@@ -296,6 +296,33 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
       params,
     });
   }
+
+  obtenerImpuestosActivos(): Observable<ImpuestoResponse> {
+    return this.http.get<ImpuestoResponse>(`${this.apiUrl}productos/impuestos/activos`);
+  }
+
+  obtenerImpuestosPorProducto(idProducto: string) {
+    return this.http.get<ImpuestosProductoResponse>(`${this.apiUrl}productos/${idProducto}/impuestosxproductos`);
+  }
+
+  grabaImpuestoProducto(impuesto: ImpuestoProducto, idUsuario: string): Observable<SavedRow> {
+      if (!impuesto.idImpuestoXProducto || impuesto.idImpuestoXProducto === 0) {
+    // POST (Nuevo): Envía el usuario en la url y el objeto en el body
+    return this.http.post<SavedRow>(`${this.apiUrl}productos/${idUsuario}/impuestosxproductos`, impuesto);
+  } else {
+    // PUT (Actualizar): Envía el usuario en la url y el idItinerario como QueryParam
+    return this.http.put<SavedRow>(
+      `${this.apiUrl}productos/${idUsuario}/impuestosxproductos?idImpuestoXProducto=${impuesto.idImpuestoXProducto}`,
+      impuesto
+    );
+  } 
+}
+
+eliminaImpuestoProducto(idImpuestoXProducto: number, idUsuario: string): Observable<any> {
+  return this.http.delete<any>(
+    `${this.apiUrl}productos/${idUsuario}/impuestosxproductos?idImpuestoXProducto=${idImpuestoXProducto}`
+  );
+}
 
 
 }

@@ -19,7 +19,7 @@ export class WinRes0003 implements OnInit {
   stateService = inject(StateService);
 
   ngOnInit(): void {
-    this.stateService.reserva.set(null);
+    //this.stateService.reserva.set(null);
     //Toma el dato enviado por el router para colocar en el id principal
     this.idReserva.set(Number(this.route.snapshot.paramMap.get('id')));
   }

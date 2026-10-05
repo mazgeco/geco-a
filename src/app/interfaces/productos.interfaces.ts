@@ -314,3 +314,22 @@ export interface TipoOperacionResponse {
   message: string;
   data: TipoOperacionXEmpresa[];
 }
+
+export interface ImpuestoProducto {
+    idImpuestoXProducto?: number | null;
+    idImpuesto: string;
+    idProducto: string;
+    valorImpuesto: number | null;
+    idUsuarioCrea: string | null;
+    fechaCrea: string | null;
+    idUsuarioModifica: string | null;
+    fechaModifica: string | null;
+}
+
+export interface ImpuestosProductoResponse {
+    status: string;
+    message: string;
+    data: ImpuestoProducto[];
+}
+
+
