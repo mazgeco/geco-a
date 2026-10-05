@@ -281,13 +281,11 @@ verificarCambioCheckbox(idImpuesto: string): void {
   }
 }
 
-
-
 }
 
 
  
 
-  // 3. Creamos este método para limpiar la lógica del HTML
+  
   
 
