@@ -1,12 +1,13 @@
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
 import { ConfirmationService } from 'primeng/api';
 import { FormsModule } from '@angular/forms';
-import { Combo } from '../../../../interfaces/general.interface';
+import { Combo, StatusMessage } from '../../../../interfaces/general.interface';
 import { Ciudades, Direcciones, TipoDirecciones } from '../../../../interfaces/personas.interfaces';
 import { FuntionsService } from '../../../../services/functions.service';
 import { PersonasService } from '../../../../services/personas.service';
 import { ToastService } from '../../../../services/toast.service';
+import { MessageService } from '../../../../services/message.service';
 
 @Component({
   selector: 'app-grd-per0006',
@@ -30,6 +31,11 @@ export class GrdPer0006 implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private personasService = inject(PersonasService);
   private toastService = inject(ToastService);
+  //VARIABLES PARA EL MANEJO DE LOS MENSAJES
+  msgName: string = 'msg' + this.idObjeto;
+  messageService = inject(MessageService);
+  statusMessages = signal<Record<string, StatusMessage>>({});
+  barraMessage = computed(() => this.messageService.obtener(this.statusMessages, this.msgName));
 
   //DECLARACIÓN DE VARIABLES
   selectedRows!: Direcciones[];
@@ -139,6 +145,12 @@ export class GrdPer0006 implements OnInit {
     this.personasService.grabaDireccion(direccion).subscribe({
       next: (resp) => {
         direccion.idDireccion = resp.idSecuencial!;
+        this.messageService.mostrar(
+          this.statusMessages,
+          this.msgName,
+          'success',
+          'Fila grabada correctamente.',
+        );
         this.cargaDirecciones();
       },
       error: (err) => {
@@ -204,6 +216,12 @@ export class GrdPer0006 implements OnInit {
               this.direcciones.set(
                 this.direcciones().filter((item) => item.idDireccion != resp.idSecuencial),
               );
+              this.messageService.mostrar(
+                this.statusMessages,
+                this.msgName,
+                'success',
+                'Fila eliminada correctamente.',
+              );
             },
             error: (err) => {
               this.toastService.showMessage(
@@ -234,6 +252,12 @@ export class GrdPer0006 implements OnInit {
               next: (resp) => {
                 this.direcciones.set(
                   this.direcciones().filter((item) => item.idDireccion != resp.idSecuencial),
+                );
+                this.messageService.mostrar(
+                  this.statusMessages,
+                  this.msgName,
+                  'success',
+                  'Filas eliminadas correctamente.',
                 );
               },
               error: (err) => {

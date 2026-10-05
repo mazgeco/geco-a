@@ -16,8 +16,6 @@
   </ng-template>
 </p-toolbar>
 
-
-
 <p-tabs value="0">
   <p-tablist>
     <p-tab value="0">Reserva</p-tab>
@@ -31,7 +29,9 @@
     <p-tabpanel value="0">
       <app-frm-res0003 [idReserva]="idReserva()"></app-frm-res0003>
     </p-tabpanel>
-    <p-tabpanel value="1"></p-tabpanel>
+    <p-tabpanel value="1">
+      <app-grd-res0021 [idReserva]="idReserva()"></app-grd-res0021>
+    </p-tabpanel>
     <p-tabpanel value="2"></p-tabpanel>
     <p-tabpanel value="3"></p-tabpanel>
     <p-tabpanel value="4"></p-tabpanel>

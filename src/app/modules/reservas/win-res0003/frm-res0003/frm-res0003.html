@@ -10,7 +10,7 @@
           icon="pi pi-check"
           class="mr-1"
           label="Inactivar"
-          pTooltip="Cambiar el estado a INGRESADO"
+          pTooltip="Cambiar el estado de la reserva"
           tooltipPosition="bottom"
           (onClick)="cambiarEstado(EstadoReserva.ING)"
         />
@@ -70,7 +70,6 @@
               type="text"
               pInputText
               class="w-full"
-              [disabled]="esActivo()"
               formControlName="codigoAgencia"
             />
           </div>
@@ -80,8 +79,8 @@
             <label>Estado</label>
             <p-select
               class="w-full"
-              [options]="estado()"
-              [disabled]="esActivo()"
+              [options]="estado"
+              [readonly]="true"
               formControlName="estadoReserva"
               pTooltip="Estado de la reserva"
               tooltipPosition="bottom"

@@ -7,7 +7,7 @@ import { ReservasService } from '../../../../services/reservas.service';
 import { ToastService } from '../../../../services/toast.service';
 import { MessageService } from '../../../../services/message.service';
 import { Combo, FilaTabla, StatusMessage } from '../../../../interfaces/general.interface';
-import { OrdenServicio } from '../../../../interfaces/reservas.interface';
+import { OrdenServicio } from '../../../../interfaces/reservas.interfaces';
 import { ProveedoresService } from '../../../../services/proveedores.service';
 import { SuperTipoInsumo } from '../../../../interfaces/proveedores.interfaces';
 

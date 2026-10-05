@@ -6,14 +6,16 @@ import { Observable } from 'rxjs';
 import {
   Clasificacion,
   ClasificacionResponse,
+  DetalleReserva,
   GraficoVentasAnioResponse,
+  ListaDetalleReservaResponse,
   ListaReservasResponse,
   OrdenServicio,
   OrdenServicioResponse,
   ReservasResponse,
   TipoHabitacion,
   TipoHabitacionResponse,
-} from '../interfaces/reservas.interface';
+} from '../interfaces/reservas.interfaces';
 import { GraficosResponse, SavedRow } from '../interfaces/general.interface';
 
 @Injectable({
@@ -128,6 +130,34 @@ export class ReservasService {
   eliminaOrdenServicio(idOrdenServicio: number): Observable<SavedRow> {
     const params = new HttpParams().set('idOrdenServicio', idOrdenServicio!);
     return this.http.delete<SavedRow>(`${this.apiUrl}reservas/${this.authService.usuario}/ordenesservicio`, {
+      params,
+    });
+  }
+
+  //DETALLE RESERVA
+  listaDetalleReserva(idReserva: number): Observable<ListaDetalleReservaResponse> {
+    return this.http.get<ListaDetalleReservaResponse>(`${this.apiUrl}reservas/detallereserva/${idReserva}`);
+  }
+
+  grabaDetalleReserva(detalleReserva: DetalleReserva, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}reservas/${this.authService.idUsuario()}/detallereserva`,
+        detalleReserva,
+      );
+    } else {
+      const params = new HttpParams().set('idDetalleReserva', detalleReserva.idDetalleReserva!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}reservas/${this.authService.idUsuario()}/detallereserva`,
+        detalleReserva,
+        { params },
+      );
+    }
+  }
+
+  eliminaDetalleReserva(idDetalleReserva: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idDetalleReserva', idDetalleReserva!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}reservas/${this.authService.usuario}/detallereserva`, {
       params,
     });
   }
