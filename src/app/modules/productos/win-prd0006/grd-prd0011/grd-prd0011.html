@@ -36,10 +36,10 @@
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 30%">Nombre Tarifa</th>
-        <th style="width: 10%">Pax Min</th>
-        <th style="width: 10%">Pax Max</th>
-        <th style="width: 10%">Costo Base($)</th>
-        <th style="width: 10%" >Tarifa RAC</th>
+        <th style="width: 10%" class="text-right">Pax Min</th>
+        <th style="width: 10%" class="text-right">Pax Max</th>
+        <th style="width: 10%" class="text-right">Costo Base($)</th>
+        <th style="width: 10%" class="text-right">Tarifa RAC</th>
         <th style="width: 10%" class="text-center">Acciones</th>
       </tr>
     </ng-template>
@@ -61,7 +61,7 @@
 </td>
 
 <!-- 2. PAX MIN (paxMin) -->
-<td>
+<td class="text-right">
   <p-cellEditor>
     <ng-template pTemplate="input">
       <p-inputNumber [(ngModel)]="rowData.paxIni" [useGrouping]="false" class="w-full"></p-inputNumber>
@@ -73,7 +73,7 @@
 </td>
 
 <!-- 3. PAX MAX (paxMax) -->
-<td>
+<td class="text-right">
   <p-cellEditor>
     <ng-template pTemplate="input">
       <p-inputNumber [(ngModel)]="rowData.paxFin" [useGrouping]="false" class="w-full"></p-inputNumber>
@@ -85,7 +85,7 @@
 </td>
 
 <!-- 4. COSTO BASE (costoBase) -->
-<td>
+<td class="text-right">
   <p-cellEditor>
     <ng-template pTemplate="input">
       <p-inputNumber [(ngModel)]="rowData.precio" mode="decimal" [minFractionDigits]="2" class="w-full"></p-inputNumber>
@@ -97,7 +97,7 @@
 </td>
 
 <!-- 5. TARIFA RAC (tarifaRac) -->
-<td>
+<td class="text-right">
   <p-cellEditor>
     <ng-template pTemplate="input">
       <p-inputNumber [(ngModel)]="rowData.tarifaRac" mode="decimal" [minFractionDigits]="2" class="w-full"></p-inputNumber>

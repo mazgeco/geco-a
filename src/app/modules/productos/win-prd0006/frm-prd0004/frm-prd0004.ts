@@ -63,6 +63,7 @@ export class FrmPrd0004 implements OnInit, OnChanges {
   // Guardará el ID real de la base de datos para pasárselo a la grilla
   idItinerarioActivo = signal<number>(0);
   idIdiomaXItinerarioActual: number | null = null;
+  public cambioIdiomaManual: boolean = false;
   idiomaPorItinerario = signal<Combo[]>([
         {
           codigo: 'es',
@@ -74,27 +75,27 @@ export class FrmPrd0004 implements OnInit, OnChanges {
         },
       ]);
 
-public frmPrd0004 = this.fb.group({
-  idItinerario: [null as number | null],
-  idProducto: [''],
-  diaItinerario: [null as number | null],
-  imagenItinerario: [''],
-  idIdiomaXItinerario: [null],
-  idIdioma: ['ES'], 
-  descripcionItinerario: [''],
-  origen: [null as string | null],
-  destino: [null as string | null],
-  actividad: [null as string | null],
-  duracionItinerario: [null as string | null],
-  tipoComidaIncluida: [[] as string[]],
-  observaciones: [null as string | null],
-  idUsuarioCrea: [''],
-  fechaCrea: [''],
-  idUsuarioModifica: [null as string | null],
-  fechaModifica: [null as string | null]
-});
+  public frmPrd0004 = this.fb.group({
+    idItinerario: [null as number | null],
+    idProducto: [''],
+    diaItinerario: [null as number | null],
+    imagenItinerario: [''],
+    idIdiomaXItinerario: [null],
+    idIdioma: ['ES'], 
+    descripcionItinerario: [''],
+    origen: [null as string | null],
+    destino: [null as string | null],
+    actividad: [null as string | null],
+    duracionItinerario: [null as string | null],
+    tipoComidaIncluida: [[] as string[]],
+    observaciones: [null as string | null],
+    idUsuarioCrea: [''],
+    fechaCrea: [''],
+    idUsuarioModifica: [null as string | null],
+    fechaModifica: [null as string | null]
+  });
 
-// GETTER PARA TRAER LOS DATOS ACTUALES DEL ITINERARIO
+  // GETTER PARA TRAER LOS DATOS ACTUALES DEL ITINERARIO
   get currentData(): DiaItinerario {
        const diaItinerario = this.frmPrd0004.getRawValue() as DiaItinerario;
        return diaItinerario;
@@ -179,8 +180,12 @@ public frmPrd0004 = this.fb.group({
             }
           }
         } else {
-          // Si el array viene vacío, limpiamos la pantalla
-          this.dias.set([]);
+          // 1. Sincronizamos tu memoria principal para que tu 'agregarDiaSecuencial' pueda leer el "1" y sacar el max() correctamente.
+          this.listaCompletaDias.set([{ diaItinerario: 1, idItinerario: 0 }as any]);
+          // 2. Pintamos el botón visual "1" en el carrusel
+          this.dias.set([1]);
+          // 3. Simulamos que el usuario hizo clic en el Día 1 para activar el formulario y que no salga en blanco
+          this.seleccionarDia(1);
         }
       },
       error: (error) => {
@@ -198,20 +203,26 @@ public frmPrd0004 = this.fb.group({
     this.idIdiomaXItinerarioActual = null;
     this.productosService.obtenerDatosOperativos(idItinerario).subscribe({
     next: (respuesta) => {
-      console.log('🔴 DATOS REALES DEL Idioma:', respuesta);
       const idiomaActual = this.frmPrd0004.get('idIdioma')?.value || 'es';
       const listaDatos = respuesta.data || [];
+      
       let datosParaMostrar = listaDatos.find((item: any) => item.idIdioma === idiomaActual);
-      if (!datosParaMostrar && listaDatos.length > 0) {
+
+      // 👉 2. LA MAGIA: Si no encontró el idioma actual, pero SÍ hay datos guardados 
+      // y NO fue un cambio manual (es decir, cargaste la página o cambiaste de día), 
+      // entonces agarra el primer idioma que encuentre (ej. el Inglés).
+      if (!datosParaMostrar && listaDatos.length > 0 && !this.cambioIdiomaManual) {
         datosParaMostrar = listaDatos[0];
       }
+
       if (datosParaMostrar) {
         this.idIdiomaXItinerarioActual = datosParaMostrar.idIdiomaXItinerario;
-        const textoBD = datosParaMostrar.tipoComidaIncluida; 
-        const arrayComidas: string[] = textoBD ? textoBD.split(',').map(letra => letra.trim()) : [];
+        const textoBD = datosParaMostrar.tipoComidaIncluida;
+        const arrayComidas = textoBD ? textoBD.split(',').map((l: string) => l.trim()) : [];
+        
         this.frmPrd0004.patchValue({
           idItinerario: datosParaMostrar.idItinerario,
-          idIdioma: datosParaMostrar.idIdioma,
+          idIdioma: datosParaMostrar.idIdioma, // 👈 Actualiza el combo al idioma que encontró
           tipoComidaIncluida: arrayComidas,
           duracionItinerario: datosParaMostrar.duracionItinerario,
           descripcionItinerario: datosParaMostrar.descripcionItinerario,
@@ -224,19 +235,34 @@ public frmPrd0004 = this.fb.group({
           idUsuarioModifica: datosParaMostrar.idUsuarioModifica,
           fechaModifica: datosParaMostrar.fechaModifica
         }, { emitEvent: false });
-      }else {
-        // --- 2. SI NO EXISTE, LO RESETeamos A NULL PARA QUE CREE UNO NUEVO (POST) ---
+
+      } else {
+        // 👉 3. SI FUE CAMBIO MANUAL Y NO HAY DATOS: Limpiamos los campos 
+        // pero DEJAMOS el combo quieto para que puedas empezar a escribir el nuevo idioma.
         this.idIdiomaXItinerarioActual = null;
+        
+        this.frmPrd0004.patchValue({
+          idItinerario: idItinerario,
+          idIdioma: idiomaActual,
+          tipoComidaIncluida: [],
+          duracionItinerario: null,
+          descripcionItinerario: '',
+          origen: '',
+          destino: '',
+          actividad: '',
+          observaciones: ''
+        }, { emitEvent: false });
       }
+      // 👉 4. APAGAMOS LA BANDERA al terminar para la próxima vez
+      this.cambioIdiomaManual = false;
       this.cdr.detectChanges();
     },
     error: (error) => {
-      // Si el día no existe o da 404, aseguramos que el ID quede en null para crear uno nuevo con POST
       this.idIdiomaXItinerarioActual = null;
-      console.log('Error al traer la ficha operativa (puede ser un día nuevo)', error);
+      this.cambioIdiomaManual = false; // Apagamos también si hay error
     }
   });
-}
+  }
 
   seleccionarDia(numeroDia: number): void {
     this.diaActivo.set(numeroDia);
@@ -273,13 +299,13 @@ public frmPrd0004 = this.fb.group({
   }
 
   alCambiarIdioma(nuevoIdioma: string): void {
-    // 1. Obligamos al formulario a reconocer el nuevo idioma instantáneamente
-    this.frmPrd0004.patchValue({ idIdioma: nuevoIdioma }, { emitEvent: false });
-    // 2. Disparamos la búsqueda de los datos
-    const diaActual = this.diaActivo();
-    if (diaActual) {
+  // 👉 1. ACTIVAMOS LA BANDERA PORQUE FUE UN CLIC MANUAL
+  this.cambioIdiomaManual = true; 
+  this.frmPrd0004.patchValue({ idIdioma: nuevoIdioma }, { emitEvent: false });
+  const diaActual = this.diaActivo();
+  if (diaActual) {
     this.seleccionarDia(diaActual);
-    }
+  }
   }
 
   // ==========================================
