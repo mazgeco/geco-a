@@ -1,7 +1,7 @@
 import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { KeyFilterModule } from 'primeng/keyfilter';
+import { AutoCompleteCompleteEvent } from 'primeng/types/autocomplete';
 
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
 import { FuntionsService } from '../../../../services/functions.service';
@@ -13,8 +13,6 @@ import {
   DetalleReserva,
   DetalleValorXDetalleReserva,
 } from '../../../../interfaces/reservas.interfaces';
-import { InputTextModule } from 'primeng/inputtext';
-import { FormsModule } from '@angular/forms';
 import { Productos } from '../../../../interfaces/productos.interfaces';
 import { ProductosService } from '../../../../services/productos.service';
 
@@ -106,6 +104,7 @@ export class GrdRes0021 implements OnInit {
    *******************************************************************************************/
 
   ngOnInit(): void {
+    this.cargaCombos();
     this.cargaDatos(this.idReserva);
   }
 
@@ -301,21 +300,61 @@ export class GrdRes0021 implements OnInit {
     }
   }
 
-  cargaComobos(): void {
-    //this.productosService.listaPro
+  cargaCombos(): void {
+    this.productosService.listaProductos().subscribe({
+      next: (resp) => {
+        this.productos.set(resp.data);
+      },
+      error: (err) => {
+        this.toastService.showMessage('error', 'Error', 'No se pudieron cargar los productos');
+      },
+    });
   }
 
   //CARGA TOTALES
   cargaTotales(row: DetalleReserva): void {
     const idDetalleReserva = row.idDetalleReserva ?? 0;
-    this.reservasService.listaDetalleValorXDetalleReserva(idDetalleReserva).subscribe({
+    if (idDetalleReserva !== null && idDetalleReserva !== 0) {
+      this.reservasService.listaDetalleValorXDetalleReserva(idDetalleReserva).subscribe({
+        next: (resp) => {
+          const datos = resp.data.map((item) => ({
+            ...item,
+            etiqueta:
+              item.tipoDetalleValor === 'T'
+                ? 'Total'
+                : item.tipoDetalleValor === 'S'
+                  ? 'Subtotal'
+                  : `Impuesto ${item.nombreImpuesto} ${item.porcentajeImpuesto}%`,
+          }));
+          this.detalleValor.set(datos);
+        },
+      });
+    }
+  }
+
+  buscarProducto(event: AutoCompleteCompleteEvent) {
+    const nombre = event.query.trim();
+    if (nombre.length < 3) {
+      this.productos.set([]);
+      return;
+    }
+    this.productosService.buscaProducto(nombre).subscribe({
       next: (resp) => {
-        const datos = resp.data.map((item) => ({
-          ...item,
-          etiqueta: item.tipoDetalleValor === 'T' ? 'Total' : (item.tipoDetalleValor === 'S' ? 'Subtotal' : 'Impuesto'),
-        }));
-        this.detalleValor.set(datos);
+        this.productos.set(resp.data);
+      },
+      error: (err) => {
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar las productos: ' + err.error.message,
+          err.error.status,
+        );
       },
     });
+  }
+
+  seleccionarProducto(event: any, rowData: DetalleReserva) {
+    rowData.nombreProducto = event.value.nombreCorto;
+    rowData.idProducto = event.value.idProducto;
   }
 }

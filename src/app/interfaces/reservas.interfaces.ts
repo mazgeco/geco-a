@@ -229,6 +229,7 @@ export interface DetalleValorXDetalleReserva {
   idDetalleValorPrd?: number | null;
   idDetalleReserva?: number | null;
   idImpuesto?: string | null;
+  nombreImpuesto?: string | null;
   tipoDetalleValor?: string | null;
   suprimeImpuesto?: string | null;
   valor?: number | null;

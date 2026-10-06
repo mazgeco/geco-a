@@ -182,14 +182,21 @@
               <p-panel class="col-12" header="General">
                 <div class="field mb-1">
                   <label>Producto <span class="asterisco">*</span></label>
-                  @if (rowData.idDetalleReserva === 0) {
-                    <input
-                      pInputText
+                  <!-- @if (rowData.idDetalleReserva === 0) { -->
+                    <p-autocomplete
                       class="w-full"
-                      [(ngModel)]="rowData.idProducto"
-                      [name]="'idProducto' + rowData.idDetalleReserva"
-                    />
-                  } @else {
+                      [fluid]="true"
+                      [(ngModel)]="rowData.nombreProducto"
+                      [ngModelOptions]="{standalone: true}"
+                      [suggestions]="productos()"
+                      (completeMethod)="buscarProducto($event)"
+                      (onSelect)="seleccionarProducto($event, rowData)"
+                      optionLabel="nombreCorto"
+                      optionValue="idProducto"
+                      [minLength]="3"
+                    >
+                    </p-autocomplete>
+                  <!-- } @else {
                     <input
                       pInputText
                       class="w-full"
@@ -197,7 +204,7 @@
                       [(ngModel)]="rowData.nombreProducto"
                       [name]="'nombreProducto' + rowData.idDetalleReserva"
                     />
-                  }
+                  } -->
                 </div>
                 <div class="field mb-1">
                   <label>Precio producto</label>
