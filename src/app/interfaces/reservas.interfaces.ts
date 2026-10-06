@@ -175,9 +175,10 @@ export interface DetalleReserva {
   idLugar?: number | null;
   idLugar2?: number | null;
   idVuelo?: number | null;
+  nombreProducto?: string | null;
   cargado?: string | null;
-  fechaInicio?: string | null;
-  fechaFin?: string | null;
+  fechaInicio?: Date | null;
+  fechaFin?: Date | null;
   horaEjecucion?: string | null;
   nroPax?: number | null;
   nroUnidades?: number | null;
@@ -206,6 +207,33 @@ export interface DetalleReserva {
   weIdImage?: string | null;
   wePublicPrivate?: string | null;
   weIdParagraph?: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+export interface ListaDetalleValorXDetalleReservaResponse {
+  status: string;
+  message: string;
+  data: DetalleValorXDetalleReserva[];
+}
+
+export interface DetalleValorXDetalleReservaResponse {
+  status: string;
+  message: string;
+  data: DetalleValorXDetalleReserva;
+}
+
+export interface DetalleValorXDetalleReserva {
+  idDetalleValorPrd?: number | null;
+  idDetalleReserva?: number | null;
+  idImpuesto?: string | null;
+  tipoDetalleValor?: string | null;
+  suprimeImpuesto?: string | null;
+  valor?: number | null;
+  porcentajeImpuesto?: number | null;
+  baseImponible?: number | null;
   idUsuarioCrea?: string | null;
   fechaCrea?: string | null;
   idUsuarioModifica?: string | null;

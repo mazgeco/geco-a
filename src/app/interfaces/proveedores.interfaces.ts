@@ -80,3 +80,35 @@ export interface Insumos {
   idUsuarioModifica?: string | null;
   fechaModifica?: string | null;
 }
+
+//PERSONA PROVEEDO
+
+export interface ListaPersonaProveedorResponse {
+  status: string;
+  message: string;
+  data: PersonaProveedor[];
+}
+
+export interface PersonaProveedorResponse {
+  status: string;
+  message: string;
+  data: PersonaProveedor;
+}
+
+export interface PersonaProveedor {
+  idProveedor: number | null;
+  idPersona: number | null;
+  razonSocial: string | null;
+  nombreComercial: string | null;
+  estadoProveedor: string | null;
+  tipoPersona: string | null;
+  email: string | null;
+  tipoIdentificacion: string | null;
+  identificacion: string | null;
+  telefono: string | null;
+  direccion: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}

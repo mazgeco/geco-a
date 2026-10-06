@@ -136,19 +136,19 @@ export class ReservasService {
 
   //DETALLE RESERVA
   listaDetalleReserva(idReserva: number): Observable<ListaDetalleReservaResponse> {
-    return this.http.get<ListaDetalleReservaResponse>(`${this.apiUrl}reservas/detallereserva/${idReserva}`);
+    return this.http.get<ListaDetalleReservaResponse>(`${this.apiUrl}reservas/detallesreserva/${idReserva}`);
   }
 
   grabaDetalleReserva(detalleReserva: DetalleReserva, nuevaFila: boolean): Observable<SavedRow> {
     if (nuevaFila) {
       return this.http.post<SavedRow>(
-        `${this.apiUrl}reservas/${this.authService.idUsuario()}/detallereserva`,
+        `${this.apiUrl}reservas/${this.authService.idUsuario()}/detallesreserva`,
         detalleReserva,
       );
     } else {
       const params = new HttpParams().set('idDetalleReserva', detalleReserva.idDetalleReserva!);
       return this.http.put<SavedRow>(
-        `${this.apiUrl}reservas/${this.authService.idUsuario()}/detallereserva`,
+        `${this.apiUrl}reservas/${this.authService.idUsuario()}/detallesreserva`,
         detalleReserva,
         { params },
       );
@@ -157,9 +157,12 @@ export class ReservasService {
 
   eliminaDetalleReserva(idDetalleReserva: number): Observable<SavedRow> {
     const params = new HttpParams().set('idDetalleReserva', idDetalleReserva!);
-    return this.http.delete<SavedRow>(`${this.apiUrl}reservas/${this.authService.usuario}/detallereserva`, {
+    return this.http.delete<SavedRow>(`${this.apiUrl}reservas/${this.authService.usuario}/detallesreserva`, {
       params,
     });
   }
+
+  //DETALLE VALOR X DETALLE RESERVA
+  
 
 }

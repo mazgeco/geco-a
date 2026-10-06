@@ -11,7 +11,6 @@
           label="Inactivar"
           pTooltip="Inactiva al producto"
           tooltipPosition="bottom"
-          
         />
       } @else {
         <p-button
@@ -20,7 +19,6 @@
           label="Activar"
           pTooltip="Activa al producto"
           tooltipPosition="bottom"
-          
         />
       }
       <p-button
@@ -28,7 +26,6 @@
         class="mr-1"
         pTooltip="Auditoría del registro actual"
         tooltipPosition="bottom"
-        
       />
       <p-button
         icon="pi pi-info-circle"
@@ -43,7 +40,7 @@
     </ng-template>
 
     <ng-template #end>
-       @if (proveedorMessage()?.visible) {
+      @if (proveedorMessage()?.visible) {
         <div class="message-container">
           <p-message [severity]="proveedorMessage()!.severity" [icon]="proveedorMessage()!.icon">
             {{ proveedorMessage()!.text }}
@@ -52,4 +49,45 @@
       }
     </ng-template>
   </p-toolbar>
-  </div>
+</div>
+
+<form id="frmPrv0002" class="grid m-0" [formGroup]="frmPrv0002">
+  <p-panel class="col-12">
+    <div class="grid">
+      <!-- ======================= -->
+      <!-- FILA 1 -->
+      <!-- ======================= -->
+      <div class="col-12">
+        <div class="field mb-1">
+          <label>Razon social <span class="asterisco">*</span></label>
+          <input pInputText class="w-full" formControlName="razonSocial" />
+        </div>
+      </div>
+      <!-- ======================= -->
+      <!-- FILA 2 -->
+      <!-- ======================= -->
+      <div class="col-12">
+        <div class="field mb-1">
+          <label>Nombre comercial <span class="asterisco">*</span></label>
+          <input pInputText class="w-full" formControlName="nombreComercial">
+        </div>
+      </div>
+      <!-- ======================= -->
+      <!-- FILA 3 -->
+      <!-- ======================= -->
+      <div class="col-12 md:col-6">
+        <div class="field mb-1">
+          <label>Código</label>
+          <input pInputText class="w-full" formControlName="idProveedor" [readOnly]="true" />
+        </div>
+      </div>
+      <div class="col-12 md:col-6">
+        <div class="field mb-1">
+          <label>Estado</label>
+          <!-- TODO: Poner aquí el estado -->
+           <input pInputText class="w-full" formControlName="estadoProveedor" />
+        </div>
+      </div>
+    </div>
+  </p-panel>
+</form>

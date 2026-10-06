@@ -1,25 +1,26 @@
 import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
+import { DatePipe, DecimalPipe } from '@angular/common';
 
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
 import { FuntionsService } from '../../../../services/functions.service';
 import { ReservasService } from '../../../../services/reservas.service';
 import { ToastService } from '../../../../services/toast.service';
 import { MessageService } from '../../../../services/message.service';
-import { FilaTabla, StatusMessage } from '../../../../interfaces/general.interface';
+import { Combo, FilaTabla, StatusMessage } from '../../../../interfaces/general.interface';
 import { DetalleReserva } from '../../../../interfaces/reservas.interfaces';
 
 @Component({
   selector: 'app-grd-res0021',
-  imports: [...PRIMENG_MODULES],
+  imports: [...PRIMENG_MODULES, DatePipe, DecimalPipe],
   providers: [ConfirmationService],
-  templateUrl: './grd-res0021.html'
+  templateUrl: './grd-res0021.html',
 })
 export class GrdRes0021 implements OnInit {
   //LLAMADA AL ID Master
   @Input()
   idReserva!: number;
-  
+
   /******************************************************************************************
    * DECLARACIÓN DE VARIABLES
    *******************************************************************************************/
@@ -33,6 +34,24 @@ export class GrdRes0021 implements OnInit {
   campoId: 'idDetalleReserva' = 'idDetalleReserva';
   nuevaFila: DetalleReserva = {
     idDetalleReserva: 0,
+    idProducto: null,
+    idProductoXPrecioProducto: null,
+    idPrecioXTemporada: null,
+    nombreProducto: '',
+    fechaInicio: null,
+    fechaFin: null,
+    cantidadTotal: 0,
+    precioUnitario: 0,
+    porcentajeDescuento: 0,
+    nroPax: 1,
+    nroUnidades: 1,
+    precioTotal: 0,
+    blankCopy: 'N',
+    comisionFija: null,
+    porcentajeUtilidad: null,
+    cantidadParcial: 1,
+    idMotivoIngresoManual: null,
+    observacionDetalle: '',
     idUsuarioCrea: '',
     fechaCrea: '',
     idUsuarioModifica: '',
@@ -51,10 +70,25 @@ export class GrdRes0021 implements OnInit {
   barraMessage = computed(() =>
     this.messageService.obtener(this.statusMessages, 'msg' + this.idObjeto()),
   );
-  //Declaración de variables
+  //DECLARACIÓN DE VARIABLES
+  total = signal<number>(0);
   selectedRows!: DetalleReserva[];
   metaKey: boolean = true;
   filas = signal<FilaTabla<DetalleReserva>[]>([]);
+  opcionSN = signal<Combo[]>([
+    {
+      codigo: 'S',
+      etiqueta: 'Si',
+    },
+    {
+      codigo: 'N',
+      etiqueta: 'No',
+    },
+  ]);
+
+  get totalPrecio(): number {
+    return this.filas().reduce((total, fila) => total + (fila.precioTotal ?? 0), 0);
+  }
 
   /******************************************************************************************
    * MÉTODOS QUE EJECUTAN LOS PROCESOS
@@ -114,6 +148,9 @@ export class GrdRes0021 implements OnInit {
         this.filas.set(
           resp.data.map((item) => ({
             ...item,
+            blankCopy: item.blankCopy ?? 'N',
+            fechaInicio: this.funciones.convertirAFecha(item.fechaInicio),
+            fechaFin: this.funciones.convertirAFecha(item.fechaFin),
             _rowId: crypto.randomUUID(),
             _estadoFila: 'NORMAL',
           })),

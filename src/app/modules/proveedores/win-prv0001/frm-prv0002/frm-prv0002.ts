@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 //Imports generales
 import { Combo } from '../../../../interfaces/general.interface';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
-import { EstadoProveedor} from '../../../../interfaces/proveedores.interfaces';
+import { EstadoProveedor } from '../../../../interfaces/proveedores.interfaces';
 
 //Servicios propios
 import { ToastService } from '../../../../services/toast.service';
@@ -24,27 +24,26 @@ import { debounceTime } from 'rxjs';
   templateUrl: './frm-prv0002.html',
   styleUrl: './frm-prv0002.css',
 })
-export class FrmPrv0002 {
-
+export class FrmPrv0002 implements OnInit {
   @Input()
   idProveedor!: number;
 
-   /******************************************************************************************
-  * DECLARACIÓN DE VARIABLES
-  *******************************************************************************************/
+  /******************************************************************************************
+   * DECLARACIÓN DE VARIABLES
+   *******************************************************************************************/
 
   //IDENTIFICADORES PRINCIPALES
-  idContenedor = signal<string>("WinPrv0001");
-  idObjeto = signal<string>("FrmPrv0002");
-  idTabla = signal<string>("235");
-  permiso = signal<string>("w");
+  idContenedor = signal<string>('WinPrv0001');
+  idObjeto = signal<string>('FrmPrv0002');
+  idTabla = signal<string>('235');
+  permiso = signal<string>('w');
 
   //Declaración variable tipo EstadoProveedor que es un enum para usar en el HTML
   readonly EstadoProveedor = EstadoProveedor;
 
   //INJECTIONS PUBLICAS
-    funciones = inject(FuntionsService);
-    stateService = inject(StateService);
+  funciones = inject(FuntionsService);
+  stateService = inject(StateService);
 
   //INJECTIONS PRIVADAS
   private proveedoresService = inject(ProveedoresService);
@@ -53,7 +52,7 @@ export class FrmPrv0002 {
   private fb = inject(FormBuilder);
   private router = inject(Router);
 
-   //VARIABLES PARA EL MANEJO DE LOS MENSAJES
+  //VARIABLES PARA EL MANEJO DE LOS MENSAJES
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
   proveedorMessage = computed(() =>
@@ -62,14 +61,59 @@ export class FrmPrv0002 {
 
   //DECLARACIÓN DE VARIABLES
   loadingProveedor = signal(true);
-    estadoProveedor = signal<string>("INACTIVO");
-    //nombreTipoProveedor = signal<NombreTipoProveedor[]>([]);
-    esActivo = signal<boolean>(false);
+  estadoProveedor = signal<string>('INACTIVO');
+  esActivo = signal<boolean>(false);
 
-    // //GETTER PARA TRAER LOS DATOS ACTUALES DE LOS PRODUCTOS
-    //      get currentData(): Proveedores {
-    //        const proveedor = this.frmPrv0002.getRawValue() as Proveedores;
-    //        return proveedor;
-    //      }
+  // //GETTER PARA TRAER LOS DATOS ACTUALES DE LOS PRODUCTOS
+  //      get currentData(): Proveedores {
+  //        const proveedor = this.frmPrv0002.getRawValue() as Proveedores;
+  //        return proveedor;
+  //      }
 
+  public frmPrv0002 = this.fb.group(
+    {
+      idProveedor: [0],
+      idPersona: [0],
+      razonSocial: [''],
+      nombreComercial: [''],
+      estadoProveedor: ['I'],
+      tipoPersona: ['J'],
+      email: [''],
+      tipoIdentificacion: [''],
+      identificacion: [''],
+      telefono: [''],
+      direccion: [''],
+      idUsuarioCrea: [''],
+      fechaCrea: [''],
+      idUsuarioModifica: [''],
+      fechaModifica: ['']
+    },
+    {
+      updateOn: 'blur',
+    },
+  );
+
+  ngOnInit(): void {
+    this.cargaDatos();
+  }
+
+  cargaDatos(): void {
+    if (this.idProveedor !== null && this.idProveedor !== 0) {
+      this.loadingProveedor.set(true);
+      this.proveedoresService.personaProveedorXIdProveedor(this.idProveedor).subscribe({
+        next: (resp) => {
+          this.frmPrv0002.reset(resp.data);
+          this.loadingProveedor.set(false);
+        },
+        error: (err) => {
+          this.toastService.showMessage(
+            'error',
+            'Error',
+            'Ha ocurrido un error al cargar los datos: ' + err.error.message,
+            err.error.status,
+          );
+        },
+      });
+    }
+  }
 }

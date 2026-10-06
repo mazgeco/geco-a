@@ -80,29 +80,51 @@
     <!-- HEADER -->
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 90%">Tipo Habitacion</th>
+        <th style="width: 5%"></th>
+        <th style="width: 25%">Producto</th>
+        <th style="width: 10%">Fecha inicio</th>
+        <th style="width: 10%">Fecha fin</th>
+        <th style="width: 10%">Cantidad</th>
+        <th style="width: 10%">Precio U.</th>
+        <th style="width: 10%">%Dscto.</th>
+        <th style="width: 10%">Subtotal</th>
         <th style="width: 10%"></th>
       </tr>
     </ng-template>
     <!-- BODY -->
     <ng-template pTemplate="body" let-rowData let-editing="editing" let-rowIndex="rowIndex">
       <tr [pEditableRow]="rowData" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-        <!-- DESCRIPCIÓN -->
+        <!-- #FILA -->
         <td>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input type="hidden" [(ngModel)]="rowData.idDetalleReserva">
-              <input
-                pInputText
-                type="text"
-                [(ngModel)]="rowData.idDetalleReserva"
-                class="w-full"
-              />
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ rowData.idDetalleReserva }}
-            </ng-template>
-          </p-cellEditor>
+          {{ rowIndex + 1 }}
+        </td>
+        <!-- PRODUCTO -->
+        <td>
+          {{ rowData.nombreProducto }}
+        </td>
+        <!-- FECHA INICIO -->
+        <td>
+          {{ rowData.fechaInicio | date: 'yyyy-MM-dd' }}
+        </td>
+        <!-- FECHA FIN -->
+        <td>
+          {{ rowData.fechaFin | date: 'yyyy-MM-dd' }}
+        </td>
+        <!-- CANTIDAD -->
+        <td class="text-right">
+          {{ rowData.cantidadTotal ?? 0 }}
+        </td>
+        <!-- PRECIO UNITARIO -->
+        <td class="text-right">
+          {{ rowData.precioUnitario ?? 0 | number: '1.2-2' }}
+        </td>
+        <!-- %DSCTO -->
+        <td class="text-right">
+          {{ rowData.porcentajeDescuento ?? 0 | number: '1.2-2' }}
+        </td>
+        <!-- SUBTOTAL -->
+        <td class="text-right">
+          {{ rowData.precioTotal ?? 0 | number: '1.2-2' }}
         </td>
         <!-- ACCIONES -->
         <td class="text-center">
@@ -152,8 +174,142 @@
           }
         </td>
       </tr>
+      @if (editing) {
+        <tr>
+          <td colspan="9">
+            <form>
+              <div class="grid">
+                <div class="col-6">
+                  <p-panel class="col-12" header="General">
+                    <div class="field mb-1">
+                      <label>Producto <span class="asterisco">*</span></label>
+                      <input
+                        pInputText
+                        class="w-full"
+                        [(ngModel)]="rowData.idProducto"
+                        [name]="'idProducto' + rowData.idDetalleReserva"
+                      />
+                    </div>
+                    <div class="field mb-1">
+                      <label>Precio producto</label>
+                      <input
+                        pInputText
+                        class="w-full"
+                        [(ngModel)]="rowData.idProductoXPrecioProducto"
+                        [name]="'idProductoXPrecioProducto' + rowData.idDetalleReserva"
+                      />
+                    </div>
+                    <div class="field mb-1">
+                      <label>#PAX <span class="asterisco">*</span></label>
+                      <input
+                        pInputText
+                        class="w-full"
+                        [(ngModel)]="rowData.nroPax"
+                        [name]="'nroPax' + rowData.idDetalleReserva"
+                      />
+                    </div>
+                    <div class="field mb-1">
+                      <label>Blank copy</label>
+                      <p-select
+                        [options]="opcionSN()"
+                        optionLabel="etiqueta"
+                        optionValue="codigo"
+                        [(ngModel)]="rowData.blankCopy"
+                        [name]="'blankCopy' + rowData.idDetalleReserva"
+                        class="w-full"
+                      >
+                      </p-select>
+                    </div>
+                    <div class="field mb-1">
+                      <label>Fecha inicio <span class="asterisco">*</span></label>
+                      <p-datepicker
+                        class="w-full"
+                        [showIcon]="true"
+                        dateFormat="yy-mm-dd"
+                        [(ngModel)]="rowData.fechaInicio"
+                        [name]="'fechaInicio' + rowData.idDetalleReserva"
+                      ></p-datepicker>
+                    </div>
+                    <div class="field mb-1">
+                      <label>Fecha fin <span class="asterisco">*</span></label>
+                      <p-datepicker
+                        class="w-full"
+                        [showIcon]="true"
+                        dateFormat="yy-mm-dd"
+                        [(ngModel)]="rowData.fechaFin"
+                        [name]="'fechaFin' + rowData.idDetalleReserva"
+                      ></p-datepicker>
+                    </div>
+                    <div class="field mb-1">
+                      <label>Días/Noches/Horas</label>
+                      <p-inputnumber
+                        class="w-full"
+                        [(ngModel)]="rowData.nroUnidades"
+                        [name]="'nroUnidades' + rowData.idDetalleReserva"
+                      />
+                    </div>
+                    <div class="field mb-1">
+                      <label>Temporada <span class="asterisco">*</span></label>
+                      <input
+                        pInputText
+                        class="w-full"
+                        [(ngModel)]="rowData.idPrecioXTemporada"
+                        [name]="'idPrecioXTemporada' + rowData.idDetalleReserva"
+                      />
+                    </div>
+                  </p-panel>
+                  <p-panel class="col-12"  header="Valores">
+                    <div class="field mb-1">
+                      <label>Comisión fija</label>
+                      <p-inputnumber
+                        class="w-full"
+                        [(ngModel)]="rowData.comisionFija"
+                        [name]="'comisionFija' + rowData.idDetalleReserva"
+                      />
+                    </div>
+                    <div class="field mb-1">
+                      <label>%Utilidad</label>
+                      <p-inputnumber
+                        class="w-full"
+                        [(ngModel)]="rowData.porcentajeUtilidad"
+                        [name]="'porcentajeUtilidad' + rowData.idDetalleReserva"
+                      />
+                    </div>
+                  </p-panel>
+                </div>
+                <div class="col-6">
+                  <p-panel header="Observaciones">
+                    <div class="field mb-1">
+                      <label>Observaciones</label>
+                      <textarea
+                        class="w-full"
+                        rows="3"
+                        pTextarea
+                        [(ngModel)]="rowData.observacionDetalle"
+                        [name]="'observacionDetalle' + rowData.idDetalleReserva"
+                      ></textarea>
+                    </div>
+                  </p-panel>
+                  <p-panel  header="Totales">
+
+                  </p-panel>
+                </div>
+              </div>
+            </form>
+          </td>
+        </tr>
+      }
     </ng-template>
     <!-- FOOTER -->
     <ng-template pTemplate="paginatorleft"> {{ filas().length }} ítems </ng-template>
+    <ng-template #footer>
+      <tr>
+        <td colspan="7" class="text-right font-bold">TOTAL:</td>
+        <td class="font-bold text-right">
+          {{ totalPrecio | number: '1.2-2' }}
+        </td>
+        <td></td>
+      </tr>
+    </ng-template>
   </p-table>
 </div>

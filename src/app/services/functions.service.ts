@@ -12,13 +12,31 @@ export class FuntionsService {
   //Función para convertir YYYY-MM-DD a Date sin errores de zona horaria
   convertirAFecha(fechaStr: any): Date | null | any {
     if (!fechaStr) return null;
+    console.log(typeof fechaStr);
+
     if (typeof fechaStr === 'string') {
-      const partes = fechaStr.split('-').map(Number); // [1978, 3, 2]
-      // Nota: el mes en JS va de 0 a 11, por eso restamos 1
-      return new Date(partes[0], partes[1] - 1, partes[2]);
-    } else {
-      return fechaStr;
+      const partes = fechaStr.split(/[T ]/);
+      const fecha = partes[0].split('-').map(Number);
+
+      const anio = fecha[0];
+      const mes = fecha[1] - 1;
+      const dia = fecha[2];
+
+      // Si no tiene hora, mantiene el comportamiento anterior
+      if (!partes[1]) {
+        return new Date(anio, mes, dia);
+      }
+
+      const hora = partes[1].split(':').map(Number);
+
+      const horas = hora[0] || 0;
+      const minutos = hora[1] || 0;
+      const segundos = hora[2] || 0;
+
+      return new Date(anio, mes, dia, horas, minutos, segundos);
     }
+
+    return fechaStr;
   }
 
   //Función que inserta una fila en cualquier p-table
@@ -123,7 +141,9 @@ export class FuntionsService {
       case 'operacion':
         return tipos.find((item) => item.idOperacion === codigo)?.descripcionOperacion ?? '';
       case 'clasificador':
-        return tipos.find((item) => item.idSuperTipoInsumo === codigo)?.descripcionSuperTipoInsumo ?? '';
+        return (
+          tipos.find((item) => item.idSuperTipoInsumo === codigo)?.descripcionSuperTipoInsumo ?? ''
+        );
       case 'tipoOperacionXempresa':
         return (
           tipos.find((item) => item.idTipoOperacionXEmpresa === codigo)?.nombreTipoOperacion ?? ''

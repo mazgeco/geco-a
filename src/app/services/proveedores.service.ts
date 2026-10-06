@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 import { SavedRow } from '../interfaces/general.interface';
-import { InsumosResponse, ProveedoresResponse, SuperTipoInsumo, SuperTipoInsumoResponse } from '../interfaces/proveedores.interfaces';
+import { InsumosResponse, PersonaProveedorResponse, ProveedoresResponse, SuperTipoInsumo, SuperTipoInsumoResponse } from '../interfaces/proveedores.interfaces';
 import { GraficosResponse } from '../interfaces/general.interface';
 import { AuthService } from './auth.service';
 
@@ -20,6 +20,13 @@ export class ProveedoresService {
   buscaProveedor(nombre: string): Observable<ProveedoresResponse> {
     return this.http.get<ProveedoresResponse>(
       `${this.apiUrl}proveedores/busqueda?nombre=${nombre}`,
+    );
+  }
+
+  //OBTIENE UNA PERSONA PROVEEDOR POR ID PROVEEDOR
+  personaProveedorXIdProveedor(idProveedor: number): Observable<PersonaProveedorResponse>{
+    return this.http.get<PersonaProveedorResponse>(
+      `${this.apiUrl}proveedores/proveedor?idProveedor=${idProveedor}`,
     );
   }
 
