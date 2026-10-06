@@ -1,6 +1,7 @@
 import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { DatePipe, DecimalPipe } from '@angular/common';
+import { KeyFilterModule } from 'primeng/keyfilter';
 
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
 import { FuntionsService } from '../../../../services/functions.service';
@@ -8,7 +9,14 @@ import { ReservasService } from '../../../../services/reservas.service';
 import { ToastService } from '../../../../services/toast.service';
 import { MessageService } from '../../../../services/message.service';
 import { Combo, FilaTabla, StatusMessage } from '../../../../interfaces/general.interface';
-import { DetalleReserva } from '../../../../interfaces/reservas.interfaces';
+import {
+  DetalleReserva,
+  DetalleValorXDetalleReserva,
+} from '../../../../interfaces/reservas.interfaces';
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
+import { Productos } from '../../../../interfaces/productos.interfaces';
+import { ProductosService } from '../../../../services/productos.service';
 
 @Component({
   selector: 'app-grd-res0021',
@@ -64,6 +72,7 @@ export class GrdRes0021 implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private reservasService = inject(ReservasService);
   private toastService = inject(ToastService);
+  private productosService = inject(ProductosService);
   //VARIABLES PARA EL MANEJO DE LOS MENSAJES
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
@@ -75,6 +84,8 @@ export class GrdRes0021 implements OnInit {
   selectedRows!: DetalleReserva[];
   metaKey: boolean = true;
   filas = signal<FilaTabla<DetalleReserva>[]>([]);
+  detalleValor = signal<DetalleValorXDetalleReserva[]>([]);
+  productos = signal<Productos[]>([]);
   opcionSN = signal<Combo[]>([
     {
       codigo: 'S',
@@ -288,5 +299,23 @@ export class GrdRes0021 implements OnInit {
         'Seleccione un registro para ver la auditoría',
       );
     }
+  }
+
+  cargaComobos(): void {
+    //this.productosService.listaPro
+  }
+
+  //CARGA TOTALES
+  cargaTotales(row: DetalleReserva): void {
+    const idDetalleReserva = row.idDetalleReserva ?? 0;
+    this.reservasService.listaDetalleValorXDetalleReserva(idDetalleReserva).subscribe({
+      next: (resp) => {
+        const datos = resp.data.map((item) => ({
+          ...item,
+          etiqueta: item.tipoDetalleValor === 'T' ? 'Total' : (item.tipoDetalleValor === 'S' ? 'Subtotal' : 'Impuesto'),
+        }));
+        this.detalleValor.set(datos);
+      },
+    });
   }
 }

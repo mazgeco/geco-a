@@ -164,7 +164,6 @@
             <p-select
               class="w-full"
               [options]="opcionSN()"
-              [disabled]="esActivo()"
               formControlName="disparaAlerta1"
               optionLabel="etiqueta"
               optionValue="codigo"
@@ -195,7 +194,6 @@
             <p-select
               class="w-full"
               [options]="opcionSN()"
-              [disabled]="esActivo()"
               formControlName="regeneraComponentes"
               optionLabel="etiqueta"
               optionValue="codigo"
@@ -226,7 +224,6 @@
             <p-select
               class="w-full"
               [options]="opcionSN()"
-              [disabled]="esActivo()"
               formControlName="sobreescribeImportacion"
               optionLabel="etiqueta"
               optionValue="codigo"
@@ -253,42 +250,10 @@
 
         <div class="col-12 md:col-6">
           <div class="field mb-1">
-            <label>Sobreescribe documento en importación</label>
-            <p-select
-              class="w-full"
-              [options]="opcionSN()"
-              [disabled]="esActivo()"
-              formControlName="sobreescribeImportacion"
-              optionLabel="etiqueta"
-              optionValue="codigo"
-            ></p-select>
-          </div>
-        </div>
-
-        <div class="col-12 md:col-6">
-          <div class="field mb-1">
-            <label>Cambia impuesto porcentual</label>
-            <p-select
-              class="w-full"
-              [options]="opcionSN()"
-              formControlName="cambiaImpuestoPorcentual"
-              optionLabel="etiqueta"
-              optionValue="codigo"
-            ></p-select>
-          </div>
-        </div>
-
-        <!-- ======================= -->
-        <!-- FILA 5 -->
-        <!-- ======================= -->
-
-        <div class="col-12 md:col-6">
-          <div class="field mb-1">
             <label>Cambia usuario creador reserva</label>
             <p-select
               class="w-full"
               [options]="opcionSN()"
-              [disabled]="esActivo()"
               formControlName="cambiaUsuarioCrea"
               optionLabel="etiqueta"
               optionValue="codigo"
@@ -310,7 +275,7 @@
         </div>
 
         <!-- ======================= -->
-        <!-- FILA 6 -->
+        <!-- FILA 5 -->
         <!-- ======================= -->
 
         <div class="col-12 md:col-6">
@@ -319,7 +284,6 @@
             <p-select
               class="w-full"
               [options]="opcionSN()"
-              [disabled]="esActivo()"
               formControlName="anulaComprobanteContable"
               optionLabel="etiqueta"
               optionValue="codigo"

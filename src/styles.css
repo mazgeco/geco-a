@@ -1,5 +1,5 @@
-@import "primeicons/primeicons.css";
-@import "primeflex/primeflex.css";
+@import 'primeicons/primeicons.css';
+@import 'primeflex/primeflex.css';
 
 :root {
   --background-color: #f5f5f5;
@@ -60,7 +60,7 @@ textarea[pTextarea] {
 }
 
 .message-container {
-    height: 25px; /* la altura del mensaje */
+  height: 25px; /* la altura del mensaje */
 }
 
 .topName {
@@ -76,6 +76,6 @@ textarea[pTextarea] {
 
 /* Forzar al editor de PrimeNG a usar la fuente de la aplicación */
 .ql-container .ql-editor {
-    font-family: 'Poppins', sans-serif; 
-    font-size: 0.8rem !important; /* Ajusta este valor si lo ves muy pequeño o grande */
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.8rem !important; /* Ajusta este valor si lo ves muy pequeño o grande */
 }

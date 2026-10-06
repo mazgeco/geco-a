@@ -9,6 +9,7 @@ import {
   DetalleReserva,
   GraficoVentasAnioResponse,
   ListaDetalleReservaResponse,
+  ListaDetalleValorXDetalleReservaResponse,
   ListaReservasResponse,
   OrdenServicio,
   OrdenServicioResponse,
@@ -43,10 +44,12 @@ export class ReservasService {
 
   //BÚSQUEDA DE RESERVAS
   buscaReservas(tipoFiltro: string, filtro: string): Observable<ListaReservasResponse> {
-    return this.http.get<ListaReservasResponse>(`${this.apiUrl}reservas/busqueda/filtro?tipoFiltro=${tipoFiltro}&filtro=${filtro}`);
+    return this.http.get<ListaReservasResponse>(
+      `${this.apiUrl}reservas/busqueda/filtro?tipoFiltro=${tipoFiltro}&filtro=${filtro}`,
+    );
   }
 
-  reservaPorId(idReserva: number): Observable<ReservasResponse>{
+  reservaPorId(idReserva: number): Observable<ReservasResponse> {
     return this.http.get<ReservasResponse>(`${this.apiUrl}reservas/${idReserva}`);
   }
 
@@ -73,9 +76,12 @@ export class ReservasService {
 
   eliminaTipoHabitacion(idTipoHabitacion: number): Observable<SavedRow> {
     const params = new HttpParams().set('idTipoHabitacion', idTipoHabitacion!);
-    return this.http.delete<SavedRow>(`${this.apiUrl}reservas/${this.authService.usuario}/tiposhabitacion`, {
-      params,
-    });
+    return this.http.delete<SavedRow>(
+      `${this.apiUrl}reservas/${this.authService.usuario}/tiposhabitacion`,
+      {
+        params,
+      },
+    );
   }
 
   //CLASIFICACION
@@ -101,9 +107,12 @@ export class ReservasService {
 
   eliminaClasificacion(idClasificacion: number): Observable<SavedRow> {
     const params = new HttpParams().set('idClasificacion', idClasificacion!);
-    return this.http.delete<SavedRow>(`${this.apiUrl}reservas/${this.authService.usuario}/clasificaciones`, {
-      params,
-    });
+    return this.http.delete<SavedRow>(
+      `${this.apiUrl}reservas/${this.authService.usuario}/clasificaciones`,
+      {
+        params,
+      },
+    );
   }
 
   //PARAMETRIZACIÓN ORDEN DE SERVICIOS
@@ -129,14 +138,19 @@ export class ReservasService {
 
   eliminaOrdenServicio(idOrdenServicio: number): Observable<SavedRow> {
     const params = new HttpParams().set('idOrdenServicio', idOrdenServicio!);
-    return this.http.delete<SavedRow>(`${this.apiUrl}reservas/${this.authService.usuario}/ordenesservicio`, {
-      params,
-    });
+    return this.http.delete<SavedRow>(
+      `${this.apiUrl}reservas/${this.authService.usuario}/ordenesservicio`,
+      {
+        params,
+      },
+    );
   }
 
   //DETALLE RESERVA
   listaDetalleReserva(idReserva: number): Observable<ListaDetalleReservaResponse> {
-    return this.http.get<ListaDetalleReservaResponse>(`${this.apiUrl}reservas/detallesreserva/${idReserva}`);
+    return this.http.get<ListaDetalleReservaResponse>(
+      `${this.apiUrl}reservas/detallesreserva/${idReserva}`,
+    );
   }
 
   grabaDetalleReserva(detalleReserva: DetalleReserva, nuevaFila: boolean): Observable<SavedRow> {
@@ -157,12 +171,22 @@ export class ReservasService {
 
   eliminaDetalleReserva(idDetalleReserva: number): Observable<SavedRow> {
     const params = new HttpParams().set('idDetalleReserva', idDetalleReserva!);
-    return this.http.delete<SavedRow>(`${this.apiUrl}reservas/${this.authService.usuario}/detallesreserva`, {
-      params,
-    });
+    return this.http.delete<SavedRow>(
+      `${this.apiUrl}reservas/${this.authService.usuario}/detallesreserva`,
+      {
+        params,
+      },
+    );
   }
 
   //DETALLE VALOR X DETALLE RESERVA
-  
-
+  listaDetalleValorXDetalleReserva(
+    idDetalleReserva: number,
+  ): Observable<ListaDetalleValorXDetalleReservaResponse> {
+    const params = new HttpParams().set('idDetalleReserva', idDetalleReserva!);
+    return this.http.get<ListaDetalleValorXDetalleReservaResponse>(
+      `${this.apiUrl}reservas/detallesvalordetallereserva`,
+      { params },
+    );
+  }
 }

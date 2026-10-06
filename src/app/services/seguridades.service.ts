@@ -24,7 +24,7 @@ import { AuthService } from './auth.service';
 export class SeguridadesService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
-  private authService = inject(AuthService)
+  private authService = inject(AuthService);
 
   validaUsuario(idUsuario: string, pass: string): Observable<UsuarioValidadoResponse> {
     const md5 = CryptoJS.MD5(pass);
@@ -75,10 +75,20 @@ export class SeguridadesService {
   }
 
   grabaUsuario(usuario: Usuarios): Observable<SavedRow> {
-    return this.http.post<SavedRow>(
-      `${this.apiUrl}seguridades/${this.authService.idUsuario()}/usuarios`,
-      usuario,
-    );
+    const idUsuario = usuario.idUsuario!;
+    if (idUsuario === '') {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}seguridades/${this.authService.idUsuario()}/usuarios`,
+        usuario,
+      );
+    } else {
+    const params = new HttpParams().set('idUsuario', idUsuario);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}seguridades/${this.authService.idUsuario()}/usuarios`,
+        usuario,
+        { params }
+      );
+    }
   }
 
   actualizaEstadoUsuario(idUsuario: string, estado: string): Observable<SavedRow> {
@@ -103,9 +113,12 @@ export class SeguridadesService {
 
   eliminaObjeto(idObjeto: number): Observable<SavedRow> {
     const params = new HttpParams().set('idObjeto', idObjeto!);
-    return this.http.delete<SavedRow>(`${this.apiUrl}personas/${this.authService.idUsuario()}/objetos`, {
-      params,
-    });
+    return this.http.delete<SavedRow>(
+      `${this.apiUrl}personas/${this.authService.idUsuario()}/objetos`,
+      {
+        params,
+      },
+    );
   }
 
   listaPerfiles(): Observable<ListaPerfilesResponse> {

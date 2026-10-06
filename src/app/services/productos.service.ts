@@ -22,6 +22,10 @@ export class ProductosService {
     const params = new HttpParams().set('nombre', nombre);
     return this.http.get<ListaProductosResponse>(`${this.apiUrl}productos/busqueda`, { params });
   }
+
+  listaProductos(): Observable<ListaProductosResponse> {
+    return this.http.get<ListaProductosResponse>(`${this.apiUrl}productos`);
+  }
   
   productoPorId(idProducto: string): Observable<ProductoResponse> {
       return this.http.get<ProductoResponse>(`${this.apiUrl}productos/${idProducto}`)
