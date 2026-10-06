@@ -163,6 +163,15 @@ export class GrdPrd0004 implements OnInit {
     });
   }
 
+  formatearCodigo(event: any, rowData: any) {
+    // 1. Obtenemos lo que el usuario acaba de tipear
+    let valor = event.target.value;
+    // 2. Lo pasamos a mayúsculas y borramos caracteres no permitidos
+    let valorLimpio = valor.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
+    // 3. Forzamos la actualización visual en la pantalla y en el modelo de datos
+    event.target.value = valorLimpio;
+    rowData.idTipoProducto = valorLimpio;
+  }
    // CREATE / UPDATE
   saveRow(fila: Impuesto): void {
     this.productosService.grabaImpuesto(fila, this.newRow).subscribe({

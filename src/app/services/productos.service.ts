@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse, ListaPrecioProductoResponse, GraficosResponse, TipoOperacionResponse, Impuesto, ImpuestoResponse, ImpuestoProducto, ImpuestosProductoResponse} from '../interfaces/productos.interfaces';
+import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse, ListaPrecioProductoResponse, GraficosResponse, TipoOperacionResponse, Impuesto, ImpuestoResponse, ImpuestoProducto, ImpuestosProductoResponse, TipoProducto,TipoProductoResponse} from '../interfaces/productos.interfaces';
 import { SavedRow } from '../interfaces/general.interface'
 
 @Injectable({
@@ -324,7 +324,43 @@ eliminaImpuestoProducto(idImpuestoXProducto: number, idUsuario: string): Observa
   );
 }
 
+cargarTipoProducto(): Observable<TipoProductoResponse> {
+      return this.http.get<TipoProductoResponse>(`${this.apiUrl}productos/tipoproductos`);
+    }
+
+    eliminaTipoProducto(idTipoProducto: string): Observable<SavedRow> {
+    const params = new HttpParams().set('idTipoProducto', idTipoProducto!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/tipoproductos`, {
+      params,
+    });
+  }
+
+   
+
+ grabaTipoProducto(TipoProducto: TipoProducto, nuevaFila: boolean): Observable<SavedRow> {
+        if (nuevaFila) {
+          //TipoProducto.idTipoProducto = null;
+          return this.http.post<SavedRow>(
+            `${this.apiUrl}productos/${this.idUsuario}/tipoproductos`,
+            TipoProducto,
+          );
+        } else {
+          const params = new HttpParams().set('idTipoProducto', TipoProducto.idTipoProducto!);
+          return this.http.put<SavedRow>(
+            `${this.apiUrl}productos/${this.idUsuario}/tipoproductos`,
+            TipoProducto,
+            { params },
+          );
+        }
+      }
+
+
+
+
+
 
 }
+
+
 
    

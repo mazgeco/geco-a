@@ -148,6 +148,10 @@ export class FuntionsService {
         return (
           tipos.find((item) => item.idTipoOperacionXEmpresa === codigo)?.nombreTipoOperacion ?? ''
         );
+      case 'unidadEstrategica':
+        return (
+          tipos.find((item) => item.idUnidadEstrategica === codigo)?.descripcionUnidadEstrategica ?? ''
+        );
       default:
         return tipos.find((item) => item.codigo === codigo)?.etiqueta ?? '';
     }

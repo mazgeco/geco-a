@@ -49,6 +49,7 @@ export const routes: Routes = [
           { path: 'parametrizacion/uens', component: Productos.WinPrd0002 },
           { path: 'parametrizacion/temporadas', component: Productos.WinPrd0003 },
           { path: 'parametrizacion/impuestos', component: Productos.WinPrd0004 },
+          { path: 'parametrizacion/tipo-producto', component: Productos.WinPrd0005 },
           { path: '', redirectTo: 'dash', pathMatch: 'full' },
         ],
       },

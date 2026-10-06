@@ -103,7 +103,9 @@
               <input
                 pInputText
                 type="text"
+                maxlength="4"
                 [(ngModel)]="rowData.idImpuesto"
+                (input)="formatearCodigo($event, rowData)"
                 class="w-full"
               />
             </ng-template>

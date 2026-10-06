@@ -332,4 +332,21 @@ export interface ImpuestosProductoResponse {
     data: ImpuestoProducto[];
 }
 
+export interface TipoProducto {
+  idTipoProducto: string | null; 
+  idUnidadEstrategica?: number | null; 
+  descripcionTipoProducto?: string;
+  estadoTipoProducto?: string;
+  idUsuarioCrea?: string;
+  fechaCrea?: string;
+  idUsuarioModifica?: string;
+  fechaModifica?: string;
+}
+
+export interface TipoProductoResponse {
+  status: string;
+  message: string;
+  data: TipoProducto[]; 
+}
+
 
