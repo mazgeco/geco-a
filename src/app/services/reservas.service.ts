@@ -2,7 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
-import { Observable } from 'rxjs';
+import { Observable, defer } from 'rxjs';
+import { AccionCalculoProducto, CalculoProductoReservadoResponse, GrabaProductoReservadoResponse } from '../interfaces/producto-reservado.interfaces';
 import {
   Clasificacion,
   ClasificacionResponse,
@@ -206,6 +207,42 @@ export class ReservasService {
   }
 
   //DETALLE RESERVA
+  calculaProductoReservado(detalle: DetalleReserva, accion: AccionCalculoProducto): Observable<CalculoProductoReservadoResponse> {
+    return defer(() => this.http.post<CalculoProductoReservadoResponse>(
+      `${this.apiUrl}reservas/productosreservados/calculo`,
+      { detalle: this.payloadProductoReservado(detalle), accion },
+    ));
+  }
+
+  grabaProductoReservado(detalle: DetalleReserva): Observable<GrabaProductoReservadoResponse> {
+    return defer(() => this.http.post<GrabaProductoReservadoResponse>(
+      `${this.apiUrl}reservas/${this.authService.idUsuario()}/productosreservados`,
+      this.payloadProductoReservado(detalle),
+    ));
+  }
+
+  private payloadProductoReservado(detalle: DetalleReserva): Record<string, unknown> {
+    const auditoria = new Set(['idUsuarioCrea', 'fechaCrea', 'idUsuarioModifica', 'fechaModifica']);
+    const payload: Record<string, unknown> = Object.fromEntries(
+      Object.entries(detalle).filter(([campo]) => !campo.startsWith('_') && !auditoria.has(campo)),
+    );
+    for (const campo of ['idReserva', 'idDetalleReserva', 'idProductoXPrecioProducto', 'idPrecioXTemporada',
+      'idMotivoIngresoManual', 'nroPax', 'nroUnidades', 'cantidadParcial', 'cantidadTotal',
+      'precioUnitario', 'precioTotal', 'comisionFija', 'porcentajeUtilidad', 'porcentajeDescuento', 'descuentoEnValor']) {
+      const valor = payload[campo];
+      if (valor === undefined || valor === null || valor === '') payload[campo] = null;
+      else {
+        const numero = Number(valor);
+        if (!Number.isFinite(numero)) throw new Error(`El campo ${campo} debe ser numérico.`);
+        payload[campo] = numero;
+      }
+    }
+    payload['idDetalleReserva'] = payload['idDetalleReserva'] || null;
+    payload['fechaInicio'] = this.fechaHoraLocal(detalle.fechaInicio);
+    payload['fechaFin'] = this.fechaHoraLocal(detalle.fechaFin);
+    return payload;
+  }
+  
   listaDetalleReserva(idReserva: number): Observable<ListaDetalleReservaResponse> {
     return this.http.get<ListaDetalleReservaResponse>(
       `${this.apiUrl}reservas/detallesreserva/${idReserva}`,

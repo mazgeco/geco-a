@@ -66,6 +66,7 @@
   <p-table
     id="grdRes0021"
     [value]="filas()"
+    [editingRowKeys]="ediciones"
     editMode="row"
     selectionMode="multiple"
     [(selection)]="selectedRows"
@@ -138,7 +139,7 @@
               text
               rounded
               severity="primary"
-              (click)="cargaTotales(rowData)"
+              (click)="iniciarEdicion(rowData)"
             ></button>
             <button
               pButton
@@ -155,18 +156,19 @@
             <button
               pButton
               [id]="'btnGrdRes00218' + rowIndex"
-              pSaveEditableRow
               icon="pi pi-check"
               text
               rounded
               severity="success"
               class="mr-1"
+              [disabled]="calculando()[rowData._rowId] || guardando()[rowData._rowId] || errorCalculo()[rowData._rowId] || !rowData.idProducto"
               (click)="saveRow(rowData)"
             ></button>
             <button
               pButton
               [id]="'btnGrdRes00219' + rowIndex"
-              pCancelEditableRow
+              [disabled]="guardando()[rowData._rowId]"
+              (click)="cancelarEdicion(rowData)"
               icon="pi pi-times"
               text
               rounded
@@ -179,35 +181,53 @@
         <tr>
           <td colspan="9">
             <form>
+              <div class="flex align-items-center gap-2 mb-2">
+                @if (calculando()[rowData._rowId]) {
+                  <span><i class="pi pi-spin pi-spinner mr-1"></i>Calculando...</span>
+                }
+                @if (guardando()[rowData._rowId]) {
+                  <span><i class="pi pi-spin pi-spinner mr-1"></i>Guardando...</span>
+                }
+                <p-button icon="pi pi-refresh" label="Recalcular" size="small"
+                  [disabled]="!rowData.idProducto || guardando()[rowData._rowId]"
+                  (onClick)="recalcular(rowData, 'VALORES', true)" />
+              </div>
               <p-panel class="col-12" header="General">
                 <div class="field mb-1">
                   <label>Producto <span class="asterisco">*</span></label>
+
                     <p-autocomplete
                       class="w-full"
                       [fluid]="true"
-                      [(ngModel)]="rowData.nombreProducto"
+                      [(ngModel)]="rowData._producto"
                       [ngModelOptions]="{standalone: true}"
                       [suggestions]="productos()"
                       (completeMethod)="buscarProducto($event)"
                       (onSelect)="seleccionarProducto($event, rowData)"
                       optionLabel="nombreCorto"
-                      optionValue="idProducto"
+                      [forceSelection]="true"
+                      [showClear]="true"
+                      (onClear)="limpiarProducto(rowData)"
+                      (onBlur)="validarProducto(rowData)"
+                      [disabled]="guardando()[rowData._rowId]"
                       [minLength]="3"
                     >
                     </p-autocomplete>
+
                 </div>
                 <div class="field mb-1">
                   <label>Precio producto</label>
                   <input
                     pInputText
                     class="w-full"
-                    [(ngModel)]="rowData.idProductoXPrecioProducto"
+                    [value]="rowData._calculo?.nombrePrecioProducto || rowData.idProductoXPrecioProducto || ''"
+                    [readOnly]="true"
                     [name]="'idProductoXPrecioProducto' + rowData.idDetalleReserva"
                   />
                 </div>
               </p-panel>
               <div class="grid">
-                <div class="col-6">
+                <div class="col-12 lg:col-6">
                   <p-panel class="col-12" header="General">
                     <div class="grid">
                       <!-- FILA 1 -->
@@ -218,6 +238,8 @@
                             pInputText
                             class="w-full"
                             [(ngModel)]="rowData.nroPax"
+                            (ngModelChange)="recalcular(rowData, 'PAX')"
+                            [disabled]="guardando()[rowData._rowId]"
                             [name]="'nroPax' + rowData.idDetalleReserva"
                             inputmode="numeric"
                             pattern="[0-9]*"
@@ -232,6 +254,7 @@
                             optionLabel="etiqueta"
                             optionValue="codigo"
                             [(ngModel)]="rowData.blankCopy"
+                            [disabled]="guardando()[rowData._rowId]"
                             [name]="'blankCopy' + rowData.idDetalleReserva"
                             class="w-full"
                           >
@@ -246,7 +269,11 @@
                             class="w-full"
                             [showIcon]="true"
                             dateFormat="yy-mm-dd"
+                            [showTime]="rowData.medidaCalculoPrecio === 'H'"
+                            hourFormat="24"
                             [(ngModel)]="rowData.fechaInicio"
+                            (ngModelChange)="recalcular(rowData, 'INICIO')"
+                            [disabled]="guardando()[rowData._rowId]"
                             [name]="'fechaInicio' + rowData.idDetalleReserva"
                           ></p-datepicker>
                         </div>
@@ -258,7 +285,11 @@
                             class="w-full"
                             [showIcon]="true"
                             dateFormat="yy-mm-dd"
+                            [showTime]="rowData.medidaCalculoPrecio === 'H'"
+                            hourFormat="24"
                             [(ngModel)]="rowData.fechaFin"
+                            (ngModelChange)="recalcular(rowData, 'FECHAS')"
+                            [disabled]="guardando()[rowData._rowId] || ((rowData._calculo?.diasItinerario ?? 0) > 0 && rowData._calculo?.cortaItinerario === 'N')"
                             [name]="'fechaFin' + rowData.idDetalleReserva"
                           ></p-datepicker>
                         </div>
@@ -271,6 +302,8 @@
                             pInputText
                             class="w-full"
                             [(ngModel)]="rowData.nroUnidades"
+                            [readOnly]="true"
+                            [disabled]="guardando()[rowData._rowId]"
                             [name]="'nroUnidades' + rowData.idDetalleReserva"
                           />
                         </div>
@@ -281,7 +314,8 @@
                           <input
                             pInputText
                             class="w-full"
-                            [(ngModel)]="rowData.idPrecioXTemporada"
+                            [value]="rowData._calculo?.nombreTemporada || rowData.idPrecioXTemporada || ''"
+                            [readOnly]="true"
                             [name]="'idPrecioXTemporada' + rowData.idDetalleReserva"
                           />
                         </div>
@@ -294,6 +328,8 @@
                       <p-inputnumber
                         class="w-full"
                         [(ngModel)]="rowData.comisionFija"
+                            (ngModelChange)="recalcular(rowData, 'VALORES')"
+                            [disabled]="guardando()[rowData._rowId]"
                         [name]="'comisionFija' + rowData.idDetalleReserva"
                       />
                     </div>
@@ -302,6 +338,8 @@
                       <p-inputnumber
                         class="w-full"
                         [(ngModel)]="rowData.porcentajeUtilidad"
+                            (ngModelChange)="recalcular(rowData, 'VALORES')"
+                            [disabled]="guardando()[rowData._rowId]"
                         [name]="'porcentajeUtilidad' + rowData.idDetalleReserva"
                       />
                     </div>
@@ -315,10 +353,12 @@
                       />
                     </div>
                     <div class="field mb-1">
-                      <label>Cantidad parcial</label>
+                      <label>{{ rowData._calculo?.esEspacio === 'S' ? 'Número de espacios' : 'Cantidad parcial' }}</label>
                       <p-inputnumber
                         class="w-full"
                         [(ngModel)]="rowData.cantidadParcial"
+                            (ngModelChange)="recalcular(rowData, 'VALORES')"
+                            [disabled]="guardando()[rowData._rowId]"
                         [name]="'cantidadParcial' + rowData.idDetalleReserva"
                       />
                     </div>
@@ -342,7 +382,7 @@
                     </div>
                   </p-panel>
                 </div>
-                <div class="col-6">
+                <div class="col-12 lg:col-6">
                   <p-panel header="Observaciones">
                     <div class="field mb-1">
                       <label>Observaciones</label>
@@ -351,14 +391,15 @@
                         rows="6"
                         pTextarea
                         [(ngModel)]="rowData.observacionDetalle"
+                        [disabled]="guardando()[rowData._rowId]"
                         [name]="'observacionDetalle' + rowData.idDetalleReserva"
                       ></textarea>
                     </div>
                   </p-panel>
                   <p-panel header="Totales">
                     <p-table
-                      id="grdRes0007"
-                      [value]="detalleValor()"
+                      id="grdRes0089"
+                      [value]="rowData._valores ?? []"
                       editMode="row"
                       selectionMode="multiple"
                       dataKey="_rowIdDetVal"

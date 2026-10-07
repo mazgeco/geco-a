@@ -1,15 +1,9 @@
-import {
-  Component,
-  computed,
-  inject,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, Input, OnChanges, OnDestroy, SimpleChanges, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { DatePipe, DecimalPipe } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { AccionCalculoProducto, CalculoProductoReservado, DetalleReservaJSON, ValorProductoCalculado } from '../../../../interfaces/producto-reservado.interfaces';
+import { StateService } from '../../state-service';
 import { AutoCompleteCompleteEvent } from 'primeng/types/autocomplete';
 
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
@@ -25,13 +19,20 @@ import {
 import { Productos } from '../../../../interfaces/productos.interfaces';
 import { ProductosService } from '../../../../services/productos.service';
 
+type FilaReserva = FilaTabla<DetalleReserva> & {
+  _rowId: string;
+  _producto: Pick<Productos, 'idProducto' | 'nombreCorto'> | null;
+  _calculo?: CalculoProductoReservado;
+  _valores?: ValorProductoCalculado[];
+};
+
 @Component({
   selector: 'app-grd-res0021',
   imports: [...PRIMENG_MODULES, DatePipe, DecimalPipe],
   providers: [ConfirmationService],
   templateUrl: './grd-res0021.html',
 })
-export class GrdRes0021 implements OnInit, OnChanges {
+export class GrdRes0021 implements OnChanges, OnDestroy {
   //LLAMADA AL ID Master
   @Input()
   idReserva!: number;
@@ -80,6 +81,7 @@ export class GrdRes0021 implements OnInit, OnChanges {
   private reservasService = inject(ReservasService);
   private toastService = inject(ToastService);
   private productosService = inject(ProductosService);
+  private stateService = inject(StateService);
   //VARIABLES PARA EL MANEJO DE LOS MENSAJES
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
@@ -90,8 +92,19 @@ export class GrdRes0021 implements OnInit, OnChanges {
   total = signal<number>(0);
   selectedRows!: DetalleReserva[];
   metaKey: boolean = true;
-  filas = signal<FilaTabla<DetalleReserva>[]>([]);
-  detalleValor = signal<DetalleValorXDetalleReserva[]>([]);
+  filas = signal<FilaReserva[]>([]);
+  calculando = signal<Record<string, boolean>>({});
+  guardando = signal<Record<string, boolean>>({});
+  errorCalculo = signal<Record<string, boolean>>({});
+  ediciones: Record<string, boolean> = {};
+  private originales = new Map<string, FilaReserva>();
+  private calculos = new Map<string, Subscription>();
+  private versiones = new Map<string, number>();
+  private pendientes = new Map<string, ReturnType<typeof setTimeout>>();
+  private busqueda?: Subscription;
+  private carga?: Subscription;
+  private activo: string | null = null;
+  detalleValor = signal<ValorProductoCalculado[]>([]);
   productos = signal<Productos[]>([]);
   opcionSN = signal<Combo[]>([
     {
@@ -112,12 +125,11 @@ export class GrdRes0021 implements OnInit, OnChanges {
    * MÉTODOS QUE EJECUTAN LOS PROCESOS
    *******************************************************************************************/
 
-  ngOnInit(): void {
-    this.cargaCombos();
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['idReserva']) {
+      this.limpiaCalculos();
+      this.ediciones = {};
+      this.originales.clear();
       this.selectedRows = [];
       this.detalleValor.set([]);
       this.cargaDatos(this.idReserva);
@@ -126,7 +138,10 @@ export class GrdRes0021 implements OnInit, OnChanges {
 
   //MÉTODO QUE INSERTA UNA FILA EN EL GRID
   insertarFila(): void {
-    const nuevaFila = { ...this.nuevaFila, idReserva: this.idReserva, _rowId: crypto.randomUUID() };
+    const pax = this.stateService.reserva()?.idReserva === this.idReserva
+      ? this.stateService.reserva()?.nroPax ?? 1 : 1;
+    const nuevaFila: FilaReserva = { ...this.nuevaFila, idReserva: this.idReserva, nroPax: pax,
+      _rowId: crypto.randomUUID(), _producto: null };
     const mensaje = this.funciones.insertRowA(
       this.filas,
       nuevaFila,
@@ -137,53 +152,67 @@ export class GrdRes0021 implements OnInit, OnChanges {
       this.toastService.showMessage('error', 'Error', mensaje);
     } else {
       this.newRow = true;
+      this.ediciones[nuevaFila._rowId] = true;
+      this.activo = nuevaFila._rowId;
+      this.detalleValor.set([]);
     }
   }
 
-  //MÉTODO QUE GRABA EL TIPO DE TELÉFONO (FILA COMPLETA)
-  saveRow(fila: DetalleReserva): void {
-    if (!(this.idReserva > 0)) {
-      this.toastService.showMessage('warn', 'Reserva', 'Primero guarde la cabecera de la reserva.');
+  saveRow(fila: FilaReserva): void {
+    const key = fila._rowId;
+    if (this.guardando()[key] || this.calculando()[key]) return;
+    if (!(this.idReserva > 0) || !fila.idProducto || fila._producto?.idProducto !== fila.idProducto || !fila.fechaInicio || !fila.fechaFin) {
+      this.toastService.showMessage('warn', 'Reserva', 'Indique el producto y sus fechas, y guarde primero la cabecera.');
+      return;
+    }
+    if (this.errorCalculo()[key]) {
+      this.toastService.showMessage('warn', 'Cálculo', 'Corrija los datos y vuelva a calcular antes de guardar.');
       return;
     }
     fila.idReserva = this.idReserva;
-    this.reservasService.grabaDetalleReserva(fila, !fila.idDetalleReserva).subscribe({
-      next: (resp) => {
-        fila[this.campoId] = resp.idSecuencial!;
-        //Envía un mensaje de grabación exitosa
-        this.messageService.mostrar(
-          this.statusMessages,
-          'msg' + this.idObjeto(),
-          'success',
-          'Fila grabada correctamente.',
-        );
+    this.guardando.update(v => ({ ...v, [key]: true }));
+    this.reservasService.grabaProductoReservado(fila).subscribe({
+      next: resp => {
+        // Una respuesta de otra reserva no debe modificar la pantalla actual.
+        if (fila.idReserva !== this.idReserva || !this.filas().includes(fila)) return;
+        Object.assign(fila, this.desdeJSON(resp.data));
+        fila.idDetalleReserva = resp.idSecuencial;
+        fila._producto = { idProducto: fila.idProducto!, nombreCorto: fila.nombreProducto ?? '' };
+        fila._estadoFila = 'NORMAL';
+        this.filas.update(v => [...v]);
+        delete this.ediciones[key];
+        this.originales.delete(key);
+        this.guardando.update(v => ({ ...v, [key]: false }));
         this.newRow = false;
-        this.cargaDatos(this.idReserva);
+        this.cargaTotales(fila);
+        this.messageService.mostrar(this.statusMessages, 'msg' + this.idObjeto(), 'success', resp.message);
       },
-      error: (err) => {
-        this.toastService.showMessage(
-          'error',
-          'Error',
-          'Ha ocurrido un error: ' + err.error.message,
-          err.error.status,
-        );
+      error: err => {
+        this.guardando.update(v => ({ ...v, [key]: false }));
+        this.toastService.showMessage('error', 'Error', err.error?.message ?? err.message ?? 'No se pudo guardar el producto.');
       },
     });
   }
 
   //MÉTODO QUE CARGA TODAS LAS IDENTIFICACIONES EN EL GRID
   cargaDatos(idReserva: number): void {
+    this.carga?.unsubscribe();
+    this.limpiaCalculos();
+    this.ediciones = {};
+    this.originales.clear();
     this.filas.set([]);
     if (!(idReserva > 0)) return;
-    this.reservasService.listaDetalleReserva(idReserva).subscribe({
+    this.carga = this.reservasService.listaDetalleReserva(idReserva).subscribe({
       next: (resp) => {
+        if (idReserva !== this.idReserva) return;
         //Coloca las filas en la estructura
         this.filas.set(
           resp.data.map((item) => ({
             ...item,
+            _producto: item.idProducto ? { idProducto: item.idProducto, nombreCorto: item.nombreProducto ?? '' } : null,
             blankCopy: item.blankCopy ?? 'N',
-            fechaInicio: this.funciones.convertirAFecha(item.fechaInicio),
-            fechaFin: this.funciones.convertirAFecha(item.fechaFin),
+            fechaInicio: this.fechaDesdeBack(item.fechaInicio),
+            fechaFin: this.fechaDesdeBack(item.fechaFin),
             _rowId: crypto.randomUUID(),
             _estadoFila: 'NORMAL',
           })),
@@ -209,16 +238,15 @@ export class GrdRes0021 implements OnInit, OnChanges {
           'msg' + this.idObjeto(),
           'error',
           'Hubo un error al cargar los datos.',
-          err.error.status,
         );
       },
     });
   }
 
   //MÉTODO QUE ELIMINA UNA FILA DEL GRID
-  eliminarFila(rowData: DetalleReserva): void {
+  eliminarFila(rowData: FilaReserva): void {
     if (rowData[this.campoId] === 0) {
-      this.filas.set(this.filas().filter((item) => item[this.campoId] != rowData[this.campoId]));
+      this.filas.set(this.filas().filter(item => item._rowId !== rowData._rowId));
     } else {
       this.confirmationService.confirm({
         message: '¿Desea eliminar la fila?',
@@ -252,7 +280,6 @@ export class GrdRes0021 implements OnInit, OnChanges {
                 'msg' + this.idObjeto(),
                 'error',
                 'Hubo un error al eliminar la fila.',
-                err.error.status,
               );
             },
           });
@@ -325,19 +352,12 @@ export class GrdRes0021 implements OnInit, OnChanges {
     }
   }
 
-  cargaCombos(): void {
-    this.productosService.listaProductos().subscribe({
-      next: (resp) => {
-        this.productos.set(resp.data);
-      },
-      error: (err) => {
-        this.toastService.showMessage('error', 'Error', 'No se pudieron cargar los productos');
-      },
-    });
-  }
-
   //CARGA TOTALES
   cargaTotales(row: DetalleReserva): void {
+    const key = (row as FilaReserva)._rowId;
+    this.activo = key;
+    const version = this.versiones.get(key);
+    this.detalleValor.set([]);
     const idDetalleReserva = row.idDetalleReserva ?? 0;
     if (idDetalleReserva !== null && idDetalleReserva !== 0) {
       this.reservasService.listaDetalleValorXDetalleReserva(idDetalleReserva).subscribe({
@@ -351,19 +371,24 @@ export class GrdRes0021 implements OnInit, OnChanges {
                   ? 'Subtotal'
                   : `Impuesto ${item.nombreImpuesto} ${item.porcentajeImpuesto}%`,
           }));
-          this.detalleValor.set(datos);
+          if (this.filas().includes(row as FilaReserva) && this.versiones.get(key) === version && !this.calculando()[key]) {
+            (row as FilaReserva)._valores = datos;
+            if (this.activo === key) this.detalleValor.set(datos);
+            this.filas.update(v => [...v]);
+          }
         },
       });
     }
   }
 
   buscarProducto(event: AutoCompleteCompleteEvent) {
+    this.busqueda?.unsubscribe();
     const nombre = event.query.trim();
     if (nombre.length < 3) {
       this.productos.set([]);
       return;
     }
-    this.productosService.buscaProducto(nombre).subscribe({
+    this.busqueda = this.productosService.buscaProducto(nombre).subscribe({
       next: (resp) => {
         this.productos.set(resp.data);
       },
@@ -378,8 +403,141 @@ export class GrdRes0021 implements OnInit, OnChanges {
     });
   }
 
-  seleccionarProducto(event: any, rowData: DetalleReserva) {
-    rowData.nombreProducto = event.value.nombreCorto;
-    rowData.idProducto = event.value.idProducto;
+  seleccionarProducto(event: { value: Productos }, fila: FilaReserva): void {
+    if (!event.value?.idProducto) return;
+    fila._producto = event.value;
+    fila.idProducto = event.value.idProducto;
+    fila.nombreProducto = event.value.nombreCorto;
+    fila.idProductoXPrecioProducto = null;
+    fila.idPrecioXTemporada = null;
+    fila.idMotivoIngresoManual = null;
+    fila.esSingleSuplement = 'N';
+    fila.cantidadParcial = null;
+    fila.nroUnidades = null;
+    fila.porcentajeUtilidad = null;
+    fila.comisionFija = null;
+    const cabecera = this.stateService.reserva();
+    if (cabecera?.idReserva === this.idReserva) fila.nroPax = cabecera.nroPax ?? 1;
+    this.recalcular(fila, 'PRODUCTO', true);
+  }
+
+  validarProducto(fila: FilaReserva): void {
+    if (fila._producto?.idProducto !== fila.idProducto) this.limpiarProducto(fila);
+  }
+
+  limpiarProducto(fila: FilaReserva): void {
+    this.cancelaCalculo(fila._rowId);
+    fila._producto = null;
+    fila.idProducto = null;
+    fila.nombreProducto = '';
+    fila._calculo = undefined;
+    fila._valores = [];
+    fila.precioUnitario = 0;
+    fila.precioTotal = 0;
+    fila.cantidadTotal = 0;
+    this.detalleValor.set([]);
+    this.errorCalculo.update(v => ({ ...v, [fila._rowId]: true }));
+    this.filas.update(v => [...v]);
+  }
+
+  iniciarEdicion(fila: FilaReserva): void {
+    this.originales.set(fila._rowId, structuredClone(fila));
+    this.activo = fila._rowId;
+    this.cargaTotales(fila);
+  }
+
+  cancelarEdicion(fila: FilaReserva): void {
+    if (this.guardando()[fila._rowId]) return;
+    this.cancelaCalculo(fila._rowId);
+    const original = this.originales.get(fila._rowId);
+    if (original) {
+      Object.keys(fila).filter(k => k.startsWith('_')).forEach(k => delete (fila as unknown as Record<string, unknown>)[k]);
+      Object.assign(fila, original);
+      this.filas.update(v => [...v]);
+    } else if (!fila.idDetalleReserva) this.filas.update(v => v.filter(f => f !== fila));
+    delete this.ediciones[fila._rowId];
+    this.originales.delete(fila._rowId);
+    this.errorCalculo.update(v => ({ ...v, [fila._rowId]: false }));
+    this.detalleValor.set([]);
+  }
+
+  recalcular(fila: FilaReserva, accion: AccionCalculoProducto, inmediato = false): void {
+    if (!fila.idProducto || this.guardando()[fila._rowId]) return;
+    const key = fila._rowId;
+    this.cancelaCalculo(key);
+    const version = this.versiones.get(key)!;
+    this.calculando.update(v => ({ ...v, [key]: true }));
+    this.errorCalculo.update(v => ({ ...v, [key]: false }));
+    this.activo = key;
+    const ejecutar = () => {
+      this.pendientes.delete(key);
+      const reserva = this.idReserva;
+      this.calculos.set(key, this.reservasService.calculaProductoReservado(fila, accion).subscribe({
+        next: resp => {
+          if (this.versiones.get(key) !== version || this.idReserva !== reserva || !this.filas().includes(fila)) return;
+          const calculado = this.desdeJSON(resp.data.detalle);
+          const campos: (keyof DetalleReserva)[] = [
+            'nombreProducto', 'nroPax', 'fechaInicio', 'fechaFin', 'individualGeneral',
+            'medidaCalculoPrecio', 'tipoPrecio', 'seReserva', 'porcentajeUtilidad', 'comisionFija',
+            'nroUnidades', 'cantidadParcial', 'cantidadTotal', 'idProductoXPrecioProducto',
+            'idPrecioXTemporada', 'precioUnitario', 'precioTotal', 'prioridadDescuento',
+            'porcentajeDescuento', 'descuentoEnValor', 'totalImpuestoPorcentaje',
+            'totalImpuestoValor', 'totalImpuestoNeto', 'esSingleSuplement', 'idMotivoIngresoManual',
+          ];
+          Object.assign(fila, Object.fromEntries(campos.map(campo => [campo, calculado[campo]])));
+          fila._calculo = resp.data;
+          fila._valores = resp.data.valores;
+          fila._producto = { idProducto: fila.idProducto!, nombreCorto: fila.nombreProducto ?? '' };
+          this.calculando.update(v => ({ ...v, [key]: false }));
+          this.filas.update(v => [...v]);
+          if (this.activo === key) this.detalleValor.set(resp.data.valores);
+        },
+        error: err => {
+          if (this.versiones.get(key) !== version || this.idReserva !== reserva) return;
+          this.calculando.update(v => ({ ...v, [key]: false }));
+          this.errorCalculo.update(v => ({ ...v, [key]: true }));
+          this.toastService.showMessage('error', 'Cálculo', err.error?.message ?? err.message ?? 'No se pudo calcular el producto.');
+        },
+      }));
+    };
+    if (inmediato) ejecutar();
+    else this.pendientes.set(key, setTimeout(ejecutar, 250));
+  }
+
+  private cancelaCalculo(key: string): void {
+    this.calculos.get(key)?.unsubscribe();
+    this.calculos.delete(key);
+    clearTimeout(this.pendientes.get(key));
+    this.pendientes.delete(key);
+    this.versiones.set(key, (this.versiones.get(key) ?? 0) + 1);
+    this.calculando.update(v => ({ ...v, [key]: false }));
+  }
+
+  private limpiaCalculos(): void {
+    for (const key of new Set([...this.calculos.keys(), ...this.pendientes.keys()])) this.cancelaCalculo(key);
+    this.calculando.set({});
+    this.guardando.set({});
+    this.errorCalculo.set({});
+    this.activo = null;
+  }
+
+  private desdeJSON(detalle: DetalleReservaJSON): DetalleReserva {
+    return { ...detalle, fechaInicio: this.fechaDesdeBack(detalle.fechaInicio), fechaFin: this.fechaDesdeBack(detalle.fechaFin) };
+  }
+
+  private fechaDesdeBack(valor: Date | string | null | undefined): Date | null {
+    if (!valor) return null;
+    if (valor instanceof Date) return valor;
+    // Construcción local: conserva también las horas del LocalDateTime de Java.
+    const partes = valor.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?)?/);
+    if (!partes) return null;
+    return new Date(Number(partes[1]), Number(partes[2]) - 1, Number(partes[3]),
+      Number(partes[4] ?? 0), Number(partes[5] ?? 0), Number(partes[6] ?? 0));
+  }
+
+  ngOnDestroy(): void {
+    this.limpiaCalculos();
+    this.carga?.unsubscribe();
+    this.busqueda?.unsubscribe();
   }
 }
