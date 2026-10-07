@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse, ListaPrecioProductoResponse, GraficosResponse, TipoOperacionResponse, Impuesto, ImpuestoResponse, ImpuestoProducto, ImpuestosProductoResponse, TipoProducto,TipoProductoResponse} from '../interfaces/productos.interfaces';
+import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse, ListaPrecioProductoResponse, GraficosResponse, TipoOperacionResponse, Impuesto, ImpuestoResponse, ImpuestoProducto, ImpuestosProductoResponse, TipoProducto,TipoProductoResponse, TarifaFila} from '../interfaces/productos.interfaces';
 import { SavedRow } from '../interfaces/general.interface'
 
 @Injectable({
@@ -358,7 +358,26 @@ cargarTipoProducto(): Observable<TipoProductoResponse> {
         }
       }
 
+    grabaTarifa(Tarifa: TarifaFila, idUsuario: string) {
+    if (Tarifa.idPrecioProductoXTemporada === 0) {
+       //Tarifa.idPrecioProductoXTemporada = null;
+      // POST (Nuevo): Pasamos el idUsuario en la URL
+      return this.http.post<any>(`${this.apiUrl}productos/${idUsuario}/preciosproductoxtemporada`, Tarifa);
+    } else {
+      // PUT (Actualizar): Pasamos idUsuario en URL y el idInsumoXItinerario como Query Param
+      return this.http.put<any>(
+        `${this.apiUrl}productos/${idUsuario}/preciosproductoxtemporada?idPrecioProductoXTemporada=${Tarifa.idPrecioProductoXTemporada}`, 
+        Tarifa
+      );
+    }
+  }
 
+  eliminaTarifa(idPrecioProductoXTemporada: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idPrecioProductoXTemporada', idPrecioProductoXTemporada!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/preciosproductoxtemporada`, {
+      params,
+    });
+  }
 
 
 

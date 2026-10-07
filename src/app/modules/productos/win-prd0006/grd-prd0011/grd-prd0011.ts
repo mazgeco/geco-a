@@ -30,7 +30,7 @@ export class GrdPrd0011 implements OnInit {
 
   // IDENTIFICADORES PRINCIPALES
   idContenedor = signal<string>('WinPrd0006');
-  idObjeto = signal<string>('GrdPrd0006');
+  idObjeto = signal<string>('GrdPrd0011');
   idTabla = signal<string>('206'); // TODO: Cambiar por el ID real de tu tabla de insumos
   permiso = signal<string>('w');
 
@@ -45,8 +45,14 @@ export class GrdPrd0011 implements OnInit {
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
   barraMessage = computed(() =>
-    this.messageService.obtener(this.statusMessages, 'msgGrdPrd0006')
+    this.messageService.obtener(this.statusMessages, 'msgGrdPrd0011')
   );
+
+  // DECLARACIÓN DE VARIABLES DE LA TABLA
+    selectedRows!: TarifaFila[];
+    metaKey: boolean = true;
+    campoId: 'idPrecioProductoXTemporada' = 'idPrecioProductoXTemporada'; // Ajusta según tu interfaz
+   
 
   ngOnInit(): void {
     //this.cargarSugerenciasTarifas();
@@ -149,5 +155,137 @@ export class GrdPrd0011 implements OnInit {
       });
     }
   }
+
+
+   // CREATE / UPDATE
+    saveData(Tarifa: TarifaFila): void {
+      // 1. Agregamos el 'ADMIN' quemado temporalmente
+      this.productosService.grabaTarifa(Tarifa, 'mparraga').subscribe({
+        next: (resp) => {
+          console.log('🔴 RESPUESTA DEL BACKEND AL GRABAR TARIFA:', resp);
+          // 2. Usamos el nombre correcto de la llave primaria
+          Tarifa.idPrecioProductoXTemporada = resp.idSecuencial!;
+          this.cargaDatos(); // Refrescamos la grilla
+           this.messageService.mostrar(
+            this.statusMessages,
+            'msgGrdPrd0011',
+            'success',
+            'Dato grabado correctamente.'
+          );
+        },
+        error: (err) => {
+          this.toastService.showMessage('error', 'Error', 'Error al guardar: ' + err.error.message, err.error.status);
+        },
+      });
+    }
+
+  
+      //MÉTODO QUE ELIMINA UNA FILA DEL GRID
+        eliminarFila(rowData: TarifaFila): void {
+          if (rowData[this.campoId] === 0) {
+            this.fila.set(this.fila().filter((item) => item[this.campoId] != rowData[this.campoId]));
+          } else {
+            this.confirmationService.confirm({
+              message: '¿Desea eliminar la fila?',
+              header: 'Eliminar',
+              acceptLabel: 'Aceptar',
+              rejectLabel: 'Cancelar',
+              accept: () => {
+                this.productosService.eliminaTarifa(rowData[this.campoId]!).subscribe({
+                  next: (resp) => {
+                    this.fila.set(
+                      this.fila().filter((item) => item[this.campoId] != resp.idSecuencial),
+                    );
+                    //Envía un mensaje de carga exitosa
+                    this.messageService.mostrar(
+                      this.statusMessages,
+                      'msg' + this.idObjeto(),
+                      'success',
+                      'Fila eliminada correctamente.',
+                    );
+                  },
+                  error: (err) => {
+                    this.toastService.showMessage(
+                      'error',
+                      'Error',
+                      'Ha ocurrido un error: ' + err.error.message,
+                      err.error.status,
+                    );
+                    //Envía un mensaje de carga exitosa
+                    this.messageService.mostrar(
+                      this.statusMessages,
+                      'msg' + this.idObjeto(),
+                      'error',
+                      'Hubo un error al eliminar la fila.',
+                    );
+                  },
+                });
+              },
+            });
+          }
+        }
+    
+
+      eliminarVariasFilas(): void {
+    const selected = this.selectedRows;
+    if (selected.length > 0) {
+      this.confirmationService.confirm({
+        message: '¿Desea eliminar todas las filas seleccionadas?',
+        header: 'Eliminar',
+        acceptLabel: 'Aceptar',
+        rejectLabel: 'Cancelar',
+        accept: () => {
+          for (let i = 0; i < selected.length; i++) {
+            let idFila = selected[i][this.campoId];
+            this.productosService.eliminaTarifa(idFila!).subscribe({
+              next: (resp) => {
+                this.fila.set(
+                  this.fila().filter((item) => item[this.campoId] != resp.idSecuencial),
+                );
+              },
+              error: (err) => {
+                this.toastService.showMessage(
+                  'error',
+                  'Error',
+                  'Ha ocurrido un error: ' + err.error.message,
+                  err.error.status,
+                );
+                //Envía un mensaje de carga exitosa
+                this.messageService.mostrar(
+                  this.statusMessages,
+                  'msg' + this.idObjeto(),
+                  'error',
+                  'Hubo un error al eliminar una fila.',
+                );
+                return;
+              },
+            });
+          }
+          //Envía un mensaje de carga exitosa
+          this.messageService.mostrar(
+            this.statusMessages,
+            'msg' + this.idObjeto(),
+            'success',
+            'Filas eliminadas correctamente.',
+          );
+        },
+      });
+    } else {
+      this.toastService.showMessage('error', 'Error', 'Seleccione varias filas');
+    }
+  }
+    
+    
+      
+    
+      // AUDITORÍA DEL REGISTRO
+      muestraAuditoriaRegistro(): void {
+        const selected = this.selectedRows || [];
+        if (selected.length === 1) {
+          this.funciones.muestraAuditoria(selected[0].idPrecioProductoXTemporada, this.idTabla(), selected[0]);
+        } else {
+          this.toastService.showMessage('error', 'Error', 'Seleccione un registro para ver la auditoría');
+        }
+      }
 
 }

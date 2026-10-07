@@ -74,6 +74,7 @@ export class FrmPrd0003 implements OnInit {
 
   ngOnInit(): void {
     this.cargarTemporadas();
+    this.consultarTipoPrecio();
   }
 
     // READ TIPOS PARA EL COMBOBOX
@@ -93,6 +94,30 @@ export class FrmPrd0003 implements OnInit {
       }
     });
   }
+
+  consultarTipoPrecio() {
+  // Verificamos que tengamos un ID válido para buscar
+  if (!this.idProducto) return;
+
+  this.productosService.productoPorId(this.idProducto).subscribe({
+    next: (respuesta) => {
+      // Extraemos la letra que guardó la BD (asumiendo que viene en respuesta.data.tipoPrecio)
+      const tipoPrecioBD = respuesta.data.tipoPrecio;
+
+      // Marcamos el Radio Button según la letra recibida
+      if (tipoPrecioBD === 'T') {
+        this.modeloCobro = 1; // Marca el Modelo Estacional (Variable)
+      } else if (tipoPrecioBD === 'F') {
+        this.modeloCobro = 2; // Marca el Modelo de Tarifa Plana (Fijo)
+      } else {
+        this.modeloCobro = null; // Si aún no tiene precio asignado
+      }
+    },
+    error: (err) => {
+      this.toastService.showMessage('error', 'Error', 'No se pudo cargar el tipo de precio');
+    }
+  });
+}
 
   autoguardarModelo(nuevoModelo: string | number) {
   // 1. Verificamos si el clic llegó al TypeScript

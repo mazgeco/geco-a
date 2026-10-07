@@ -1,16 +1,17 @@
 <div class="col-12">
   <p-toolbar>
     <ng-template #start>
-      <p-button id="btnGrdPrd00061" icon="pi pi-plus" class="mr-1" label="Insertar" pTooltip="Agrega un insumo al día"
+      <p-button id="btnGrdPrd00111" icon="pi pi-plus" class="mr-1" label="Insertar" pTooltip="Agrega un insumo al día"
         tooltipPosition="bottom" (onClick)="insertarFila()" />
-      <p-button id="btnGrdPrd00062" icon="pi pi-trash" class="mr-1" label="Eliminar"
-        pTooltip="Elimina varias filas seleccionadas" tooltipPosition="bottom"  />
-      <p-button id="btnGrdPrd00063" icon="pi pi-refresh" class="mr-1" pTooltip="Refresca los datos del grid"
-        tooltipPosition="bottom"  />
-      <p-button id="btnGrdPrd00064" icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual"
-        tooltipPosition="bottom"  />
-      <p-button id="btnGrdPrd00065" icon="pi pi-info-circle" pTooltip="Información del objeto actual"
+      <p-button id="btnGrdPrd00112" icon="pi pi-trash" class="mr-1" label="Eliminar"
+        pTooltip="Elimina varias filas seleccionadas" tooltipPosition="bottom" (onClick)="eliminarVariasFilas()" />
+      <p-button id="btnGrdPrd00113" icon="pi pi-refresh" class="mr-1" pTooltip="Refresca los datos del grid"
+        tooltipPosition="bottom" (onClick)="cargaDatos()"  />
+      <p-button id="btnGrdPrd00114" icon="pi pi-user" class="mr-1" pTooltip="Auditoría del registro actual"
+        tooltipPosition="bottom"  (onClick)="muestraAuditoriaRegistro()"/>
+      <p-button id="btnGrdPrd00115" icon="pi pi-info-circle" pTooltip="Información del objeto actual"
         tooltipPosition="bottom"
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
         />
     </ng-template>
 
@@ -19,17 +20,17 @@
     </ng-template>
 
     <ng-template #end>
-      <!-- @if (barraMessage()?.visible) {
+      @if (barraMessage()?.visible) {
       <div class="message-container">
         <p-message [severity]="barraMessage()!.severity" [icon]="barraMessage()!.icon">
           {{ barraMessage()!.text }}
         </p-message>
       </div>
-      } -->
+      }
     </ng-template>
   </p-toolbar>
 <p-table id="GrdPrd0011" [value]="fila()" editMode="row" selectionMode="multiple"
-     dataKey="idPrecioProducto" class="p-datatable-sm"
+     [(selection)]="selectedRows" [metaKeySelection]="metaKey" dataKey="idPrecioProductoXTemporada" class="p-datatable-sm"
     [paginator]="true" [rows]="10" showGridlines [size]="'small'">
     
     <!-- HEADER (Actualizado con las 7 columnas) -->
@@ -112,15 +113,15 @@
         <!-- 7. ACCIONES -->
         <td class="text-center">
           @if (!editing) {
-          <button pButton [id]="'btnGrdPrd0011' + rowData.idPrecioProducto" pInitEditableRow icon="pi pi-pencil" text
+          <button pButton [id]="'btnGrdPrd0011' + rowData.idPrecioProductoXTemporada" pInitEditableRow icon="pi pi-pencil" text
             rounded severity="primary"></button>
-          <button pButton [id]="'btnGrdPrd00066' + rowData.idItinerarioInsumo" icon="pi pi-trash" text rounded
-            severity="danger" ></button>
+          <button pButton [id]="'btnGrdPrd00116' + rowData.idPrecioProductoXTemporada" icon="pi pi-trash" text rounded
+            severity="danger" (click)="eliminarFila(rowData)"></button>
           }
           @if (editing) {
-          <button pButton [id]="'btnGrdPrd00067' + rowData.idItinerarioInsumo" pSaveEditableRow icon="pi pi-check" text
-            rounded severity="success" class="mr-1" ></button>
-          <button pButton [id]="'btnGrdPrd00068' + rowData.idItinerarioInsumo" pCancelEditableRow icon="pi pi-times" text
+          <button pButton [id]="'btnGrdPrd00117' + rowData.idPrecioProductoXTemporada" pSaveEditableRow icon="pi pi-check" text
+            rounded severity="success" class="mr-1" (click)="saveData(rowData)" ></button>
+          <button pButton [id]="'btnGrdPrd00118' + rowData.idPrecioProductoXTemporada" pCancelEditableRow icon="pi pi-times" text
             rounded severity="danger"></button>
           }
         </td>

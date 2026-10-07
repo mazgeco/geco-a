@@ -50,6 +50,7 @@ export class GrdPrd0006 implements OnInit, OnChanges {
   tiposInsumo = signal<TipoInsumo[]>([]);
   listaInsumos = signal<ListaInsumo[]>([]); // Ajusta el 'any' a tu interfaz real de Insumos
   listaProveedores = signal<ListaProveedores[]>([]); // Ajusta el 'any' a tu interfaz de Proveedores
+  
 
   // 3. SE EJECUTA UNA SOLA VEZ AL ABRIR LA PESTAÑA
   ngOnInit(): void {
