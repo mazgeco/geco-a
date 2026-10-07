@@ -213,6 +213,36 @@ export interface DetalleReserva {
   fechaModifica?: string | null;
 }
 
+//DETALLE VALOR X RESERVA
+export interface ListaDetalleValorXReservaResponse {
+  status: string;
+  message: string;
+  data: DetalleValorXReserva[];
+}
+
+export interface DetalleValorXReservaResponse {
+  status: string;
+  message: string;
+  data: DetalleValorXReserva;
+}
+
+export interface DetalleValorXReserva {
+  idReserva?: number | null;
+  idImpuesto?: string | null;
+  nombreImpuesto?: string | null;
+  tipoDetalleValor?: string | null;
+  suprimeImpuesto?: string | null;
+  valor?: number | null;
+  porcentajeImpuesto?: number | null;
+  baseImponible?: number | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+
+//DETALLE VALOR X DETALLE RESERVA
 export interface ListaDetalleValorXDetalleReservaResponse {
   status: string;
   message: string;
@@ -235,6 +265,78 @@ export interface DetalleValorXDetalleReserva {
   valor?: number | null;
   porcentajeImpuesto?: number | null;
   baseImponible?: number | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+//ARCHIVO RESERVA
+export interface ListaArchivoReservaResponse {
+  status: string;
+  message: string;
+  data: ArchivoReserva[];
+}
+
+export interface ArchivoReservaResponse {
+  status: string;
+  message: string;
+  data: ArchivoReserva;
+}
+
+export interface ArchivoReserva {
+  idArchivoReserva?: number | null;
+  idReserva?: number | null;
+  descripcionArchivoReserva?: string | null;
+  nombreArchivo?: string | null;
+  tipoArchivo?: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+//GUÍAS RESERVA
+export interface ListaGuiaResponse {
+  status: string;
+  message: string;
+  data: Guia[];
+}
+
+export interface GuiaResponse {
+  status: string;
+  message: string;
+  data: Guia;
+}
+
+export interface Guia {
+  idGuia?: number | null;
+  idProveedor?: number | null;
+  idReserva?: number | null;
+  razonSocial?: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+//OBSERVACIONES GENERALES
+export interface ListaObservacionGeneralResponse {
+  status: string;
+  message: string;
+  data: ObservacionGeneral[];
+}
+
+export interface ObservacionGeneralResponse {
+  status: string;
+  message: string;
+  data: ObservacionGeneral;
+}
+
+export interface ObservacionGeneral {
+  idObservacionGeneral?: number | null;
+  idReserva?: number | null;
+  descripcionObservacionGeneral?: string | null;
   idUsuarioCrea?: string | null;
   fechaCrea?: string | null;
   idUsuarioModifica?: string | null;

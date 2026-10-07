@@ -182,7 +182,6 @@
               <p-panel class="col-12" header="General">
                 <div class="field mb-1">
                   <label>Producto <span class="asterisco">*</span></label>
-                  <!-- @if (rowData.idDetalleReserva === 0) { -->
                     <p-autocomplete
                       class="w-full"
                       [fluid]="true"
@@ -196,15 +195,6 @@
                       [minLength]="3"
                     >
                     </p-autocomplete>
-                  <!-- } @else {
-                    <input
-                      pInputText
-                      class="w-full"
-                      [readOnly]="true"
-                      [(ngModel)]="rowData.nombreProducto"
-                      [name]="'nombreProducto' + rowData.idDetalleReserva"
-                    />
-                  } -->
                 </div>
                 <div class="field mb-1">
                   <label>Precio producto</label>
@@ -367,7 +357,7 @@
                   </p-panel>
                   <p-panel header="Totales">
                     <p-table
-                      id="grdRes0089"
+                      id="grdRes0007"
                       [value]="detalleValor()"
                       editMode="row"
                       selectionMode="multiple"

@@ -18,6 +18,13 @@ import {
   EstadoReserva,
   TipoHabitacion,
   TipoHabitacionResponse,
+  ListaArchivoReservaResponse,
+  ArchivoReserva,
+  ListaGuiaResponse,
+  Guia,
+  ListaObservacionGeneralResponse,
+  ObservacionGeneral,
+  ListaDetalleValorXReservaResponse,
 } from '../interfaces/reservas.interfaces';
 import { GraficosResponse, SavedRow } from '../interfaces/general.interface';
 
@@ -92,7 +99,8 @@ export class ReservasService {
     if (!fecha) return null;
     if (typeof fecha === 'string') return fecha.replace(' ', 'T');
     const hora = [fecha.getHours(), fecha.getMinutes(), fecha.getSeconds()]
-      .map(valor => String(valor).padStart(2, '0')).join(':');
+      .map((valor) => String(valor).padStart(2, '0'))
+      .join(':');
     return `${this.fechaLocal(fecha)}T${hora}`;
   }
 
@@ -237,6 +245,15 @@ export class ReservasService {
     );
   }
 
+  //DETALLE VALOR X RESERVA
+  listaDetalleValorXReserva(
+    idReserva: number,
+  ): Observable<ListaDetalleValorXReservaResponse> {
+    return this.http.get<ListaDetalleValorXDetalleReservaResponse>(
+      `${this.apiUrl}reservas/detallesvalorreserva/${idReserva}`
+    );
+  }
+
   //DETALLE VALOR X DETALLE RESERVA
   listaDetalleValorXDetalleReserva(
     idDetalleReserva: number,
@@ -247,4 +264,100 @@ export class ReservasService {
       { params },
     );
   }
+
+  //ARCHIVOS RESERVA
+  listaArchivoReserva(idReserva: number): Observable<ListaArchivoReservaResponse> {
+    return this.http.get<ListaArchivoReservaResponse>(
+      `${this.apiUrl}reservas/archivosreserva/${idReserva}`,
+    );
+  }
+
+  grabaArchivoReserva(archivoReserva: ArchivoReserva, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}reservas/${this.authService.idUsuario()}/archivosreserva`,
+        archivoReserva,
+      );
+    } else {
+      const params = new HttpParams().set('idArchivoReserva', archivoReserva.idArchivoReserva!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}reservas/${this.authService.idUsuario()}/archivosreserva`,
+        archivoReserva,
+        { params },
+      );
+    }
+  }
+
+  eliminaArchivoReserva(idArchivoReserva: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idArchivoReserva', idArchivoReserva!);
+    return this.http.delete<SavedRow>(
+      `${this.apiUrl}reservas/${this.authService.idUsuario()}/archivosreserva`,
+      {
+        params,
+      },
+    );
+  }
+
+  //GUIA
+  listaGuia(idReserva: number): Observable<ListaGuiaResponse> {
+    return this.http.get<ListaGuiaResponse>(`${this.apiUrl}reservas/guias/${idReserva}`);
+  }
+
+  grabaGuia(guias: Guia, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}reservas/${this.authService.idUsuario()}/guias`,
+        guias,
+      );
+    } else {
+      const params = new HttpParams().set('idGuia', guias.idGuia!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}reservas/${this.authService.idUsuario()}/guias`,
+        guias,
+        { params },
+      );
+    }
+  }
+
+  eliminaGuia(idGuia: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idGuia', idGuia!);
+    return this.http.delete<SavedRow>(
+      `${this.apiUrl}reservas/${this.authService.idUsuario()}/guias`,
+      {
+        params,
+      },
+    );
+  }
+
+  //OBSERVACIONES GENERALES
+  listaObservacionGeneral(idReserva: number): Observable<ListaObservacionGeneralResponse> {
+    return this.http.get<ListaObservacionGeneralResponse>(`${this.apiUrl}reservas/observacionGenerals/${idReserva}`);
+  }
+
+  grabaObservacionGeneral(observacionGenerals: ObservacionGeneral, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}reservas/${this.authService.idUsuario()}/observacionesgenerales`,
+        observacionGenerals,
+      );
+    } else {
+      const params = new HttpParams().set('idObservacionGeneral', observacionGenerals.idObservacionGeneral!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}reservas/${this.authService.idUsuario()}/observacionesgenerales`,
+        observacionGenerals,
+        { params },
+      );
+    }
+  }
+
+  eliminaObservacionGeneral(idObservacionGeneral: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idObservacionGeneral', idObservacionGeneral!);
+    return this.http.delete<SavedRow>(
+      `${this.apiUrl}reservas/${this.authService.idUsuario()}/observacionesgenerales`,
+      {
+        params,
+      },
+    );
+  }
+
 }

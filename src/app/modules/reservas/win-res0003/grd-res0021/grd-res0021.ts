@@ -1,4 +1,13 @@
-import { Component, computed, inject, Input, OnChanges, OnInit, SimpleChanges, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  signal,
+} from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { AutoCompleteCompleteEvent } from 'primeng/types/autocomplete';
@@ -200,6 +209,7 @@ export class GrdRes0021 implements OnInit, OnChanges {
           'msg' + this.idObjeto(),
           'error',
           'Hubo un error al cargar los datos.',
+          err.error.status,
         );
       },
     });
@@ -242,6 +252,7 @@ export class GrdRes0021 implements OnInit, OnChanges {
                 'msg' + this.idObjeto(),
                 'error',
                 'Hubo un error al eliminar la fila.',
+                err.error.status,
               );
             },
           });

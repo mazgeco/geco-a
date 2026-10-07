@@ -12,7 +12,6 @@ export class FuntionsService {
   //Función para convertir YYYY-MM-DD a Date sin errores de zona horaria
   convertirAFecha(fechaStr: any): Date | null | any {
     if (!fechaStr) return null;
-    console.log(typeof fechaStr);
 
     if (typeof fechaStr === 'string') {
       const partes = fechaStr.split(/[T ]/);

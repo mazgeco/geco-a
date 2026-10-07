@@ -14,6 +14,7 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AutoCompleteCompleteEvent } from 'primeng/types/autocomplete';
 import { debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DatePipe, DecimalPipe } from '@angular/common';
 //Servicios propios
 import { ToastService } from '../../../../services/toast.service';
 import { Combo, StatusMessage } from '../../../../interfaces/general.interface';
@@ -23,6 +24,7 @@ import { FuntionsService } from '../../../../services/functions.service';
 import { CatalogService } from '../../../../services/catalog.service';
 import { StateService } from '../../state-service';
 import {
+  DetalleValorXReserva,
   EstadoReserva,
   EstadoReservaNombre,
   Reservas,
@@ -31,9 +33,18 @@ import { MessageService } from '../../../../services/message.service';
 import { Personas } from '../../../../interfaces/personas.interfaces';
 import { PersonasService } from '../../../../services/personas.service';
 import { ReservasService } from '../../../../services/reservas.service';
+import { GrdRes0076 } from '../grd-res0076/grd-res0076';
+import { GrdRes0080 } from '../grd-res0080/grd-res0080';
 @Component({
   selector: 'app-frm-res0003',
-  imports: [...PRIMENG_MODULES, CatalogDialogComponent, ReactiveFormsModule],
+  imports: [
+    ...PRIMENG_MODULES,
+    CatalogDialogComponent,
+    ReactiveFormsModule,
+    DecimalPipe,
+    GrdRes0076,
+    GrdRes0080,
+  ],
   providers: [ConfirmationService, ReactiveFormsModule],
   templateUrl: './frm-res0003.html',
   styleUrl: './frm-res0003.css',
@@ -87,6 +98,7 @@ export class FrmRes0003 implements OnInit {
   personas = signal<Personas[]>([]);
   esActivo = signal(false);
   personaContactoSeleccionada: any = null;
+  detalleValor = signal<DetalleValorXReserva[]>([]);
   estado: Combo[] = Object.values(EstadoReserva).map((codigo) => ({
     codigo,
     etiqueta: EstadoReservaNombre[codigo],
@@ -142,6 +154,7 @@ export class FrmRes0003 implements OnInit {
   ngOnInit(): void {
     this.reservaActiva(EstadoReserva.ING);
     this.cargaDatos(this.idReserva);
+    this.cargaTotales(this.idReserva);
     this.frmRes0003.valueChanges
       .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
@@ -235,7 +248,7 @@ export class FrmRes0003 implements OnInit {
             'msgFrmRes0003',
             'error',
             'La reserva no se cargó correctamente.',
-            err.error.status
+            err.error.status,
           );
           this.toastService.showMessage(
             'error',
@@ -246,6 +259,38 @@ export class FrmRes0003 implements OnInit {
         },
       });
     }
+  }
+
+  cargaTotales(idReserva: number): void {
+    this.reservasService.listaDetalleValorXReserva(idReserva).subscribe({
+      next: (resp) => {
+        const datos = resp.data.map((item) => ({
+          ...item,
+          etiqueta:
+            item.tipoDetalleValor === 'T'
+              ? 'Total'
+              : item.tipoDetalleValor === 'S'
+                ? 'Subtotal'
+                : `Impuesto ${item.nombreImpuesto} ${item.porcentajeImpuesto}%`,
+        }));
+        this.detalleValor.set(datos);
+      },
+      error: (err) => {
+        this.messageService.mostrar(
+          this.statusMessages,
+          'msgFrmRes0003',
+          'error',
+          'Los totales no se cargaron correctamente.',
+          err.error.status,
+        );
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar los totales de la reserva: ' + err.error.message,
+          err.error.status,
+        );
+      },
+    });
   }
 
   //FUNCIÓN PARA VER SI UNA RESERVA ES ACTIVA O NO
