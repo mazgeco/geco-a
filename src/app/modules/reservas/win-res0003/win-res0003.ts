@@ -16,6 +16,7 @@ import { StateService } from '../state-service';
 })
 export class WinRes0003 implements OnInit {
   idReserva = signal<number>(0);
+  tabActivo = signal<string>('0');
 
   private route = inject(ActivatedRoute);
   private location = inject(Location);
@@ -30,5 +31,10 @@ export class WinRes0003 implements OnInit {
     if (this.idReserva() === id) return;
     this.idReserva.set(id);
     this.location.replaceState(`/reservas/reserva/${id}`);
+  }
+  cambiarTab(tab: string | number | undefined): void {
+    if (tab !== undefined) {
+      this.tabActivo.set(String(tab));
+    }
   }
 }

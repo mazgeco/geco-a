@@ -16,14 +16,18 @@
   </ng-template>
 </p-toolbar>
 
-<p-tabs value="0">
+<p-tabs [value]="tabActivo()" (valueChange)="cambiarTab($event)">
   <p-tablist>
     <p-tab value="0">Reserva</p-tab>
     <p-tab value="1">Productos</p-tab>
   </p-tablist>
   <p-tabpanels>
     <p-tabpanel value="0">
-      <app-frm-res0003 [idReserva]="idReserva()" (reservaGuardada)="reservaGuardada($event)"></app-frm-res0003>
+      <app-frm-res0003
+        [idReserva]="idReserva()"
+        [tabActivo]="tabActivo()"
+        (reservaGuardada)="reservaGuardada($event)"
+      ></app-frm-res0003>
     </p-tabpanel>
     <p-tabpanel value="1">
       <app-grd-res0021 [idReserva]="idReserva()"></app-grd-res0021>

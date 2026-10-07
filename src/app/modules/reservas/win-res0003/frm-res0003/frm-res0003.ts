@@ -54,6 +54,13 @@ export class FrmRes0003 implements OnInit {
   @Input()
   idReserva!: number;
 
+  @Input()
+  set tabActivo(value: string) {
+    if (value === '0' && this.idReserva > 0) {
+      this.cargaTotales(this.idReserva);
+    }
+  }
+
   @Output() reservaGuardada = new EventEmitter<number>();
   guardando = signal(false);
   cambiandoEstado = signal(false);
