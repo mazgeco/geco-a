@@ -5,13 +5,35 @@
 <div class="col-12">
   <p-toolbar>
     <ng-template #start>
+      <p-button
+        icon="pi pi-save"
+        label="Guardar"
+        class="mr-1"
+        [loading]="guardando()"
+        [disabled]="
+          loadingReserva() ||
+          cambiandoEstado() ||
+          currentData.estadoReserva === EstadoReserva.XXX ||
+          currentData.estadoReserva === EstadoReserva.PAG
+        "
+        (onClick)="saveForm(currentData)"
+      />
       @if (esActivo()) {
         <p-button
           icon="pi pi-check"
           class="mr-1"
-          label="Inactivar"
+          label="Volver a ingresada"
           pTooltip="Cambiar el estado de la reserva"
           tooltipPosition="bottom"
+          [disabled]="
+            !idReserva ||
+            loadingReserva() ||
+            guardando() ||
+            cambiandoEstado() ||
+            frmRes0003.dirty ||
+            currentData.estadoReserva === EstadoReserva.XXX ||
+            currentData.estadoReserva === EstadoReserva.PAG
+          "
           (onClick)="cambiarEstado(EstadoReserva.ING)"
         />
       } @else {
@@ -21,6 +43,15 @@
           label="Confirmar"
           pTooltip="Confirmar la reserva"
           tooltipPosition="bottom"
+          [disabled]="
+            !idReserva ||
+            loadingReserva() ||
+            guardando() ||
+            cambiandoEstado() ||
+            frmRes0003.dirty ||
+            currentData.estadoReserva === EstadoReserva.XXX ||
+            currentData.estadoReserva === EstadoReserva.PAG
+          "
           (onClick)="cambiarEstado(EstadoReserva.CNF)"
         />
       }
@@ -58,158 +89,169 @@
     <!-- PANEL SUPERIOR -->
     <!-- ====================================================== -->
     <p-panel class="col-12">
-      <div class="grid">
-        <!-- ======================= -->
-        <!-- FILA 1 -->
-        <!-- ======================= -->
-        <div class="col-12 md:col-6">
-          <div class="field mb-1">
-            <label for="codigoAgencia"> Código agencia <span class="asterisco">*</span></label>
-            <input
-              id="codigoAgencia"
-              type="text"
-              pInputText
-              class="w-full"
-              formControlName="codigoAgencia"
-            />
-          </div>
-        </div>
-        <div class="col-12 md:col-6">
-          <div class="field mb-1">
-            <label>Estado</label>
-            <p-select
-              class="w-full"
-              [options]="estado"
-              [readonly]="true"
-              formControlName="estadoReserva"
-              pTooltip="Estado de la reserva"
-              tooltipPosition="bottom"
-              optionLabel="etiqueta"
-              optionValue="codigo"
-            ></p-select>
-          </div>
-        </div>
-        <!-- ======================= -->
-        <!-- FILA 2 -->
-        <!-- ======================= -->
-        <div class="col-12 md:col-6">
-          <div class="field mb-1">
-            <label>Cliente</label>
-            @if (currentData.idReserva !== 0) {
-              <input pInputText class="w-full" formControlName="nombrePersona" [readOnly]="true" />
-            } @else {
-              <p-autocomplete
-                class="w-full"
-                [fluid]="true"
-                formControlName="idPersona"
-                [suggestions]="personas()"
-                (completeMethod)="buscarPersonas($event)"
-                (onSelect)="seleccionarPersona('CLI', $event)"
-                optionLabel="razonSocial"
-                optionValue="idPersona"
-                [minLength]="3"
-              >
-              </p-autocomplete>
-            }
-          </div>
-        </div>
-        <div class="col-12 md:col-6">
-          <div class="field mb-1">
-            <label>Persona contacto</label>
-            @if (currentData.idReserva !== 0) {
+      <fieldset
+        class="border-none p-0 m-0 w-full"
+        [disabled]="loadingReserva() || cambiandoEstado()"
+      >
+        <div class="grid">
+          <!-- ======================= -->
+          <!-- FILA 1 -->
+          <!-- ======================= -->
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label for="codigoAgencia"> Código agencia <span class="asterisco">*</span></label>
               <input
+                id="codigoAgencia"
+                type="text"
                 pInputText
                 class="w-full"
-                formControlName="nombrePersonaContacto"
-                [readOnly]="true"
+                formControlName="codigoAgencia"
               />
-            } @else {
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Estado</label>
+              <p-select
+                class="w-full"
+                [options]="estado"
+                [readonly]="true"
+                formControlName="estadoReserva"
+                pTooltip="Estado de la reserva"
+                tooltipPosition="bottom"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+            </div>
+          </div>
+          <!-- ======================= -->
+          <!-- FILA 2 -->
+          <!-- ======================= -->
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Cliente</label>
+              @if (currentData.idReserva !== 0) {
+                <input
+                  pInputText
+                  class="w-full"
+                  formControlName="nombrePersona"
+                  [readOnly]="true"
+                />
+              } @else {
+                <p-autocomplete
+                  class="w-full"
+                  [fluid]="true"
+                  formControlName="idPersona"
+                  [suggestions]="personas()"
+                  (completeMethod)="buscarPersonas($event)"
+                  (onSelect)="seleccionarPersona('CLI', $event)"
+                  optionLabel="razonSocial"
+                  optionValue="idPersona"
+                  [minLength]="3"
+                  [forceSelection]="true"
+                >
+                </p-autocomplete>
+              }
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Persona contacto</label>
               <p-autocomplete
                 class="w-full"
                 [fluid]="true"
-                formControlName="idPersonaContacto"
+                [(ngModel)]="personaContactoSeleccionada"
+                [ngModelOptions]="{ standalone: true }"
                 [suggestions]="personas()"
                 (completeMethod)="buscarPersonas($event)"
                 (onSelect)="seleccionarPersona('CNT', $event)"
                 optionLabel="razonSocial"
-                optionValue="idPersona"
                 [minLength]="3"
+                [forceSelection]="true"
               >
               </p-autocomplete>
-            }
+            </div>
+          </div>
+          <!-- ======================= -->
+          <!-- FILA 3 -->
+          <!-- ======================= -->
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>#Pax</label>
+              <p-inputnumber class="w-full" inputId="integeronly" formControlName="nroPax" />
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Fecha generación</label>
+              <p-datepicker
+                class="w-full"
+                formControlName="fechaGeneracion"
+                dateFormat="yy-mm-dd"
+              />
+            </div>
+          </div>
+          <!-- ======================= -->
+          <!-- FILA 4 -->
+          <!-- ======================= -->
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Importado de</label>
+              <input pInputText class="w-full" formControlName="importadoDe" [readOnly]="true" />
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Código importado</label>
+              <input pInputText class="w-full" formControlName="idImportadoDe" [readOnly]="true" />
+            </div>
+          </div>
+          <!-- ======================= -->
+          <!-- FILA 5 -->
+          <!-- ======================= -->
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>#Factura local</label>
+              <input pInputText class="w-full" formControlName="nroFacturaLocal" />
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Fecha facturación</label>
+              <p-datepicker
+                class="w-full"
+                formControlName="fechaFacturacion"
+                dateFormat="yy-mm-dd"
+              />
+            </div>
+          </div>
+          <!-- ======================= -->
+          <!-- FILA 6 -->
+          <!-- ======================= -->
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Observaciones públicas</label>
+              <textarea
+                class="w-full"
+                rows="3"
+                pTextarea
+                formControlName="observacionReserva"
+              ></textarea>
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Observaciones privadas</label>
+              <textarea
+                class="w-full"
+                rows="3"
+                pTextarea
+                formControlName="observacionPrivada"
+              ></textarea>
+            </div>
           </div>
         </div>
-        <!-- ======================= -->
-        <!-- FILA 3 -->
-        <!-- ======================= -->
-        <div class="col-12 md:col-6">
-          <div class="field mb-1">
-            <label>#Pax</label>
-            <p-inputnumber class="w-full" inputId="integeronly" formControlName="nroPax" />
-          </div>
-        </div>
-        <div class="col-12 md:col-6">
-          <div class="field mb-1">
-            <label>Fecha generación</label>
-            <p-datepicker class="w-full" formControlName="fechaGeneracion" dateFormat="yy-mm-dd" />
-          </div>
-        </div>
-        <!-- ======================= -->
-        <!-- FILA 4 -->
-        <!-- ======================= -->
-        <div class="col-12 md:col-6">
-          <div class="field mb-1">
-            <label>Importado de</label>
-            <input pInputText class="w-full" formControlName="importadoDe" [readOnly]="true" />
-          </div>
-        </div>
-        <div class="col-12 md:col-6">
-          <div class="field mb-1">
-            <label>Código importado</label>
-            <input pInputText class="w-full" formControlName="idImportadoDe" [readOnly]="true" />
-          </div>
-        </div>
-        <!-- ======================= -->
-        <!-- FILA 5 -->
-        <!-- ======================= -->
-        <div class="col-12 md:col-6">
-          <div class="field mb-1">
-            <label>#Factura local</label>
-            <input pInputText class="w-full" formControlName="nroFacturaLocal" />
-          </div>
-        </div>
-        <div class="col-12 md:col-6">
-          <div class="field mb-1">
-            <label>Fecha facturación</label>
-            <p-datepicker class="w-full" formControlName="fechaFacturacion" dateFormat="yy-mm-dd" />
-          </div>
-        </div>
-        <!-- ======================= -->
-        <!-- FILA 6 -->
-        <!-- ======================= -->
-        <div class="col-12 md:col-6">
-          <div class="field mb-1">
-            <label>Observaciones públicas</label>
-            <textarea
-              class="w-full"
-              rows="3"
-              pTextarea
-              formControlName="observacionReserva"
-            ></textarea>
-          </div>
-        </div>
-        <div class="col-12 md:col-6">
-          <div class="field mb-1">
-            <label>Observaciones privadas</label>
-            <textarea
-              class="w-full"
-              rows="3"
-              pTextarea
-              formControlName="observacionPrivada"
-            ></textarea>
-          </div>
-        </div>
-      </div>
+      </fieldset>
     </p-panel>
   </form>
 </div>

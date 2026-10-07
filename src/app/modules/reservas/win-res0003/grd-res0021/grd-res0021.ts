@@ -1,4 +1,4 @@
-import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, Input, OnChanges, OnInit, SimpleChanges, signal } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { AutoCompleteCompleteEvent } from 'primeng/types/autocomplete';
@@ -22,7 +22,7 @@ import { ProductosService } from '../../../../services/productos.service';
   providers: [ConfirmationService],
   templateUrl: './grd-res0021.html',
 })
-export class GrdRes0021 implements OnInit {
+export class GrdRes0021 implements OnInit, OnChanges {
   //LLAMADA AL ID Master
   @Input()
   idReserva!: number;
@@ -105,15 +105,23 @@ export class GrdRes0021 implements OnInit {
 
   ngOnInit(): void {
     this.cargaCombos();
-    this.cargaDatos(this.idReserva);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['idReserva']) {
+      this.selectedRows = [];
+      this.detalleValor.set([]);
+      this.cargaDatos(this.idReserva);
+    }
   }
 
   //MÉTODO QUE INSERTA UNA FILA EN EL GRID
   insertarFila(): void {
+    const nuevaFila = { ...this.nuevaFila, idReserva: this.idReserva, _rowId: crypto.randomUUID() };
     const mensaje = this.funciones.insertRowA(
       this.filas,
-      this.nuevaFila,
-      true,
+      nuevaFila,
+      this.idReserva > 0,
       'btn' + this.idObjeto() + '60',
     );
     if (mensaje !== '') {
@@ -125,7 +133,12 @@ export class GrdRes0021 implements OnInit {
 
   //MÉTODO QUE GRABA EL TIPO DE TELÉFONO (FILA COMPLETA)
   saveRow(fila: DetalleReserva): void {
-    this.reservasService.grabaDetalleReserva(fila, this.newRow).subscribe({
+    if (!(this.idReserva > 0)) {
+      this.toastService.showMessage('warn', 'Reserva', 'Primero guarde la cabecera de la reserva.');
+      return;
+    }
+    fila.idReserva = this.idReserva;
+    this.reservasService.grabaDetalleReserva(fila, !fila.idDetalleReserva).subscribe({
       next: (resp) => {
         fila[this.campoId] = resp.idSecuencial!;
         //Envía un mensaje de grabación exitosa
@@ -152,6 +165,7 @@ export class GrdRes0021 implements OnInit {
   //MÉTODO QUE CARGA TODAS LAS IDENTIFICACIONES EN EL GRID
   cargaDatos(idReserva: number): void {
     this.filas.set([]);
+    if (!(idReserva > 0)) return;
     this.reservasService.listaDetalleReserva(idReserva).subscribe({
       next: (resp) => {
         //Coloca las filas en la estructura

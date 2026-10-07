@@ -14,6 +14,8 @@ import {
   OrdenServicio,
   OrdenServicioResponse,
   ReservasResponse,
+  Reservas,
+  EstadoReserva,
   TipoHabitacion,
   TipoHabitacionResponse,
 } from '../interfaces/reservas.interfaces';
@@ -53,6 +55,55 @@ export class ReservasService {
     return this.http.get<ReservasResponse>(`${this.apiUrl}reservas/${idReserva}`);
   }
 
+  // CABECERA: crear o actualizar con fechas locales para LocalDate de Java.
+  grabaReserva(reserva: Reservas): Observable<SavedRow> {
+    const payload = {
+      idReserva: reserva.idReserva || null,
+      idPersona: reserva.idPersona,
+      idPersonaContacto: reserva.idPersonaContacto || null,
+      codigoAgencia: reserva.codigoAgencia,
+      observacionReserva: reserva.observacionReserva,
+      observacionPrivada: reserva.observacionPrivada,
+      nroPax: reserva.nroPax,
+      nroFacturaLocal: reserva.nroFacturaLocal,
+      fechaGeneracion: this.fechaLocal(reserva.fechaGeneracion),
+      fechaFacturacion: this.fechaLocal(reserva.fechaFacturacion),
+    };
+    const url = `${this.apiUrl}reservas/${this.authService.idUsuario()}`;
+    return reserva.idReserva
+      ? this.http.put<SavedRow>(url, payload, {
+          params: new HttpParams().set('idReserva', reserva.idReserva),
+        })
+      : this.http.post<SavedRow>(url, { ...payload, estadoReserva: EstadoReserva.ING });
+  }
+
+  actualizaEstadoReserva(idReserva: number, estadoReserva: EstadoReserva): Observable<SavedRow> {
+    return this.http.put<SavedRow>(
+      `${this.apiUrl}reservas/${this.authService.idUsuario()}/estado`,
+      { estadoReserva },
+      {
+        params: new HttpParams().set('idReserva', idReserva),
+        headers: { Authorization: `Bearer ${this.authService.token() ?? ''}` },
+      },
+    );
+  }
+
+  private fechaHoraLocal(fecha: Date | string | null | undefined): string | null {
+    if (!fecha) return null;
+    if (typeof fecha === 'string') return fecha.replace(' ', 'T');
+    const hora = [fecha.getHours(), fecha.getMinutes(), fecha.getSeconds()]
+      .map(valor => String(valor).padStart(2, '0')).join(':');
+    return `${this.fechaLocal(fecha)}T${hora}`;
+  }
+
+  private fechaLocal(fecha: Date | string | null | undefined): string | null {
+    if (!fecha) return null;
+    if (typeof fecha === 'string') return fecha.slice(0, 10);
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    return `${fecha.getFullYear()}-${mes}-${dia}`;
+  }
+
   //TIPO HABITACIÓN
   listaTipoHabitacion(): Observable<TipoHabitacionResponse> {
     return this.http.get<TipoHabitacionResponse>(`${this.apiUrl}reservas/tiposhabitacion`);
@@ -77,7 +128,7 @@ export class ReservasService {
   eliminaTipoHabitacion(idTipoHabitacion: number): Observable<SavedRow> {
     const params = new HttpParams().set('idTipoHabitacion', idTipoHabitacion!);
     return this.http.delete<SavedRow>(
-      `${this.apiUrl}reservas/${this.authService.usuario}/tiposhabitacion`,
+      `${this.apiUrl}reservas/${this.authService.idUsuario()}/tiposhabitacion`,
       {
         params,
       },
@@ -108,7 +159,7 @@ export class ReservasService {
   eliminaClasificacion(idClasificacion: number): Observable<SavedRow> {
     const params = new HttpParams().set('idClasificacion', idClasificacion!);
     return this.http.delete<SavedRow>(
-      `${this.apiUrl}reservas/${this.authService.usuario}/clasificaciones`,
+      `${this.apiUrl}reservas/${this.authService.idUsuario()}/clasificaciones`,
       {
         params,
       },
@@ -139,7 +190,7 @@ export class ReservasService {
   eliminaOrdenServicio(idOrdenServicio: number): Observable<SavedRow> {
     const params = new HttpParams().set('idOrdenServicio', idOrdenServicio!);
     return this.http.delete<SavedRow>(
-      `${this.apiUrl}reservas/${this.authService.usuario}/ordenesservicio`,
+      `${this.apiUrl}reservas/${this.authService.idUsuario()}/ordenesservicio`,
       {
         params,
       },
@@ -154,16 +205,23 @@ export class ReservasService {
   }
 
   grabaDetalleReserva(detalleReserva: DetalleReserva, nuevaFila: boolean): Observable<SavedRow> {
+    const { idUsuarioCrea, fechaCrea, idUsuarioModifica, fechaModifica, ...datos } = detalleReserva;
+    const payload = {
+      ...datos,
+      idDetalleReserva: nuevaFila ? null : detalleReserva.idDetalleReserva,
+      fechaInicio: this.fechaHoraLocal(detalleReserva.fechaInicio),
+      fechaFin: this.fechaHoraLocal(detalleReserva.fechaFin),
+    };
     if (nuevaFila) {
       return this.http.post<SavedRow>(
         `${this.apiUrl}reservas/${this.authService.idUsuario()}/detallesreserva`,
-        detalleReserva,
+        payload,
       );
     } else {
       const params = new HttpParams().set('idDetalleReserva', detalleReserva.idDetalleReserva!);
       return this.http.put<SavedRow>(
         `${this.apiUrl}reservas/${this.authService.idUsuario()}/detallesreserva`,
-        detalleReserva,
+        payload,
         { params },
       );
     }
@@ -172,7 +230,7 @@ export class ReservasService {
   eliminaDetalleReserva(idDetalleReserva: number): Observable<SavedRow> {
     const params = new HttpParams().set('idDetalleReserva', idDetalleReserva!);
     return this.http.delete<SavedRow>(
-      `${this.apiUrl}reservas/${this.authService.usuario}/detallesreserva`,
+      `${this.apiUrl}reservas/${this.authService.idUsuario()}/detallesreserva`,
       {
         params,
       },

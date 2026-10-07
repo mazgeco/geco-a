@@ -27,7 +27,7 @@
   </p-tablist>
   <p-tabpanels>
     <p-tabpanel value="0">
-      <app-frm-res0003 [idReserva]="idReserva()"></app-frm-res0003>
+      <app-frm-res0003 [idReserva]="idReserva()" (reservaGuardada)="reservaGuardada($event)"></app-frm-res0003>
     </p-tabpanel>
     <p-tabpanel value="1">
       <app-grd-res0021 [idReserva]="idReserva()"></app-grd-res0021>
