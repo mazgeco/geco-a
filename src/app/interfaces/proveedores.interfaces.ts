@@ -8,7 +8,7 @@ export interface Proveedores {
   idProveedor: number;
   idOperacion?: number;
   idPersona: number;
-  nombrePersona: string;
+  nombrePersona?: string;
   idTipoRetencionIr?: number;
   idTipoRetencionIva?: number;
   idConceptoRetencion?: number;

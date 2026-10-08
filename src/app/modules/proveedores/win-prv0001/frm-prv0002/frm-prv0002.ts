@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 //Imports generales
 import { Combo } from '../../../../interfaces/general.interface';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
-import { EstadoProveedor } from '../../../../interfaces/proveedores.interfaces';
+import { EstadoProveedor,Proveedores} from '../../../../interfaces/proveedores.interfaces';
 
 //Servicios propios
 import { ToastService } from '../../../../services/toast.service';
@@ -64,11 +64,11 @@ export class FrmPrv0002 implements OnInit {
   estadoProveedor = signal<string>('INACTIVO');
   esActivo = signal<boolean>(false);
 
-  // //GETTER PARA TRAER LOS DATOS ACTUALES DE LOS PRODUCTOS
-  //      get currentData(): Proveedores {
-  //        const proveedor = this.frmPrv0002.getRawValue() as Proveedores;
-  //        return proveedor;
-  //      }
+  //GETTER PARA TRAER LOS DATOS ACTUALES DE LOS PRODUCTOS
+  get currentData(): Proveedores {
+  const proveedor = this.frmPrv0002.getRawValue() as Proveedores;
+  return proveedor;
+  }
 
   public frmPrv0002 = this.fb.group(
     {
@@ -116,4 +116,25 @@ export class FrmPrv0002 implements OnInit {
       });
     }
   }
+
+    //MÉTODO QUE CAMBIA EL ESTADO DEL PRODUCTO   
+         cambiarEstado(estado: EstadoProveedor): void {
+           this.confirmationService.confirm({
+             message: '¿Realmente desea cambiar el estado de este producto?',
+             header: 'Cambio de estado',
+             acceptLabel: 'Aceptar',
+             rejectLabel: 'Cancelar',
+             accept: () => {
+               this.esActivo.set(estado === "A" ? true : false);
+               this.estadoProveedor.set(estado === "A" ? "ACTIVO" : "INACTIVO");
+               this.frmPrv0002.patchValue({
+                 estadoProveedor: estado
+               });
+               this.stateService.proveedor.update(p => ({
+                 ...p!,
+                 estadoProducto: estado
+               }));
+             }
+           });
+         }
 }
