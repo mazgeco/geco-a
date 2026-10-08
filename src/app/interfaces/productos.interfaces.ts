@@ -170,7 +170,7 @@ export interface InsumoItinerario {
   horaEjecucion: string; // Ej: '15:00'
   
   idProveedor: number | null;
-  nombreProveedor?: string; 
+  razonSocial?: string; 
   
   darAnticipo: boolean; 
   observacionInsumoXItinerario: string;
@@ -180,6 +180,12 @@ export interface InsumoItinerario {
   fechaCrea?: string;
   idUsuarioModifica?: string;
   fechaModifica?: string;
+}
+
+export interface InsumoItinerarioResponse {
+  status: string;
+  message: string;
+  data: InsumoItinerario[]; 
 }
 
 export interface Operacion {

@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse, ListaPrecioProductoResponse, GraficosResponse, TipoOperacionResponse, Impuesto, ImpuestoResponse, ImpuestoProducto, ImpuestosProductoResponse, TipoProducto,TipoProductoResponse, TarifaFila} from '../interfaces/productos.interfaces';
+import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, InsumoItinerarioResponse, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse, ListaPrecioProductoResponse, GraficosResponse, TipoOperacionResponse, Impuesto, ImpuestoResponse, ImpuestoProducto, ImpuestosProductoResponse, TipoProducto,TipoProductoResponse, TarifaFila} from '../interfaces/productos.interfaces';
 import { SavedRow } from '../interfaces/general.interface'
 
 @Injectable({
@@ -126,33 +126,55 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
 
   // Lee los insumos de un itinerario (día) específico
   // OJO: El backend pide idItinerario por Query Param
- listaInsumosPorItinerario(idItinerario: number) {
-    // Le quitamos el '/' inicial y le agregamos 'productos/'
-    return this.http.get<any>(`${this.apiUrl}productos/insumosxitinerario/itinerario?idItinerario=${idItinerario}`);
-  }
+//  listaInsumosPorItinerario(idItinerario: number) {
+//     // Le quitamos el '/' inicial y le agregamos 'productos/'
+//     return this.http.get<any>(`${this.apiUrl}productos/insumosxitinerario/itinerario?idItinerario=${idItinerario}`);
+//   }
+
+  listaInsumosPorItinerario(idItinerario: number): Observable<InsumoItinerarioResponse> {
+      return this.http.get<InsumoItinerarioResponse>(`${this.apiUrl}productos/insumosxitinerario/itinerario?idItinerario=${idItinerario}`);
+    }
+  
 
   // Inserta o actualiza un insumo
-  grabaInsumoItinerario(insumo: InsumoItinerario, idUsuario: string) {
-    if (insumo.idInsumoXItinerario === 0) {
-       insumo.idInsumoXItinerario = null;
-      // POST (Nuevo): Pasamos el idUsuario en la URL
-      return this.http.post<any>(`${this.apiUrl}productos/insumosxitinerario/${idUsuario}`, insumo);
-    } else {
-      // PUT (Actualizar): Pasamos idUsuario en URL y el idInsumoXItinerario como Query Param
-      return this.http.put<any>(
-        `${this.apiUrl}productos/insumosxitinerario/${idUsuario}?idInsumoXItinerario=${insumo.idInsumoXItinerario}`, 
-        insumo
-      );
-    }
-  }
+  // grabaInsumoItinerario(insumo: InsumoItinerario, idUsuario: string) {
+  //   if (insumo.idInsumoXItinerario === 0) {
+  //      insumo.idInsumoXItinerario = null;
+  //     // POST (Nuevo): Pasamos el idUsuario en la URL
+  //     return this.http.post<any>(`${this.apiUrl}productos/insumosxitinerario/${idUsuario}`, insumo);
+  //   } else {
+  //     // PUT (Actualizar): Pasamos idUsuario en URL y el idInsumoXItinerario como Query Param
+  //     return this.http.put<any>(
+  //       `${this.apiUrl}productos/insumosxitinerario/${idUsuario}?idInsumoXItinerario=${insumo.idInsumoXItinerario}`, 
+  //       insumo
+  //     );
+  //   }
+  // }
 
- 
+   grabaInsumoItinerario(insumo: InsumoItinerario, nuevaFila: boolean): Observable<SavedRow> {
+        if (nuevaFila) {
+          insumo.idInsumoXItinerario = null;
+          return this.http.post<SavedRow>(
+            `${this.apiUrl}productos/insumosxitinerario/${this.idUsuario}`,
+            insumo,
+          );
+        } else {
+          const params = new HttpParams().set('idInsumoXItinerario', insumo.idInsumoXItinerario!);
+          return this.http.put<SavedRow>(
+            `${this.apiUrl}productos/insumosxitinerario/${this.idUsuario}`,
+            insumo,
+            { params },
+          );
+        }
+      }
 
-  // Elimina un insumo (Asumiendo la estructura estándar del DELETE que no se ve completa en la foto)
-  eliminaInsumoItinerario(idInsumoXItinerario: number, idUsuario: string) {
-    return this.http.delete<any>(
-      `${this.apiUrl}productos/insumosxitinerario/${idUsuario}?idInsumoXItinerario=${idInsumoXItinerario}`
-    );
+
+
+  eliminaInsumoItinerario(idInsumoXItinerario: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idInsumoXItinerario', idInsumoXItinerario!);
+    return this.http.delete<SavedRow>(`${this.apiUrl}productos/insumosxitinerario/${this.idUsuario}`, {
+      params,
+    });
   }
 
   // Asegúrate de importar Observable desde 'rxjs'
