@@ -1,0 +1,201 @@
+<p-confirmdialog />
+<div class="flex flex-wrap gap-2 mb-3">
+  <p-button
+    label="Agregar día"
+    icon="pi pi-plus"
+    [disabled]="!puedeSalir()"
+    (onClick)="agregar()"
+  />
+  <p-button
+    label="Eliminar día"
+    icon="pi pi-trash"
+    severity="danger"
+    [disabled]="!dia() || !puedeSalir()"
+    (onClick)="eliminar()"
+  />
+</div>
+@if (mensaje()) {
+  <p-message [severity]="error() ? 'error' : 'success'">{{ mensaje() }}</p-message>
+}
+@if (cargando()) {
+  <div class="p-3" role="status">Cargando itinerario...</div>
+}
+<nav class="flex gap-2 overflow-x-auto my-3" aria-label="Días del itinerario">
+  @for (d of dias(); track d.idItinerarioRes) {
+    <button
+      pButton
+      type="button"
+      class="flex flex-column flex-shrink-0 p-3"
+      [outlined]="d.idItinerarioRes !== dia()?.idItinerarioRes"
+      [disabled]="guardando() || cargando()"
+      (click)="seleccionar(d)"
+      [attr.aria-pressed]="d.idItinerarioRes === dia()?.idItinerarioRes"
+    >
+      <span>DÍA {{ d.diaItinerario }}</span
+      ><small>{{ d.fechaCumpleItinerario | date: 'yyyy-MM-dd' }}</small>
+    </button>
+  }
+</nav>
+@if (dia(); as actual) {
+  <div class="grid">
+    <div class="col-12 xl:col-4" style="min-width: 0">
+      <p-panel [header]="'Ficha operativa · Día ' + actual.diaItinerario">
+        <fieldset [disabled]="guardando() || cargando()" class="border-none p-0 m-0">
+          <div class="field">
+            <label class="block">Fecha del día</label
+            ><input
+              pInputText
+              class="w-full"
+              [value]="actual.fechaCumpleItinerario || ''"
+              readonly
+            />
+          </div>
+          <div class="field">
+            <label class="block">Imagen del itinerario (archivo)</label
+            ><input
+              pInputText
+              class="w-full"
+              [(ngModel)]="diaModelo.imagenItinerario"
+              (ngModelChange)="cambiar()"
+            />
+          </div>
+          <div class="grid">
+            <div class="field col-6">
+              <label class="block">Hora inicio</label
+              ><input
+                pInputText
+                class="w-full"
+                type="time"
+                [(ngModel)]="diaModelo.horaInicio"
+                (ngModelChange)="cambiar()"
+              />
+            </div>
+            <div class="field col-6">
+              <label class="block">Hora fin</label
+              ><input
+                pInputText
+                class="w-full"
+                type="time"
+                [(ngModel)]="diaModelo.horaFin"
+                (ngModelChange)="cambiar()"
+              />
+            </div>
+          </div>
+          @if (actual.importado === 'S') {
+            <p-message severity="info"
+              >Importado de {{ actual.idProductoImportacion }} · Día
+              {{ actual.diaImportacion }}</p-message
+            >
+          }
+          <div class="field">
+            <label class="block mb-1">Idioma</label>
+            <p-select
+              class="w-full"
+              [options]="catalogos().idiomas"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+              [ngModel]="texto.idIdioma"
+              (ngModelChange)="idioma($event)"
+              [disabled]="sucio() || guardando() || cargando()"
+            />
+          </div>
+          <div class="field">
+            <label class="block mb-1">Descripción</label
+            ><p-editor
+              [(ngModel)]="texto.descripcionItinerario"
+              (ngModelChange)="cambiar()"
+              [readonly]="guardando() || cargando()"
+              [style]="{ height: '220px' }"
+            />
+          </div>
+          <div class="grid">
+            <div class="field col-12 md:col-6">
+              <label class="block">Origen</label
+              ><input
+                pInputText
+                class="w-full"
+                [(ngModel)]="texto.origen"
+                (ngModelChange)="cambiar()"
+              />
+            </div>
+            <div class="field col-12 md:col-6">
+              <label class="block">Destino</label
+              ><input
+                pInputText
+                class="w-full"
+                [(ngModel)]="texto.destino"
+                (ngModelChange)="cambiar()"
+              />
+            </div>
+          </div>
+          <div class="field">
+            <label class="block">Actividad</label
+            ><textarea
+              pTextarea
+              class="w-full"
+              rows="3"
+              [(ngModel)]="texto.actividad"
+              (ngModelChange)="cambiar()"
+            ></textarea>
+          </div>
+          <div class="field">
+            <label class="block">Duración</label
+            ><input
+              pInputText
+              class="w-full"
+              [(ngModel)]="texto.duracionItinerario"
+              (ngModelChange)="cambiar()"
+            />
+          </div>
+          <div class="field">
+            <label class="block">Comidas / tipo de inclusión</label
+            ><p-select
+              class="w-full"
+              [options]="catalogos().inclusiones"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+              [showClear]="true"
+              [(ngModel)]="texto.idTipoInclusion"
+              (ngModelChange)="cambiar()"
+              [disabled]="guardando() || cargando()"
+            />
+          </div>
+          <div class="field">
+            <label class="block">Observaciones</label
+            ><p-editor
+              [(ngModel)]="texto.observaciones"
+              (ngModelChange)="cambiar()"
+              [readonly]="guardando() || cargando()"
+              [style]="{ height: '150px' }"
+            />
+          </div>
+        </fieldset>
+        <div class="flex gap-2 mt-2">
+          <p-button
+            label="Guardar ficha"
+            icon="pi pi-save"
+            [loading]="guardando()"
+            [disabled]="!sucio() || cargando() || guardando()"
+            (onClick)="guardar()"
+          />
+          <p-button
+            label="Descartar"
+            severity="secondary"
+            [disabled]="!sucio() || guardando()"
+            (onClick)="descartar()"
+          />
+        </div>
+      </p-panel>
+    </div>
+    <div class="col-12 xl:col-8" style="min-width: 0">
+      <app-grd-res0019
+        [idItinerarioRes]="actual.idItinerarioRes!"
+        (modificado)="modificado.emit()"
+      />
+    </div>
+  </div>
+} @else if (!cargando()) {
+  <p-message severity="info"
+    >Este producto reservado no tiene días. Pulse Agregar día para comenzar.</p-message
+  >
+}

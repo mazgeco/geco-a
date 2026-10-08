@@ -33,7 +33,8 @@ export class ProveedoresService {
   //BÚSQUEDA INSUMO
   buscaInsumos(nombre: string): Observable<InsumosResponse> {
     return this.http.get<InsumosResponse>(
-      `${this.apiUrl}proveedores/insumos/busqueda?nombre=${nombre}`,
+      `${this.apiUrl}proveedores/insumos/busqueda`,
+      { params: new HttpParams().set('nombre', nombre) },
     );
   }
 

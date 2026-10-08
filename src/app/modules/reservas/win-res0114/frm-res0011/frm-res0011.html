@@ -1,0 +1,107 @@
+@if (mensaje()) {
+  <p-message severity="error">{{ mensaje() }}</p-message>
+}
+<fieldset [disabled]="guardando()" class="border-none p-0 m-0">
+  <div class="field">
+    <label class="block mb-1">Insumo *</label>
+    <p-autocomplete
+      class="w-full"
+      [fluid]="true"
+      [(ngModel)]="insumo"
+      [suggestions]="sugerencias()"
+      optionLabel="descripcionInsumo"
+      [forceSelection]="true"
+      [showClear]="true"
+      [minLength]="3"
+      [disabled]="guardando()"
+      (completeMethod)="buscar($event)"
+      (onSelect)="seleccionar($event)"
+      (onClear)="limpiar()"
+    />
+  </div>
+  @for (grupo of grupos; track grupo.titulo) {
+    <p-panel [header]="grupo.titulo" class="block mb-3">
+      <div class="grid">
+        @for (campo of grupo.campos; track campo.clave) {
+          <div class="field col-12 md:col-6">
+            <label class="block mb-1" [for]="campo.clave">{{ campo.etiqueta }}</label>
+            @if (campo.tipo === 'sn') {
+              <p-select
+                class="w-full"
+                [inputId]="campo.clave"
+                [options]="siNo"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+                [(ngModel)]="modelo[campo.clave]"
+                [disabled]="guardando()"
+                (ngModelChange)="cambio()"
+              />
+            } @else {
+              <input
+                pInputText
+                class="w-full"
+                [id]="campo.clave"
+                [type]="campo.tipo"
+                [attr.step]="campo.tipo === 'number' ? 'any' : null"
+                [(ngModel)]="modelo[campo.clave]"
+                (ngModelChange)="cambio()"
+              />
+            }
+          </div>
+        }
+      </div>
+    </p-panel>
+  }
+  <div class="grid">
+    <div class="field col-12 md:col-6">
+      <label class="block">Total de impuestos unitario</label
+      ><input pInputText class="w-full" [value]="modelo['totalImpuesto'] ?? 0" readonly />
+    </div>
+    <div class="field col-12 md:col-6">
+      <label class="block">Costo real unitario (con impuestos)</label
+      ><input
+        pInputText
+        class="w-full"
+        [value]="+(modelo['costoRealSinImpuesto'] ?? 0) + +(modelo['totalImpuesto'] ?? 0)"
+        readonly
+      />
+    </div>
+  </div>
+  <div class="field">
+    <label class="block">Observaciones</label
+    ><textarea
+      pTextarea
+      class="w-full"
+      rows="4"
+      [(ngModel)]="modelo['observacionInsumo']"
+      (ngModelChange)="cambio()"
+    ></textarea>
+  </div>
+</fieldset>
+<p-message severity="info"
+  >Los impuestos y el costo real se recalculan en el servidor al guardar. Los totales de abajo son
+  provisionales si cambió el costo o el insumo.</p-message
+>
+<div class="flex flex-wrap gap-3 my-3">
+  <span>Total presupuestado: {{ totalPresupuestado.toFixed(2) }}</span
+  ><span>Total real: {{ totalReal.toFixed(2) }}</span>
+</div>
+<div class="flex flex-wrap gap-2">
+  <p-button
+    label="Guardar insumo"
+    icon="pi pi-save"
+    [loading]="guardando()"
+    [disabled]="guardando() || !insumo?.idInsumo"
+    (onClick)="guardar()"
+  />
+  <p-button label="Cerrar" severity="secondary" [disabled]="guardando()" (onClick)="cancelar()" />
+  @if (sucio()) {
+    <p-button
+      label="Descartar y cerrar"
+      severity="danger"
+      [outlined]="true"
+      [disabled]="guardando()"
+      (onClick)="descartar()"
+    />
+  }
+</div>

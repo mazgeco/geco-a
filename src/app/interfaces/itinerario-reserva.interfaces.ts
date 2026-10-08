@@ -1,0 +1,85 @@
+export interface RespuestaItinerario<T> { status: string; message: string; idSecuencial?: number; data: T; }
+export interface OpcionReserva { codigo: string | number; etiqueta: string; }
+export interface CatalogosItinerario { idiomas: OpcionReserva[]; inclusiones: OpcionReserva[]; }
+export interface DiaReserva {
+  idItinerarioRes?: number | null;
+  idDetalleReserva?: number | null;
+  diaItinerario?: number | null;
+  imagenItinerario?: string | null;
+  fechaCumpleItinerario?: string | null;
+  importado?: string | null;
+  idProductoImportacion?: string | null;
+  diaImportacion?: number | null;
+  horaInicio?: string | null;
+  horaFin?: string | null;
+  weIdItinerary?: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+export interface TextoDiaReserva {
+  idIdiomaXItinerarioRes?: number | null;
+  idIdioma?: string | null;
+  idTipoInclusion?: number | null;
+  idItinerarioRes?: number | null;
+  descripcionItinerario?: string | null;
+  origen?: string | null;
+  destino?: string | null;
+  actividad?: string | null;
+  duracionItinerario?: string | null;
+  observaciones?: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+export interface InsumoDiaReserva {
+  idInsumoXItinerarioRes?: number | null;
+  idItinerarioRes?: number | null;
+  idInsumo?: number | null;
+  descripcionInsumo?: string | null;
+  totalPresupuestado?: number | null;
+  totalReal?: number | null;
+  idPrecioInsumo?: number | null;
+  idPrecioXTemporada?: number | null;
+  idProducto?: string | null;
+  idProductoXPrecioProducto?: number | null;
+  idProveedor?: number | null;
+  idInsumoXItinerarioRes2?: number | null;
+  idMotivoDescuento?: number | null;
+  tipoInsumoXItinerario?: string | null;
+  cantidadInsumo?: number | null;
+  nroPaxInsumo?: number | null;
+  tipoPrecio?: string | null;
+  precioFijo?: number | null;
+  factorPrecio?: number | null;
+  costoPresupuestado?: number | null;
+  totalImpuesto?: number | null;
+  costoReal?: number | null;
+  descuentoInsumo?: number | null;
+  nroComprobanteInsumo?: string | null;
+  fechaInicioInsumo?: string | null;
+  fechaFinInsumo?: string | null;
+  fechaMaxPago?: string | null;
+  fechaPagoInsumo?: string | null;
+  codigoConfirmaProveedor?: string | null;
+  observacionInsumo?: string | null;
+  insumoPagado?: string | null;
+  insumoFacturado?: string | null;
+  utilidadXInsumo?: number | null;
+  apruebaPago?: string | null;
+  idUsuarioResponsable?: string | null;
+  horaEjecucion?: string | null;
+  fechaConfirmacion?: string | null;
+  timeLimit?: string | null;
+  darAnticipo?: string | null;
+  centroCostos?: string | null;
+  costoRealSinImpuesto?: number | null;
+  inventarioDescargado?: string | null;
+  lugar?: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}

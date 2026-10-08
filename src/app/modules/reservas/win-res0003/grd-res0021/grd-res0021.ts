@@ -1,4 +1,5 @@
-import { Component, computed, inject, Input, OnChanges, OnDestroy, SimpleChanges, signal } from '@angular/core';
+import { WinRes0114 } from '../../win-res0114/win-res0114';
+import { Component, computed, inject, Input, OnChanges, OnDestroy, SimpleChanges, signal, ViewChild } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -28,7 +29,7 @@ type FilaReserva = FilaTabla<DetalleReserva> & {
 
 @Component({
   selector: 'app-grd-res0021',
-  imports: [...PRIMENG_MODULES, DatePipe, DecimalPipe],
+  imports: [...PRIMENG_MODULES, DatePipe, DecimalPipe, WinRes0114],
   providers: [ConfirmationService],
   templateUrl: './grd-res0021.html',
 })
@@ -36,6 +37,34 @@ export class GrdRes0021 implements OnChanges, OnDestroy {
   //LLAMADA AL ID Master
   @Input()
   idReserva!: number;
+  itinerarioAbierto = signal<string|null>(null);
+  paginaProductos=0;
+  alPaginar(event:{first?:number},tabla:{first:number|null|undefined}):void {
+    if(this.winItinerario && !this.winItinerario.puedeCerrar()) {
+      tabla.first=this.paginaProductos;
+      this.toastService.showMessage('warn','Itinerario','Guarde o descarte los cambios antes de cambiar de página.');return;
+    }
+    this.paginaProductos=event.first??0;this.itinerarioAbierto.set(null);
+  }
+  @ViewChild(WinRes0114) winItinerario?: WinRes0114;
+  private actualizacionItinerario?: Subscription;
+  verItinerario(fila: FilaReserva): void {
+    if(!fila.idDetalleReserva || this.guardando()[fila._rowId] || this.ediciones[fila._rowId]) return;
+    if(this.winItinerario && !this.winItinerario.puedeCerrar()) {
+      this.toastService.showMessage('warn','Itinerario','Guarde o descarte los cambios y cierre la ficha del insumo antes de salir.');return;
+    }
+    this.itinerarioAbierto.set(this.itinerarioAbierto()===fila._rowId?null:fila._rowId);
+  }
+  actualizaDesdeItinerario(fila: FilaReserva): void {
+    this.actualizacionItinerario?.unsubscribe();const reserva=this.idReserva;
+    this.actualizacionItinerario=this.reservasService.listaDetalleReserva(reserva).subscribe({
+      next:r=>{if(reserva!==this.idReserva || !this.filas().includes(fila))return;
+        const actual=r.data.find(d=>d.idDetalleReserva===fila.idDetalleReserva);
+        if(actual){Object.assign(fila,actual,{fechaInicio:this.fechaDesdeBack(actual.fechaInicio),fechaFin:this.fechaDesdeBack(actual.fechaFin)});fila._calculo=undefined;this.filas.update(v=>[...v]);this.cargaTotales(fila);}},
+      error:e=>this.toastService.showMessage('error','Reserva',e.error?.message??'No se pudo actualizar el detalle después de editar el itinerario.')
+    });
+  }
+
 
   /******************************************************************************************
    * DECLARACIÓN DE VARIABLES
@@ -195,7 +224,16 @@ export class GrdRes0021 implements OnChanges, OnDestroy {
   }
 
   //MÉTODO QUE CARGA TODAS LAS IDENTIFICACIONES EN EL GRID
+  refrescar(): void {
+    if(this.winItinerario && !this.winItinerario.puedeCerrar()) {
+      this.toastService.showMessage('warn','Itinerario','Guarde o descarte la ficha antes de actualizar la lista.');return;
+    }
+    this.cargaDatos(this.idReserva);
+  }
   cargaDatos(idReserva: number): void {
+    this.itinerarioAbierto.set(null);
+    this.paginaProductos=0;
+    this.actualizacionItinerario?.unsubscribe();
     this.carga?.unsubscribe();
     this.limpiaCalculos();
     this.ediciones = {};
@@ -245,6 +283,7 @@ export class GrdRes0021 implements OnChanges, OnDestroy {
 
   //MÉTODO QUE ELIMINA UNA FILA DEL GRID
   eliminarFila(rowData: FilaReserva): void {
+    if(this.itinerarioAbierto()===rowData._rowId) {this.toastService.showMessage('warn','Reserva','Cierre primero el itinerario del producto.');return;}
     if (rowData[this.campoId] === 0) {
       this.filas.set(this.filas().filter(item => item._rowId !== rowData._rowId));
     } else {
@@ -290,6 +329,7 @@ export class GrdRes0021 implements OnChanges, OnDestroy {
 
   //MÉTODO QUE ELIMINA VARIAS FILAS SELECCIONADAS DEL GRID
   eliminarVarias(): void {
+    if(this.itinerarioAbierto()) {this.toastService.showMessage('warn','Reserva','Cierre primero el itinerario antes de eliminar productos.');return;}
     const selected = this.selectedRows;
     if (selected.length > 0) {
       this.confirmationService.confirm({
@@ -539,5 +579,6 @@ export class GrdRes0021 implements OnChanges, OnDestroy {
     this.limpiaCalculos();
     this.carga?.unsubscribe();
     this.busqueda?.unsubscribe();
+    this.actualizacionItinerario?.unsubscribe();
   }
 }

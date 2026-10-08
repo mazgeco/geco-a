@@ -27,7 +27,7 @@
         class="mr-1"
         pTooltip="Refresca los datos del grid"
         tooltipPosition="bottom"
-        (onClick)="cargaDatos(idReserva)"
+        (onClick)="refrescar()"
       />
       <p-button
         id="btnGrdRes00214"
@@ -65,6 +65,9 @@
   <!-- ===================================== -->
   <p-table
     id="grdRes0021"
+    #tablaProductos
+    [first]="paginaProductos"
+    (onPage)="alPaginar($event, tablaProductos)"
     [value]="filas()"
     [editingRowKeys]="ediciones"
     editMode="row"
@@ -139,6 +142,7 @@
               text
               rounded
               severity="primary"
+              [disabled]="itinerarioAbierto() === rowData._rowId"
               (click)="iniciarEdicion(rowData)"
             ></button>
             <button
@@ -150,6 +154,13 @@
               severity="danger"
               (click)="eliminarFila(rowData)"
             ></button>
+          }
+          @if(!editing && rowData.idDetalleReserva){
+            <button pButton type="button" icon="pi pi-map" text rounded
+              [severity]="itinerarioAbierto()===rowData._rowId?'info':'secondary'"
+              pTooltip="Itinerario e insumos" aria-label="Ver itinerario e insumos"
+              [attr.aria-expanded]="itinerarioAbierto()===rowData._rowId"
+              [disabled]="guardando()[rowData._rowId]" (click)="verItinerario(rowData)"></button>
           }
           <!-- GUARDAR / CANCELAR -->
           @if (editing) {
@@ -177,6 +188,10 @@
           }
         </td>
       </tr>
+      @if(itinerarioAbierto()===rowData._rowId && !editing){
+        <tr><td colspan="9"><app-win-res0114 [idDetalleReserva]="rowData.idDetalleReserva"
+          [nombreProducto]="rowData.nombreProducto || ''" (modificado)="actualizaDesdeItinerario(rowData)" /></td></tr>
+      }
       @if (editing) {
         <tr>
           <td colspan="9">
