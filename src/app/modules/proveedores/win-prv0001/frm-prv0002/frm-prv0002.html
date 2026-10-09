@@ -61,7 +61,18 @@
       <div class="col-12">
         <div class="field mb-1">
           <label>Razon social <span class="asterisco">*</span></label>
-          <input pInputText class="w-full" formControlName="razonSocial" />
+          <!-- <input pInputText class="w-full" formControlName="razonSocial" /> -->
+           <p-autocomplete
+                class="w-full"
+                [fluid]="true"
+                formControlName="razonSocial"
+                [suggestions]="personas()"
+                (completeMethod)="buscarPersona($event)"
+                (onSelect)="seleccionarPersona($event)"
+                optionLabel="razonSocial"
+                [minLength]="3"
+              >
+              </p-autocomplete>
         </div>
       </div>
       <!-- ======================= -->

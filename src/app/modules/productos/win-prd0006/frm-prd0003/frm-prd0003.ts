@@ -74,7 +74,11 @@ export class FrmPrd0003 implements OnInit {
 
   ngOnInit(): void {
     this.cargarTemporadas();
-    this.consultarTipoPrecio();
+    
+    if (this.idProducto && this.idProducto !== '0') {
+    // Si el producto SÍ existe (es modo edición), entonces vamos a Java
+      this.consultarTipoPrecio();
+  }
   }
 
     // READ TIPOS PARA EL COMBOBOX

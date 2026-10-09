@@ -6,11 +6,13 @@ import { Router } from '@angular/router';
 //Imports generales
 import { Combo } from '../../../../interfaces/general.interface';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
+import { Personas} from '../../../../interfaces/personas.interfaces';
 import { EstadoProveedor,Proveedores} from '../../../../interfaces/proveedores.interfaces';
 
 //Servicios propios
 import { ToastService } from '../../../../services/toast.service';
 import { MessageService } from '../../../../services/message.service';
+import { PersonasService } from '../../../../services/personas.service';
 import { ProveedoresService } from '../../../../services/proveedores.service';
 import { FuntionsService } from '../../../../services/functions.service';
 import { StatusMessage } from '../../../../interfaces/general.interface';
@@ -47,6 +49,7 @@ export class FrmPrv0002 implements OnInit {
 
   //INJECTIONS PRIVADAS
   private proveedoresService = inject(ProveedoresService);
+  private personasService = inject(PersonasService);
   private toastService = inject(ToastService);
   private confirmationService = inject(ConfirmationService);
   private fb = inject(FormBuilder);
@@ -63,6 +66,7 @@ export class FrmPrv0002 implements OnInit {
   loadingProveedor = signal(true);
   estadoProveedor = signal<string>('INACTIVO');
   esActivo = signal<boolean>(false);
+  personas = signal<Personas[]>([]);
 
   //GETTER PARA TRAER LOS DATOS ACTUALES DE LOS PRODUCTOS
   get currentData(): Proveedores {
@@ -137,4 +141,39 @@ export class FrmPrv0002 implements OnInit {
              }
            });
          }
+
+  // 2. Método para buscar la persona en tu backend mientras escribes
+buscarPersona(event: any): void {
+  const termino = event.query.trim();
+  if (termino.length < 3) {
+    this.personas.set([]);
+    return;
+  }
+  
+  // Llama a tu servicio de personas (ajusta el nombre del servicio)
+  this.personasService.buscaPersona(termino).subscribe({
+    next: (resp) => {
+      this.personas.set(resp.data);
+    },
+    error: (err) => {
+      this.toastService.showMessage('error', 'Error', 'No se pudo buscar la persona');
+    }
+  });
+}
+
+// 3. Método para capturar la selección y llenar el formulario
+seleccionarPersona(event: any): void {
+  // Como quitamos optionValue en el HTML, event.value trae el objeto completo de la persona
+  const persona = event.value; 
+  
+  // Autocompletas automáticamente otros campos del formulario basándote en la persona elegida
+  this.frmPrv0002.patchValue({
+    // Ajusta las variables según tu interfaz de Persona y tu FormGroup
+    idPersona: persona.idPersona,
+    nombreComercial: persona.nombreCompleto,
+    identificacion: persona.cedulaRuc 
+  });
+}
+
+
 }

@@ -2,14 +2,14 @@ import { Component, computed, inject, Input, OnInit, OnChanges, SimpleChanges, s
 import { ConfirmationService } from 'primeng/api';
 import { AutoCompleteCompleteEvent } from 'primeng/types/autocomplete';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
-import { InsumoItinerario, TipoInsumo, ListaInsumo, ListaProveedores} from '../../../../interfaces/productos.interfaces';
+import { InsumoItinerario, ListaInsumo, ListaProveedores} from '../../../../interfaces/productos.interfaces';
 import { FuntionsService } from '../../../../services/functions.service';
 import { ProductosService } from '../../../../services/productos.service';
 import { StatusMessage } from '../../../../interfaces/general.interface';
 import { MessageService } from '../../../../services/message.service';
 import { ToastService } from '../../../../services/toast.service';
 import { StateService } from '../state-service';
-import { Proveedores } from '../../../../interfaces/proveedores.interfaces';
+import { Proveedores, Insumos, TipoInsumo} from '../../../../interfaces/proveedores.interfaces';
 import { ProveedoresService } from '../../../../services/proveedores.service';
 import {
   Combo,
@@ -61,8 +61,9 @@ export class GrdPrd0006 implements OnInit, OnChanges {
   selectedRows!: InsumoItinerario[];
   metaKey: boolean = true;
   filas = signal<FilaTabla<InsumoItinerario>[]>([]);
-  tiposInsumo = signal<TipoInsumo[]>([]);
+  tipoInsumo = signal<TipoInsumo[]>([]);
   listaInsumos = signal<ListaInsumo[]>([]); // Ajusta el 'any' a tu interfaz real de Insumos
+  insumos = signal<Insumos[]>([]);
   listaProveedores = signal<ListaProveedores[]>([]); // Ajusta el 'any' a tu interfaz de Proveedores
    proveedores = signal<Proveedores[]>([]);
   nuevaFila: InsumoItinerario = {
@@ -75,7 +76,7 @@ export class GrdPrd0006 implements OnInit, OnChanges {
       descripcionInsumo: '',
       horaEjecucion: '',
       idProveedor: null,
-      razonSocial: '',
+      nombreProveedor: '',
       darAnticipo: false,
       observacionInsumoXItinerario: '',
       idUsuarioCrea: '',
@@ -86,9 +87,9 @@ export class GrdPrd0006 implements OnInit, OnChanges {
 
   // 3. SE EJECUTA UNA SOLA VEZ AL ABRIR LA PESTAÑA
   ngOnInit(): void {
-    this.cargaTipos();
-    this.cargaInsumos();
-    this.cargaProveedores();
+    //this.cargaTipos();
+    //this.cargaInsumos();
+    //this.cargaProveedores();
   //   if (this.idItinerario) {
   //   this.cargaDatos();
   // }
@@ -160,17 +161,17 @@ export class GrdPrd0006 implements OnInit, OnChanges {
 
 
   // READ TIPOS PARA EL COMBOBOX
-cargaTipos(): void {
-    this.productosService.listaTiposInsumos().subscribe({
-      next: (resp) => {
-        // 1. Guardamos los tipos en el Signal
-        this.tiposInsumo.set(resp.data);
-      },
-      error: (err) => {
-        this.toastService.showMessage('error', 'Error', 'Error al cargar tipos: ' + err.error.message);
-      }
-    });
-  }
+// cargaTipos(): void {
+//     this.productosService.listaTiposInsumos().subscribe({
+//       next: (resp) => {
+//         // 1. Guardamos los tipos en el Signal
+//         this.tipoInsumo.set(resp.data);
+//       },
+//       error: (err) => {
+//         this.toastService.showMessage('error', 'Error', 'Error al cargar tipos: ' + err.error.message);
+//       }
+//     });
+//   }
 // READ INSUMOS PARA EL COMBOX
   cargaInsumos(): void {
     this.productosService.listaInsumos().subscribe({
@@ -185,17 +186,17 @@ cargaTipos(): void {
   }
 
   // Método para descargar los proveedores
-  cargaProveedores(): void {
-    this.productosService.listaProveedores().subscribe({
-      next: (resp) => {
-        console.log('LO QUE LLEGA DE PROVEEDORES:', resp);
-        this.listaProveedores.set(resp.data);
-      },
-      error: (err) => {
-        this.toastService.showMessage('error', 'Error', 'Error al cargar proveedores');
-      }
-    });
-  }
+  // cargaProveedores(): void {
+  //   this.productosService.listaProveedores().subscribe({
+  //     next: (resp) => {
+  //       console.log('LO QUE LLEGA DE PROVEEDORES:', resp);
+  //       this.listaProveedores.set(resp.data);
+  //     },
+  //     error: (err) => {
+  //       this.toastService.showMessage('error', 'Error', 'Error al cargar proveedores');
+  //     }
+  //   });
+  // }
   
 
  // CREATE / UPDATE
@@ -434,7 +435,63 @@ cargaTipos(): void {
   seleccionarProveedor(event: any, fila: InsumoItinerario): void {
     const proveedor = event.value;
     fila.idProveedor = proveedor.idProveedor;
-    fila.razonSocial = proveedor.nombrePersona;
+    fila.nombreProveedor = proveedor.nombrePersona;
+  }
+
+  buscarInsumo(event: AutoCompleteCompleteEvent): void {
+    const nombre = event.query.trim();
+    if (nombre.length < 3) {
+      this.insumos.set([]);
+      return;
+    }
+
+    this.proveedoresService.buscaInsumos(nombre).subscribe({
+      next: (resp) => {
+        this.insumos.set(resp.data);
+      },
+      error: (err) => {
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar las insumos: ' + err.error.message,
+          err.error.status,
+        );
+      },
+    });
+  }
+
+  seleccionarInsumo(event: any, fila: Insumos): void {
+    const insumo = event.value;
+    fila.idInsumo = insumo.idInsumo;
+    fila.descripcionInsumo = insumo.descripcionInsumo;
+  }
+
+  buscarTipoInsumo(event: AutoCompleteCompleteEvent): void {
+    const nombre = event.query.trim();
+    if (nombre.length < 3) {
+      this.tipoInsumo.set([]);
+      return;
+    }
+
+    this.proveedoresService.buscaTipoInsumo(nombre).subscribe({
+      next: (resp) => {
+        this.tipoInsumo.set(resp.data);
+      },
+      error: (err) => {
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar las insumos: ' + err.error.message,
+          err.error.status,
+        );
+      },
+    });
+  }
+
+  seleccionarTipoInsumo(event: any, fila: TipoInsumo): void {
+    const tipoInsumo = event.value;
+    fila.idTipoInsumo = tipoInsumo.idTipoInsumo;
+    fila.descripcionTipoInsumo = tipoInsumo.descripcionTipoInsumo;
   }
 
   

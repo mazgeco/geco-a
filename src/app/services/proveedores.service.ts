@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 import { SavedRow } from '../interfaces/general.interface';
-import { InsumosResponse, PersonaProveedorResponse, ProveedoresResponse, SuperTipoInsumo, SuperTipoInsumoResponse } from '../interfaces/proveedores.interfaces';
+import { InsumosResponse, TipoInsumoResponse, PersonaProveedorResponse, ProveedoresResponse, SuperTipoInsumo, SuperTipoInsumoResponse } from '../interfaces/proveedores.interfaces';
 import { GraficosResponse } from '../interfaces/general.interface';
 import { AuthService } from './auth.service';
 
@@ -34,6 +34,13 @@ export class ProveedoresService {
   buscaInsumos(nombre: string): Observable<InsumosResponse> {
     return this.http.get<InsumosResponse>(
       `${this.apiUrl}proveedores/insumos/busqueda?nombre=${nombre}`,
+    );
+  }
+
+  //BÚSQUEDA TIPO DE INSUMO
+  buscaTipoInsumo(nombre: string): Observable<TipoInsumoResponse> {
+    return this.http.get<TipoInsumoResponse>(
+      `${this.apiUrl}proveedores/tipoinsumos/busqueda?nombre=${nombre}`,
     );
   }
 

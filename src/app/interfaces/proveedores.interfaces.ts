@@ -81,6 +81,25 @@ export interface Insumos {
   fechaModifica?: string | null;
 }
 
+export interface TipoInsumo {
+    idTipoInsumo: number | null; 
+    idProveedor: number;
+    idSuperTipoInsumo: number;
+    descripcionTipoInsumo: string;
+    inventariar: string;
+    tipoInterno: string;
+    idUsuarioCrea?: string;
+    fechaCrea?: string;
+    idUsuarioModifica?: string;
+    fechaModifica?: string;
+}
+
+export interface TipoInsumoResponse {
+    status: string;
+    message: string;
+    data: TipoInsumo[]; 
+}
+
 //PERSONA PROVEEDO
 
 export interface ListaPersonaProveedorResponse {

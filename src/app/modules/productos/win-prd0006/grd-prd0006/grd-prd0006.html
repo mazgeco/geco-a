@@ -54,15 +54,25 @@
       <tr [pEditableRow]="rowData" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
         
         <!-- 1. TIPO DE INSUMO (p-select) -->
-        <td>
+       <td>
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <p-select [options]="tiposInsumo()" optionLabel="descripcionTipoInsumo"
-                optionValue="idTipoInsumo" [filter]="true" [(ngModel)]="rowData.idTipoInsumo"
-                placeholder="Seleccione" class="w-full" appendTo="body" />
+              <p-autocomplete
+                class="w-full"
+                [fluid]="true"
+                [(ngModel)]="rowData.descripcionTipoInsumo"
+                [ngModelOptions]="{standalone: true}"
+                [suggestions]="tipoInsumo()"
+                (completeMethod)="buscarTipoInsumo($event)"
+                (onSelect)="seleccionarTipoInsumo($event, rowData)"
+                optionLabel="descripcionTipoInsumo"
+                optionValue="idTipoInsumo"
+                [minLength]="3"
+              >
+              </p-autocomplete>
             </ng-template>
             <ng-template pTemplate="output">
-              {{ funciones.obtenerEtiqueta(tiposInsumo(), rowData.idTipoInsumo, 'tipoInsumo') }}
+              {{ rowData.nombreTipoInsumo }}
             </ng-template>
           </p-cellEditor>
         </td>
@@ -71,12 +81,22 @@
         <td>
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <p-select [options]="listaInsumos()" optionLabel="descripcionInsumo"
-                optionValue="idInsumo" [filter]="true" [(ngModel)]="rowData.idInsumo"
-                placeholder="Seleccione" class="w-full" appendTo="body" />
+              <p-autocomplete
+                class="w-full"
+                [fluid]="true"
+                [(ngModel)]="rowData.descripcionInsumo"
+                [ngModelOptions]="{standalone: true}"
+                [suggestions]="insumos()"
+                (completeMethod)="buscarInsumo($event)"
+                (onSelect)="seleccionarInsumo($event, rowData)"
+                optionLabel="descripcionInsumo"
+                optionValue="idInsumo"
+                [minLength]="3"
+              >
+              </p-autocomplete>
             </ng-template>
             <ng-template pTemplate="output">
-               {{ funciones.obtenerEtiqueta(listaInsumos(), rowData.idInsumo, 'insumo') }}
+              {{ rowData.nombreInsumo }}
             </ng-template>
           </p-cellEditor>
         </td>
@@ -98,7 +118,7 @@
               <p-autocomplete
                 class="w-full"
                 [fluid]="true"
-                [(ngModel)]="rowData.razonSocial"
+                [(ngModel)]="rowData.nombreProveedor"
                 [ngModelOptions]="{standalone: true}"
                 [suggestions]="proveedores()"
                 (completeMethod)="buscarProveedores($event)"
@@ -110,7 +130,7 @@
               </p-autocomplete>
             </ng-template>
             <ng-template pTemplate="output">
-              {{ rowData.razonSocial }}
+              {{ rowData.nombreProveedor }}
             </ng-template>
           </p-cellEditor>
         </td>
