@@ -4,23 +4,14 @@
 <div class="col-12">
   <p-toolbar>
     <ng-template #start>
-      @if (esActivo()) {
         <p-button
           icon="pi pi-check"
           class="mr-1"
-          label="Inactivar"
-          pTooltip="Inactiva al producto"
-          tooltipPosition="bottom"
+          [label]="(esActivo() ? 'Inactivar' : 'Activar')"
+          pTooltip="Cambia el estado del proveedor"
+          tooltipPosition="bottom",
+          (onClick)="cambiarEstado()"
         />
-      } @else {
-        <p-button
-          icon="pi pi-check"
-          class="mr-1"
-          label="Activar"
-          pTooltip="Activa al producto"
-          tooltipPosition="bottom"
-        />
-      }
       <p-button
         icon="pi pi-user"
         class="mr-1"

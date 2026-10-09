@@ -158,6 +158,7 @@ export class FrmPrv0002 implements OnInit {
           this.frmPrv0002.reset(resp.data);
           this.loadingProveedor.set(false);
           this.stateService.proveedor.set(resp.data);
+          this.esActivo.set(resp.data.estadoProveedor === 'A' ? true : false);
         },
         error: (err) => {
           this.toastService.showMessage(
@@ -173,7 +174,6 @@ export class FrmPrv0002 implements OnInit {
 
   //GRABA FORMA
   saveForm(proveedor: PersonaProveedor): void {
-    console.log(proveedor);
     this.proveedoresService.grabaProveedor(proveedor).subscribe({
       next: (resp) => {
         this.idProveedor = resp.idSecuencial!;
@@ -198,7 +198,8 @@ export class FrmPrv0002 implements OnInit {
   }
 
   //MÉTODO QUE CAMBIA EL ESTADO DEL PRODUCTO
-  cambiarEstado(estado: EstadoProveedor): void {
+  cambiarEstado(): void {
+    const estado = this.esActivo() ? 'I' : 'A';
     this.confirmationService.confirm({
       message: '¿Realmente desea cambiar el estado de este producto?',
       header: 'Cambio de estado',
