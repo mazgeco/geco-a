@@ -8,6 +8,10 @@ export class StateService {
 
   proveedor = signal<PersonaProveedor | null>(null);
 
+  codigo = computed(() =>
+    this.proveedor()?.idProveedor ?? 0
+  );
+
   nombre = computed(() =>
     this.proveedor()?.razonSocial ?? ''
   );

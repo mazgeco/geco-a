@@ -67,7 +67,7 @@ export class FrmPrv0002 implements OnInit {
   );
 
   //DECLARACIÓN DE VARIABLES
-  loadingProveedor = signal(true);
+  loadingProveedor = signal(false);
   estadoProveedor = signal<string>('INACTIVO');
   esActivo = signal<boolean>(false);
   personas = signal<Personas[]>([]);
@@ -136,7 +136,18 @@ export class FrmPrv0002 implements OnInit {
   );
 
   ngOnInit(): void {
+    //Carga los datos de persona
     this.cargaDatos();
+
+    this.frmPrv0002.valueChanges.pipe(debounceTime(300)).subscribe(() => {
+      if (this.loadingProveedor()) {
+        return;
+      }
+      const proveedor = this.frmPrv0002.getRawValue();
+      if (proveedor.razonSocial !== '' && proveedor.tipoIdentificacion !== '' && proveedor.identificacion !== '') {
+        this.saveForm(proveedor);
+      }
+    });
   }
 
   cargaDatos(): void {
@@ -162,10 +173,19 @@ export class FrmPrv0002 implements OnInit {
 
   //GRABA FORMA
   saveForm(proveedor: PersonaProveedor): void {
+    console.log(proveedor);
     this.proveedoresService.grabaProveedor(proveedor).subscribe({
       next: (resp) => {
         this.idProveedor = resp.idSecuencial!;
         this.frmPrv0002.patchValue({ idProveedor: resp.idSecuencial }, { emitEvent: false });
+        this.stateService.proveedor.update((p) => ({
+          ...p!,
+          idProveedor: resp.idSecuencial!,
+          razonSocial: proveedor.razonSocial,
+        }));
+        if(this.currentData.idPersona === 0){
+          this.cargaDatos();
+        }
       },
       error: (err) => {
         this.toastService.showMessage(
@@ -173,7 +193,7 @@ export class FrmPrv0002 implements OnInit {
           'Error',
           'Ha ocurrido un error al grabar: ' + err.error.message,
         );
-      }
+      },
     });
   }
 
@@ -223,25 +243,28 @@ export class FrmPrv0002 implements OnInit {
     const persona = event.value;
 
     // Autocompletas automáticamente otros campos del formulario basándote en la persona elegida
-    this.frmPrv0002.patchValue({
-      // Ajusta las variables según tu interfaz de Persona y tu FormGroup
-      idPersona: persona.idPersona,
-      nombreComercial: persona.nombreComercial,
-      identificacion: persona.identificacion,
-      tipoIdentificacion:
-        persona.tipoIdentificacion === 'P'
-          ? '03'
-          : persona.tipoIdentificacion === 'C'
-            ? '02'
-            : persona.tipoIdentificacion === 'R'
-              ? '01'
-              : persona.tipoIdentificacion,
-      tipoPersona: persona.tipoPersona,
-      email: persona.correoElectronico,
-      telefono: persona.telefono,
-      direccion: persona.direccion,
-      estadoProveedor: persona.estadoPersona === 'A' ? 'A' : 'I',
-    });
+    this.frmPrv0002.patchValue(
+      {
+        // Ajusta las variables según tu interfaz de Persona y tu FormGroup
+        idPersona: persona.idPersona,
+        nombreComercial: persona.nombreComercial,
+        identificacion: persona.identificacion,
+        tipoIdentificacion:
+          persona.tipoIdentificacion === 'P'
+            ? '03'
+            : persona.tipoIdentificacion === 'C'
+              ? '02'
+              : persona.tipoIdentificacion === 'R'
+                ? '01'
+                : persona.tipoIdentificacion,
+        tipoPersona: persona.tipoPersona,
+        email: persona.correoElectronico,
+        telefono: persona.telefono,
+        direccion: persona.direccion,
+        estadoProveedor: persona.estadoPersona === 'A' ? 'A' : 'I',
+      },
+      { emitEvent: false },
+    );
 
     this.saveForm(this.currentData);
   }
