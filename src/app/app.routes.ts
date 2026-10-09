@@ -63,6 +63,7 @@ export const routes: Routes = [
           { path: 'proveedor/:id', component: Proveedores.WinPrv0001 },
           { path: 'insumo/:id', component: Proveedores.WinPrv0003 },
           { path: 'clasificadores', component: Proveedores.WinPrv0006 },
+          { path: 'tiposinsumo', component: Proveedores.WinPrv0004 },
           { path: '', redirectTo: 'dash', pathMatch: 'full' },
         ],
       },
