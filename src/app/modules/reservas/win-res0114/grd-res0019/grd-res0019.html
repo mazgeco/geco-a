@@ -1,110 +1,158 @@
 <p-confirmdialog />
-<p-panel header="Insumos y servicios del día">
-  <div class="flex gap-2 mb-3">
-    <p-button
-      label="Insertar"
-      icon="pi pi-plus"
-      [disabled]="!puedeSalir() || cargando()"
-      (onClick)="insertar()"
-    />
-    <p-button
-      icon="pi pi-refresh"
-      ariaLabel="Actualizar insumos"
-      [disabled]="!puedeSalir() || cargando()"
-      (onClick)="cargar()"
-    />
-  </div>
-  @if (mensaje()) {
-    <p-message severity="error">{{ mensaje() }}</p-message>
-  }
-  <p-table
-    [value]="filas()"
-    [loading]="cargando()"
-    [scrollable]="true"
-    [paginator]="true"
-    [rows]="10"
-    size="small"
-    showGridlines
-    dataKey="idInsumoXItinerarioRes"
-    [tableStyle]="{ 'min-width': '70rem' }"
+<div class="contenedor-insumos">
+  <p-toolbar>
+    <ng-template #start>
+      <p-button
+        label="Insertar"
+        icon="pi pi-plus"
+        pTooltip="Inserta un insumo abriendo otra pantalla"
+        class="mr-1"
+        [disabled]="!puedeSalir() || cargando()"
+        (onClick)="insertar()"
+      />
+      <p-button
+        id="btnGrdRes00192"
+        icon="pi pi-trash"
+        class="mr-1"
+        label="Eliminar"
+        pTooltip="Elimina varias filas seleccionadas"
+        tooltipPosition="bottom"
+      />
+      <p-button
+        icon="pi pi-refresh"
+        class="mr-1"
+        ariaLabel="Actualizar insumos"
+        [disabled]="!puedeSalir() || cargando()"
+        (onClick)="cargar()"
+      />
+      <p-button
+        id="btnGrdRes00194"
+        icon="pi pi-user"
+        class="mr-1"
+        pTooltip="Auditoría del registro actual"
+        tooltipPosition="bottom"
+      />
+      <p-button
+        id="btnGrdRes00195"
+        icon="pi pi-info-circle"
+        pTooltip="Información del objeto actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
+      />
+    </ng-template>
+  </p-toolbar>
+  <p-panel header="Insumos y servicios del día">
+    @if (mensaje()) {
+      <p-message severity="error">{{ mensaje() }}</p-message>
+    }
+    <p-table
+      [value]="filas()"
+      [loading]="cargando()"
+      [scrollable]="true"
+      [paginator]="true"
+      [rows]="10"
+      size="small"
+      showGridlines
+      dataKey="idInsumoXItinerarioRes"
+    >
+      <ng-template #header>
+        <tr>
+          <th>Insumo</th>
+          <th class="col-detalle">Cantidad</th>
+          <th class="col-detalle">Costo presupuestado</th>
+          <th class="col-detalle">Impuestos</th>
+          <th class="col-detalle">Total presupuestado</th>
+          <th class="col-detalle">Costo real sin impuestos</th>
+          <th class="col-detalle">Costo real</th>
+          <th>Total real</th>
+          <th></th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-f
+        ><tr>
+          <td>{{ f.descripcionInsumo || f.idInsumo }}</td>
+          <td class="text-right col-detalle">{{ f.cantidadInsumo ?? 0 | number: '1.0-4' }}</td>
+          <td class="text-right col-detalle">{{ f.costoPresupuestado ?? 0 | number: '1.2-2' }}</td>
+          <td class="text-right col-detalle">{{ f.totalImpuesto ?? 0 | number: '1.2-2' }}</td>
+          <td class="text-right col-detalle">{{ f.totalPresupuestado ?? 0 | number: '1.2-2' }}</td>
+          <td class="text-right col-detalle">
+            {{ f.costoRealSinImpuesto ?? 0 | number: '1.2-2' }}
+          </td>
+          <td class="text-right col-detalle">{{ f.costoReal ?? 0 | number: '1.2-2' }}</td>
+          <td class="text-right">{{ f.totalReal ?? 0 | number: '1.2-2' }}</td>
+          <td class="white-space-nowrap">
+            <button
+              pButton
+              type="button"
+              icon="pi pi-pencil"
+              text
+              rounded
+              aria-label="Editar insumo"
+              [disabled]="!puedeSalir()"
+              (click)="editar(f)"
+            ></button>
+            <button
+              pButton
+              type="button"
+              icon="pi pi-trash"
+              text
+              rounded
+              severity="danger"
+              aria-label="Eliminar insumo"
+              [disabled]="!puedeSalir()"
+              (click)="eliminar(f)"
+            ></button>
+          </td></tr
+      ></ng-template>
+      <ng-template #emptymessage>
+        <tr class="footer-completo">
+          <td colspan="9">No hay insumos en este día.</td>
+        </tr>
+
+        <tr class="footer-reducido">
+          <td colspan="3">No hay insumos en este día.</td>
+        </tr>
+      </ng-template>
+      <ng-template #footer>
+        <tr class="footer-completo">
+          <td colspan="4" class="text-right font-bold">TOTAL DEL DÍA</td>
+          <td class="text-right font-bold">
+            {{ totalPresupuestado() | number: '1.2-2' }}
+          </td>
+          <td colspan="2"></td>
+          <td class="text-right font-bold">
+            {{ totalReal() | number: '1.2-2' }}
+          </td>
+          <td></td>
+        </tr>
+
+        <tr class="footer-reducido">
+          <td class="font-bold">TOTAL DEL DÍA</td>
+          <td class="text-right font-bold">
+            {{ totalReal() | number: '1.2-2' }}
+          </td>
+          <td></td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-panel>
+  <p-dialog
+    header="Ficha del insumo reservado"
+    [visible]="!!edicion()"
+    [modal]="true"
+    [closable]="false"
+    [closeOnEscape]="false"
+    [draggable]="false"
+    [style]="{ width: '64rem', 'max-width': '95vw' }"
   >
-    <ng-template #header
-      ><tr>
-        <th>Insumo</th>
-        <th>Cantidad</th>
-        <th>Costo presupuestado</th>
-        <th>Impuestos</th>
-        <th>Total presupuestado</th>
-        <th>Costo real sin impuestos</th>
-        <th>Costo real</th>
-        <th>Total real</th>
-        <th>Acciones</th>
-      </tr></ng-template
-    >
-    <ng-template #body let-f
-      ><tr>
-        <td>{{ f.descripcionInsumo || f.idInsumo }}</td>
-        <td class="text-right">{{ f.cantidadInsumo ?? 0 | number: '1.0-4' }}</td>
-        <td class="text-right">{{ f.costoPresupuestado ?? 0 | number: '1.2-2' }}</td>
-        <td class="text-right">{{ f.totalImpuesto ?? 0 | number: '1.2-2' }}</td>
-        <td class="text-right">{{ f.totalPresupuestado ?? 0 | number: '1.2-2' }}</td>
-        <td class="text-right">{{ f.costoRealSinImpuesto ?? 0 | number: '1.2-2' }}</td>
-        <td class="text-right">{{ f.costoReal ?? 0 | number: '1.2-2' }}</td>
-        <td class="text-right">{{ f.totalReal ?? 0 | number: '1.2-2' }}</td>
-        <td class="white-space-nowrap">
-          <button
-            pButton
-            type="button"
-            icon="pi pi-pencil"
-            text
-            rounded
-            aria-label="Editar insumo"
-            [disabled]="!puedeSalir()"
-            (click)="editar(f)"
-          ></button>
-          <button
-            pButton
-            type="button"
-            icon="pi pi-trash"
-            text
-            rounded
-            severity="danger"
-            aria-label="Eliminar insumo"
-            [disabled]="!puedeSalir()"
-            (click)="eliminar(f)"
-          ></button>
-        </td></tr
-    ></ng-template>
-    <ng-template #emptymessage
-      ><tr>
-        <td colspan="9">No hay insumos en este día.</td>
-      </tr></ng-template
-    >
-    <ng-template #footer
-      ><tr>
-        <td colspan="4" class="text-right font-bold">TOTAL DEL DÍA</td>
-        <td class="text-right font-bold">{{ totalPresupuestado() | number: '1.2-2' }}</td>
-        <td colspan="2"></td>
-        <td class="text-right font-bold">{{ totalReal() | number: '1.2-2' }}</td>
-        <td></td></tr
-    ></ng-template>
-  </p-table>
-</p-panel>
-<p-dialog
-  header="Ficha del insumo reservado"
-  [visible]="!!edicion()"
-  [modal]="true"
-  [closable]="false"
-  [closeOnEscape]="false"
-  [draggable]="false"
-  [style]="{ width: '64rem', 'max-width': '95vw' }"
->
-  @if (edicion(); as fila) {
-    <app-frm-res0011
-      [fila]="fila"
-      (guardado)="guardado($event)"
-      (cancelado)="edicion.set(null)"
-      (ocupado)="ocupado.set($event)"
-    />
-  }
-</p-dialog>
+    @if (edicion(); as fila) {
+      <app-frm-res0011
+        [fila]="fila"
+        (guardado)="guardado($event)"
+        (cancelado)="edicion.set(null)"
+        (ocupado)="ocupado.set($event)"
+      />
+    }
+  </p-dialog>
+</div>
