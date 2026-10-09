@@ -9,6 +9,7 @@ import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
 import { Personas} from '../../../../interfaces/personas.interfaces';
 import { EstadoProveedor,Proveedores} from '../../../../interfaces/proveedores.interfaces';
 
+
 //Servicios propios
 import { ToastService } from '../../../../services/toast.service';
 import { MessageService } from '../../../../services/message.service';
@@ -67,11 +68,45 @@ export class FrmPrv0002 implements OnInit {
   estadoProveedor = signal<string>('INACTIVO');
   esActivo = signal<boolean>(false);
   personas = signal<Personas[]>([]);
+  tipoPersonaCombo = signal<Combo[]>([
+    {
+      codigo: "N",
+      etiqueta: "Natural"
+    },
+    {
+      codigo: "J",
+      etiqueta: "Jurídica"
+    }
+  ]);
+  estadoCombo = signal<Combo[]>([
+    {
+      codigo: "A",
+      etiqueta: "Activo"
+    },
+    {
+      codigo: "I",
+      etiqueta: "Inactivo"
+    }
+  ]);
+  tipoIdentificacionCombo = signal<Combo[]>([
+    {
+      codigo: "05",
+      etiqueta: "Cédula"
+    },
+    {
+      codigo: "04",
+      etiqueta: "RUC"
+    },
+    {
+      codigo: "06",
+      etiqueta: "Pasaporte"
+    }
+  ]);
 
   //GETTER PARA TRAER LOS DATOS ACTUALES DE LOS PRODUCTOS
-  get currentData(): Proveedores {
-  const proveedor = this.frmPrv0002.getRawValue() as Proveedores;
-  return proveedor;
+  get currentData(): Proveedores{
+    const proveedor = this.frmPrv0002.getRawValue() as Proveedores;
+    return proveedor;
   }
 
   public frmPrv0002 = this.fb.group(
@@ -90,7 +125,7 @@ export class FrmPrv0002 implements OnInit {
       idUsuarioCrea: [''],
       fechaCrea: [''],
       idUsuarioModifica: [''],
-      fechaModifica: ['']
+      fechaModifica: [''],
     },
     {
       updateOn: 'blur',
@@ -174,6 +209,7 @@ seleccionarPersona(event: any): void {
     identificacion: persona.cedulaRuc 
   });
 }
+
 
 
 }

@@ -81,7 +81,7 @@
       <div class="col-12">
         <div class="field mb-1">
           <label>Nombre comercial <span class="asterisco">*</span></label>
-          <input pInputText class="w-full" formControlName="nombreComercial">
+          <input pInputText class="w-full" formControlName="nombreComercial" />
         </div>
       </div>
       <!-- ======================= -->
@@ -97,43 +97,75 @@
         <div class="field mb-1">
           <label>Estado</label>
           <!-- TODO: Poner aquí el estado -->
-           <input pInputText class="w-full" formControlName="estadoProveedor" />
+          <p-select
+            class="w-full"
+            [options]="estadoCombo()"
+            formControlName="estadoProveedor"
+            pTooltip="Estado del proveedor"
+            [readonly]="true"
+            tooltipPosition="bottom"
+            optionLabel="etiqueta"
+            optionValue="codigo"
+          ></p-select>
         </div>
       </div>
-       <div class="col-12 md:col-6">
+      <div class="col-12 md:col-6">
         <div class="field mb-1">
-          <label>Tipo Persona</label>
-           <input pInputText class="w-full" formControlName="tipoPersona" />
+          <label>Tipo persona</label>
+          <p-select
+            class="w-full"
+            [options]="tipoPersonaCombo()"
+            formControlName="tipoPersona"
+            pTooltip="Tipo persona"
+            tooltipPosition="bottom"
+            optionLabel="etiqueta"
+            optionValue="codigo"
+          ></p-select>
         </div>
       </div>
-        <div class="col-12 md:col-6">
+      <div class="col-12 md:col-6">
         <div class="field mb-1">
           <label>Correo Electrónico<span class="asterisco">*</span></label>
-           <input pInputText class="w-full" formControlName="email" />
+          <input pInputText class="w-full" formControlName="email" />
         </div>
       </div>
-            <div class="col-12 md:col-6">
+      <div class="col-12 md:col-6">
         <div class="field mb-1">
           <label>Tipo de Identificación<span class="asterisco">*</span></label>
-           <input pInputText class="w-full" formControlName="tipoIdentificacion" />
+          <p-select
+            class="w-full"
+            [options]="tipoIdentificacionCombo()"
+            formControlName="tipoIdentificacion"
+            pTooltip="Tipo de identificación"
+            tooltipPosition="bottom"
+            optionLabel="etiqueta"
+            optionValue="codigo"
+          ></p-select>
         </div>
       </div>
       <div class="col-12 md:col-6">
         <div class="field mb-1">
           <label>Identificación<span class="asterisco">*</span></label>
-           <input pInputText class="w-full" formControlName="identificacion" />
+          <input pInputText class="w-full" formControlName="identificacion" />
         </div>
       </div>
-            <div class="col-12 md:col-6">
+      <div class="col-12 md:col-6">
         <div class="field mb-1">
           <label>Teléfono<span class="asterisco">*</span></label>
-           <input pInputText class="w-full" formControlName="telefono" />
+          <input pInputText class="w-full" formControlName="telefono" />
         </div>
       </div>
-                  <div class="col-12 md:col-6">
+      <div class="col-12 md:col-6">
         <div class="field mb-1">
           <label>Dirección<span class="asterisco">*</span></label>
-           <input pInputText class="w-full" formControlName="direccion" />
+          <textarea
+            class="w-full"
+            rows="5"
+            [readOnly]="true"
+            pTooltip="La dirección se cambia en el módulo de personas"
+            pTextarea
+            formControlName="direccion"
+          ></textarea>
         </div>
       </div>
     </div>

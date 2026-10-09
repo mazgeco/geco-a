@@ -5,9 +5,9 @@ export interface ProveedoresResponse {
 }
 
 export interface Proveedores {
-  idProveedor: number;
+  idProveedor?: number | null;
   idOperacion?: number;
-  idPersona: number;
+  idPersona?: number | null;
   nombrePersona?: string;
   idTipoRetencionIr?: number;
   idTipoRetencionIva?: number;
