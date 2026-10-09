@@ -81,6 +81,11 @@ export interface Insumos {
   fechaModifica?: string | null;
 }
 
+export enum EstadoInsumo {
+  A = 'A',
+  I = 'I',
+}
+
 export interface TipoInsumo {
     idTipoInsumo: number | null; 
     idProveedor: number;
