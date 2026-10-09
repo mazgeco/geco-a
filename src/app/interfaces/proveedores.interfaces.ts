@@ -53,13 +53,13 @@ export interface InsumosResponse {
 
 export interface Insumos {
   idInsumo?: number | null;
-  idTipoInsumo: number | null;
+  idTipoInsumo?: number | null;
   idTipoPresentacion?: number | null;
   idUbicacionExistencia?: number | null;
-  idUnidadMedida: string | null;
+  idUnidadMedida?: string | null;
   idProveedor?: number | null;
   porcionXMedida?: number | null;
-  descripcionInsumo: string | null;
+  descripcionInsumo?: string | null;
   costoPresupuestado?: number | null;
   costoPromedio?: number | null;
   idMonedaPresupuesto?: number | null;
@@ -74,7 +74,7 @@ export interface Insumos {
   tipoBien?: string | null;
   darAnticipo?: string | null;
   codigoExterno?: string | null;
-  cajaChica: string | null;
+  cajaChica?: string | null;
   idUsuarioCrea?: string | null;
   fechaCrea?: string | null;
   idUsuarioModifica?: string | null;
@@ -86,24 +86,24 @@ export enum EstadoInsumo {
   I = 'I',
 }
 
-export interface TipoInsumo {
-    idTipoInsumo: number | null; 
-    idProveedor: number;
-    nombreProveedor: string;
-    idSuperTipoInsumo: number;
-    descripcionTipoInsumo: string;
-    inventariar: string;
-    tipoInterno: string;
-    idUsuarioCrea?: string;
-    fechaCrea?: string;
-    idUsuarioModifica?: string;
-    fechaModifica?: string;
+export interface TipoInsumoResponse {
+  status: string;
+  message: string;
+  data: TipoInsumo[];
 }
 
-export interface TipoInsumoResponse {
-    status: string;
-    message: string;
-    data: TipoInsumo[]; 
+export interface TipoInsumo {
+  idTipoInsumo?: number | null;
+  idProveedor?: number | null;
+  nombreProveedor?: string | null;
+  idSuperTipoInsumo?: number | null;
+  descripcionTipoInsumo?: string | null;
+  inventariar?: string | null;
+  tipoInterno?: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
 }
 
 //PERSONA PROVEEDO

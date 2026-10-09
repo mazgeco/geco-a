@@ -13,6 +13,7 @@ import {
   SuperTipoInsumoResponse,
   PersonaProveedor,
   Proveedores,
+  TipoInsumo,
 } from '../interfaces/proveedores.interfaces';
 import { GraficosResponse } from '../interfaces/general.interface';
 import { AuthService } from './auth.service';
@@ -87,6 +88,27 @@ export class ProveedoresService {
     return this.http.get<TipoInsumoResponse>(
       `${this.apiUrl}proveedores/tipoinsumos/busqueda?nombre=${nombre}`,
     );
+  }
+
+  listaTipoInsumo(): Observable<TipoInsumoResponse> {
+    return this.http.get<TipoInsumoResponse>(
+      `${this.apiUrl}proveedores/tipoinsumos`,
+    );
+  }
+
+  grabaTipoInsumo(tipoInsumo: TipoInsumo): Observable<SavedRow> {
+    return this.http.post<SavedRow>(
+        `${this.apiUrl}proveedores/${this.authService.idUsuario()}/tipoinsumos`,
+        tipoInsumo,
+      );
+  }
+
+  eliminaTipoInsumo(idTipoInsumo: number): Observable<SavedRow>{
+    return of({
+      status: 'NOT_FOUND',
+      message: 'Datos incompletos',
+      idSecuencial: idTipoInsumo,
+    } as SavedRow);
   }
 
   //GRÁFICOS DEL DASHBOARD
