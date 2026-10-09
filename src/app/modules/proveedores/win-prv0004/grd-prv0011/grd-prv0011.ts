@@ -6,14 +6,14 @@ import { FuntionsService } from '../../../../services/functions.service';
 import { ProveedoresService } from '../../../../services/proveedores.service';
 import { ToastService } from '../../../../services/toast.service';
 import { MessageService } from '../../../../services/message.service';
-import { FilaTabla, StatusMessage } from '../../../../interfaces/general.interface';
-import { TipoInsumo } from '../../../../interfaces/proveedores.interfaces';
+import { Combo, FilaTabla, StatusMessage } from '../../../../interfaces/general.interface';
+import { SuperTipoInsumo, TipoInsumo } from '../../../../interfaces/proveedores.interfaces';
 
 @Component({
   selector: 'app-grd-prv0011',
   imports: [...PRIMENG_MODULES],
   providers: [ConfirmationService],
-  templateUrl: './grd-prv0011.html'
+  templateUrl: './grd-prv0011.html',
 })
 export class GrdPrv0011 implements OnInit {
   /******************************************************************************************
@@ -40,7 +40,7 @@ export class GrdPrv0011 implements OnInit {
   funciones = inject(FuntionsService);
   //INJECTIONS PRIVADAS
   private confirmationService = inject(ConfirmationService);
-  private reservasService = inject(ProveedoresService);
+  private proveedorService = inject(ProveedoresService);
   private toastService = inject(ToastService);
   //VARIABLES PARA EL MANEJO DE LOS MENSAJES
   messageService = inject(MessageService);
@@ -51,13 +51,25 @@ export class GrdPrv0011 implements OnInit {
   //Declaración de variables
   selectedRows!: TipoInsumo[];
   metaKey: boolean = true;
+  clasificador = signal<SuperTipoInsumo[]>([]);
   filas = signal<FilaTabla<TipoInsumo>[]>([]);
+  opcionSN = signal<Combo[]>([
+    {
+      codigo: 'S',
+      etiqueta: 'Si',
+    },
+    {
+      codigo: 'N',
+      etiqueta: 'No',
+    },
+  ]);
 
   /******************************************************************************************
    * MÉTODOS QUE EJECUTAN LOS PROCESOS
    *******************************************************************************************/
 
   ngOnInit(): void {
+    this.cargaCombos();
     this.cargaDatos();
   }
 
@@ -78,7 +90,7 @@ export class GrdPrv0011 implements OnInit {
 
   //MÉTODO QUE GRABA EL TIPO DE TELÉFONO (FILA COMPLETA)
   saveRow(fila: TipoInsumo): void {
-    this.reservasService.grabaTipoInsumo(fila).subscribe({
+    this.proveedorService.grabaTipoInsumo(fila).subscribe({
       next: (resp) => {
         fila[this.campoId] = resp.idSecuencial!;
         //Envía un mensaje de grabación exitosa
@@ -105,7 +117,7 @@ export class GrdPrv0011 implements OnInit {
   //MÉTODO QUE CARGA TODAS LAS IDENTIFICACIONES EN EL GRID
   cargaDatos(): void {
     this.filas.set([]);
-    this.reservasService.listaTipoInsumo().subscribe({
+    this.proveedorService.listaTipoInsumo().subscribe({
       next: (resp) => {
         //Coloca las filas en la estructura
         this.filas.set(
@@ -141,6 +153,29 @@ export class GrdPrv0011 implements OnInit {
     });
   }
 
+  cargaCombos(): void {
+    this.proveedorService.listaSuperTipoInsumo().subscribe({
+      next: (resp) => {
+        this.clasificador.set(resp.data);
+      },
+      error: (err) => {
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al cargar los datos: ' + err.error.message,
+          err.error.status,
+        );
+        //Envía un mensaje de carga exitosa
+        this.messageService.mostrar(
+          this.statusMessages,
+          'msg' + this.idObjeto(),
+          'error',
+          'Hubo un error al cargar los datos.',
+        );
+      },
+    });
+  }
+
   //MÉTODO QUE ELIMINA UNA FILA DEL GRID
   eliminarFila(rowData: TipoInsumo): void {
     if (rowData[this.campoId] === 0) {
@@ -152,7 +187,7 @@ export class GrdPrv0011 implements OnInit {
         acceptLabel: 'Aceptar',
         rejectLabel: 'Cancelar',
         accept: () => {
-          this.reservasService.eliminaTipoInsumo(rowData[this.campoId]!).subscribe({
+          this.proveedorService.eliminaTipoInsumo(rowData[this.campoId]!).subscribe({
             next: (resp) => {
               this.filas.set(
                 this.filas().filter((item) => item[this.campoId] != resp.idSecuencial),
@@ -198,7 +233,7 @@ export class GrdPrv0011 implements OnInit {
         accept: () => {
           for (let i = 0; i < selected.length; i++) {
             let idFila = selected[i][this.campoId];
-            this.reservasService.eliminaTipoInsumo(idFila!).subscribe({
+            this.proveedorService.eliminaTipoInsumo(idFila!).subscribe({
               next: (resp) => {
                 this.filas.set(
                   this.filas().filter((item) => item[this.campoId] != resp.idSecuencial),

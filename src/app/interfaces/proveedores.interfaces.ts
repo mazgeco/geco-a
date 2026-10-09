@@ -98,6 +98,7 @@ export interface TipoInsumo {
   nombreProveedor?: string | null;
   idSuperTipoInsumo?: number | null;
   descripcionTipoInsumo?: string | null;
+  nombreClasificador?: string | null;
   inventariar?: string | null;
   tipoInterno?: string | null;
   idUsuarioCrea?: string | null;

@@ -80,18 +80,41 @@
     <!-- HEADER -->
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 90%">Tipo Insumo</th>
+        <th style="width: 25%">Clasificador</th>
+        <th style="width: 25%">Tipo insumo</th>
+        <th style="width: 20%">Inventariar</th>
+        <th style="width: 20%">Tipo interno</th>
         <th style="width: 10%"></th>
       </tr>
     </ng-template>
     <!-- BODY -->
     <ng-template pTemplate="body" let-rowData let-editing="editing" let-rowIndex="rowIndex">
       <tr [pEditableRow]="rowData" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+        <!-- CLASIFICADOR -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-select
+                [options]="clasificador()"
+                optionLabel="descripcionSuperTipoInsumo"
+                optionValue="idSuperTipoInsumo"
+                [filter]="true"
+                [(ngModel)]="rowData.idSuperTipoInsumo"
+                placeholder="Seleccione"
+                class="w-full"
+                appendTo="body"
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ rowData.nombreClasificador }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
         <!-- DESCRIPCIÓN -->
         <td>
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <input type="hidden" [(ngModel)]="rowData.idTipoInsumo">
+              <input type="hidden" [(ngModel)]="rowData.idTipoInsumo" />
               <input
                 pInputText
                 type="text"
@@ -101,6 +124,44 @@
             </ng-template>
             <ng-template pTemplate="output">
               {{ rowData.descripcionTipoInsumo }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- INVENTARIAR -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-select
+                [options]="opcionSN()"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+                [(ngModel)]="rowData.inventariar"
+                placeholder="Seleccione"
+                class="w-full"
+                appendTo="body"
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ rowData.inventariar === "S" ? "Si" : "No" }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- TIPO INTERNO -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-select
+                [options]="opcionSN()"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+                [(ngModel)]="rowData.tipoInterno"
+                placeholder="Seleccione"
+                class="w-full"
+                appendTo="body"
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ rowData.tipoInterno === "S" ? "Si" : "No" }}
             </ng-template>
           </p-cellEditor>
         </td>
