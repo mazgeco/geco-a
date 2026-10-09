@@ -17,8 +17,8 @@ export interface Proveedores {
   tipoIdentificacionAts?: string;
   diasFechaMax?: number;
   diasTimeLimit?: number;
-  idUsuarioCrea: string;
-  fechaCrea: string;
+  idUsuarioCrea?: string;
+  fechaCrea?: string;
   idUsuarioModifica?: string;
   fechaModifica?: string;
 }
@@ -79,6 +79,11 @@ export interface Insumos {
   fechaCrea?: string | null;
   idUsuarioModifica?: string | null;
   fechaModifica?: string | null;
+}
+
+export enum EstadoInsumo {
+  A = 'A',
+  I = 'I',
 }
 
 export interface TipoInsumo {

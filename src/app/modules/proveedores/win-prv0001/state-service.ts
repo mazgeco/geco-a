@@ -1,15 +1,19 @@
 import { computed, Injectable, signal } from "@angular/core";
-import { Proveedores } from "../../../interfaces/proveedores.interfaces";
+import { PersonaProveedor } from "../../../interfaces/proveedores.interfaces";
 
 @Injectable({
   providedIn: 'root'
 })
 export class StateService {
 
-  proveedor = signal<Proveedores | null>(null);
+  proveedor = signal<PersonaProveedor | null>(null);
+
+  codigo = computed(() =>
+    this.proveedor()?.idProveedor ?? 0
+  );
 
   nombre = computed(() =>
-    this.proveedor()?.nombrePersona ?? ''
+    this.proveedor()?.razonSocial ?? ''
   );
 
   estado = computed(() =>
