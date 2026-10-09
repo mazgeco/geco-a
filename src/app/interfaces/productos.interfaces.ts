@@ -172,7 +172,7 @@ export interface InsumoItinerario {
   idProveedor: number | null;
   nombreProveedor?: string; 
   
-  darAnticipo: boolean; 
+  darAnticipo: string; // 'S' o 'N'
   observacionInsumoXItinerario: string;
   
   // Auditoría

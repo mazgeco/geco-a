@@ -84,6 +84,7 @@ export interface Insumos {
 export interface TipoInsumo {
     idTipoInsumo: number | null; 
     idProveedor: number;
+    nombreProveedor: string;
     idSuperTipoInsumo: number;
     descripcionTipoInsumo: string;
     inventariar: string;

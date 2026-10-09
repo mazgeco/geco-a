@@ -60,7 +60,8 @@
               <p-autocomplete
                 class="w-full"
                 [fluid]="true"
-                [(ngModel)]="rowData.descripcionTipoInsumo"
+                [(ngModel)]="rowData.nombreTipoInsumo"
+                [disabled]="rowData.nombreInsumo ? true : false"
                 [ngModelOptions]="{standalone: true}"
                 [suggestions]="tipoInsumo()"
                 (completeMethod)="buscarTipoInsumo($event)"
@@ -84,7 +85,8 @@
               <p-autocomplete
                 class="w-full"
                 [fluid]="true"
-                [(ngModel)]="rowData.descripcionInsumo"
+                [(ngModel)]="rowData.nombreInsumo"
+                [disabled]="rowData.nombreTipoInsumo ? true : false"
                 [ngModelOptions]="{standalone: true}"
                 [suggestions]="insumos()"
                 (completeMethod)="buscarInsumo($event)"
@@ -136,16 +138,25 @@
         </td>
 
         <!-- 5. DAR ANTICIPO -->
-        <td class="text-center">
+        <!-- <td class="text-center">
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <p-checkbox [(ngModel)]="rowData.darAnticipo" [binary]="true" />
+              <p-checkbox [ngModel]="rowData.darAnticipo=== 'S'" [binary]="true" [disabled]="true"/>
             </ng-template>
             <ng-template pTemplate="output">
               <i [class]="rowData.darAnticipo ? 'pi pi-check-circle text-green-500' : 'pi pi-circle'"></i>
             </ng-template>
           </p-cellEditor>
-        </td>
+        </td> -->
+
+        <!-- 5. DAR ANTICIPO -->
+<td class="text-center">
+    <p-checkbox 
+        [ngModel]="rowData.darAncticipo === 'S'" 
+        [binary]="true" 
+        [disabled]="true">
+    </p-checkbox>
+</td>
 
         <!-- 6. OBSERVACIONES -->
         <td>

@@ -77,7 +77,7 @@ export class GrdPrd0006 implements OnInit, OnChanges {
       horaEjecucion: '',
       idProveedor: null,
       nombreProveedor: '',
-      darAnticipo: false,
+      darAnticipo: '',
       observacionInsumoXItinerario: '',
       idUsuarioCrea: '',
       fechaCrea: '',
@@ -464,6 +464,7 @@ export class GrdPrd0006 implements OnInit, OnChanges {
     const insumo = event.value;
     fila.idInsumo = insumo.idInsumo;
     fila.descripcionInsumo = insumo.descripcionInsumo;
+    fila.darAnticipo = event.darAnticipo;
   }
 
   buscarTipoInsumo(event: AutoCompleteCompleteEvent): void {
@@ -492,6 +493,12 @@ export class GrdPrd0006 implements OnInit, OnChanges {
     const tipoInsumo = event.value;
     fila.idTipoInsumo = tipoInsumo.idTipoInsumo;
     fila.descripcionTipoInsumo = tipoInsumo.descripcionTipoInsumo;
+    if (event.nombrePersona) { 
+    fila.nombreProveedor = event.nombrePersona; // Reemplaza 'proveedor' por el nombre de tu columna en rowData
+  } else {
+    // Si ese insumo no tiene un proveedor asignado, lo dejamos como Pendiente o vacío
+    fila.nombreProveedor = 'Pendiente'; 
+  }
   }
 
   
