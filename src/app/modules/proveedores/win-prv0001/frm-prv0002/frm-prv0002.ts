@@ -6,9 +6,8 @@ import { Router } from '@angular/router';
 //Imports generales
 import { Combo } from '../../../../interfaces/general.interface';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
-import { Personas} from '../../../../interfaces/personas.interfaces';
-import { EstadoProveedor,Proveedores} from '../../../../interfaces/proveedores.interfaces';
-
+import { Personas } from '../../../../interfaces/personas.interfaces';
+import { EstadoProveedor, PersonaProveedor, Proveedores } from '../../../../interfaces/proveedores.interfaces';
 
 //Servicios propios
 import { ToastService } from '../../../../services/toast.service';
@@ -70,42 +69,42 @@ export class FrmPrv0002 implements OnInit {
   personas = signal<Personas[]>([]);
   tipoPersonaCombo = signal<Combo[]>([
     {
-      codigo: "N",
-      etiqueta: "Natural"
+      codigo: 'N',
+      etiqueta: 'Natural',
     },
     {
-      codigo: "J",
-      etiqueta: "Jurídica"
-    }
+      codigo: 'J',
+      etiqueta: 'Jurídica',
+    },
   ]);
   estadoCombo = signal<Combo[]>([
     {
-      codigo: "A",
-      etiqueta: "Activo"
+      codigo: 'A',
+      etiqueta: 'Activo',
     },
     {
-      codigo: "I",
-      etiqueta: "Inactivo"
-    }
+      codigo: 'I',
+      etiqueta: 'Inactivo',
+    },
   ]);
   tipoIdentificacionCombo = signal<Combo[]>([
     {
-      codigo: "05",
-      etiqueta: "Cédula"
+      codigo: '01',
+      etiqueta: 'Ruc (Compra)',
     },
     {
-      codigo: "04",
-      etiqueta: "RUC"
+      codigo: '02',
+      etiqueta: 'Cédula (Compra)',
     },
     {
-      codigo: "06",
-      etiqueta: "Pasaporte"
-    }
+      codigo: '03',
+      etiqueta: 'Pasaporte / Identificación Tributaria Del Exterior (Compra)',
+    },
   ]);
 
   //GETTER PARA TRAER LOS DATOS ACTUALES DE LOS PRODUCTOS
-  get currentData(): Proveedores{
-    const proveedor = this.frmPrv0002.getRawValue() as Proveedores;
+  get currentData(): PersonaProveedor {
+    const proveedor = this.frmPrv0002.getRawValue() as PersonaProveedor;
     return proveedor;
   }
 
@@ -143,6 +142,7 @@ export class FrmPrv0002 implements OnInit {
         next: (resp) => {
           this.frmPrv0002.reset(resp.data);
           this.loadingProveedor.set(false);
+          this.stateService.proveedor.set(resp.data);
         },
         error: (err) => {
           this.toastService.showMessage(
@@ -156,68 +156,82 @@ export class FrmPrv0002 implements OnInit {
     }
   }
 
-    //MÉTODO QUE CAMBIA EL ESTADO DEL PRODUCTO   
-         cambiarEstado(estado: EstadoProveedor): void {
-           this.confirmationService.confirm({
-             message: '¿Realmente desea cambiar el estado de este producto?',
-             header: 'Cambio de estado',
-             acceptLabel: 'Aceptar',
-             rejectLabel: 'Cancelar',
-             accept: () => {
-               this.esActivo.set(estado === "A" ? true : false);
-               this.estadoProveedor.set(estado === "A" ? "ACTIVO" : "INACTIVO");
-               this.frmPrv0002.patchValue({
-                 estadoProveedor: estado
-               });
-               this.stateService.proveedor.update(p => ({
-                 ...p!,
-                 estadoProducto: estado
-               }));
-             }
-           });
-         }
+  //GRABA FORMA
+  saveForm(proveedor: PersonaProveedor, newRow: boolean): void {
+    console.log(proveedor);
+  }
+
+  //MÉTODO QUE CAMBIA EL ESTADO DEL PRODUCTO
+  cambiarEstado(estado: EstadoProveedor): void {
+    this.confirmationService.confirm({
+      message: '¿Realmente desea cambiar el estado de este producto?',
+      header: 'Cambio de estado',
+      acceptLabel: 'Aceptar',
+      rejectLabel: 'Cancelar',
+      accept: () => {
+        this.esActivo.set(estado === 'A' ? true : false);
+        this.estadoProveedor.set(estado === 'A' ? 'ACTIVO' : 'INACTIVO');
+        this.frmPrv0002.patchValue({
+          estadoProveedor: estado,
+        });
+        this.stateService.proveedor.update((p) => ({
+          ...p!,
+          estadoProveedor: estado,
+        }));
+      },
+    });
+  }
 
   // 2. Método para buscar la persona en tu backend mientras escribes
-buscarPersona(event: any): void {
-  const termino = event.query.trim();
-  if (termino.length < 3) {
-    this.personas.set([]);
-    return;
-  }
-  
-  // Llama a tu servicio de personas (ajusta el nombre del servicio)
-  this.personasService.buscaPersona(termino).subscribe({
-    next: (resp) => {
-      this.personas.set(resp.data);
-    },
-    error: (err) => {
-      this.toastService.showMessage('error', 'Error', 'No se pudo buscar la persona');
+  buscarPersona(event: any): void {
+    const termino = event.query.trim();
+    if (termino.length < 3) {
+      this.personas.set([]);
+      return;
     }
-  });
-}
 
-// 3. Método para capturar la selección y llenar el formulario
-seleccionarPersona(event: any): void {
-  // Como quitamos optionValue en el HTML, event.value trae el objeto completo de la persona
-  const persona = event.value; 
-  
-  // Autocompletas automáticamente otros campos del formulario basándote en la persona elegida
-  this.frmPrv0002.patchValue({
-    // Ajusta las variables según tu interfaz de Persona y tu FormGroup
-   idPersona: persona.idPersona,
-  nombreComercial: persona.nombreComercial, 
-  identificacion: persona.identificacion,
-  tipoIdentificacion: persona.tipoIdentificacion === 'P' ? '06' : 
-                      persona.tipoIdentificacion === 'C' ? '05' : 
-                      persona.tipoIdentificacion === 'R' ? '04' : persona.tipoIdentificacion,
-  tipoPersona: persona.tipoPersona,
-  email: persona.correoElectronico, 
-  telefono: persona.telefono,
-  direccion: persona.direccion,
-  estadoProveedor: persona.estadoPersona === 'A' ? 'A' : 'I', 
-  });
-}
+    // Llama a tu servicio de personas (ajusta el nombre del servicio)
+    this.personasService.buscaPersonaParaCrearProveedor(termino).subscribe({
+      next: (resp) => {
+        this.personas.set(resp.data);
+      },
+      error: (err) => {
+        this.toastService.showMessage('error', 'Error', 'No se pudo buscar la persona');
+      },
+    });
+  }
 
+  // 3. Método para capturar la selección y llenar el formulario
+  seleccionarPersona(event: any): void {
+    // Como quitamos optionValue en el HTML, event.value trae el objeto completo de la persona
+    const persona = event.value;
 
+    // Autocompletas automáticamente otros campos del formulario basándote en la persona elegida
+    this.frmPrv0002.patchValue({
+      // Ajusta las variables según tu interfaz de Persona y tu FormGroup
+      idPersona: persona.idPersona,
+      nombreComercial: persona.nombreComercial,
+      identificacion: persona.identificacion,
+      tipoIdentificacion:
+        persona.tipoIdentificacion === 'P'
+          ? '03'
+          : persona.tipoIdentificacion === 'C'
+            ? '02'
+            : persona.tipoIdentificacion === 'R'
+              ? '01'
+              : persona.tipoIdentificacion,
+      tipoPersona: persona.tipoPersona,
+      email: persona.correoElectronico,
+      telefono: persona.telefono,
+      direccion: persona.direccion,
+      estadoProveedor: persona.estadoPersona === 'A' ? 'A' : 'I',
+    });
+
+    this.saveForm(this.currentData, true);
+  }
+
+  readOnlyPersona(): boolean {
+    return this.idProveedor !== 0 && this.idProveedor !== null;
+  }
 
 }

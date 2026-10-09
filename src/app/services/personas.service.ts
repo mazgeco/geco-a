@@ -54,6 +54,12 @@ export class PersonasService {
     return this.http.get<ListaPersonasResponse>(`${this.apiUrl}personas/busqueda?nombre=${nombre}`);
   }
 
+  buscaPersonaParaCrearProveedor(nombre: string): Observable<ListaPersonasResponse> {
+    return this.http.get<ListaPersonasResponse>(
+      `${this.apiUrl}personas/noproveedores?nombre=${nombre}`,
+    );
+  }
+
   buscaPersonaParaCrearUsuario(nombre: string): Observable<ListaPersonasResponse> {
     return this.http.get<ListaPersonasResponse>(
       `${this.apiUrl}personas/naturales/nousuarios?nombre=${nombre}`,

@@ -21,6 +21,7 @@ export class WinPrv0001 implements OnInit {
   stateService = inject(StateService);
 
   ngOnInit(): void {
+    this.stateService.proveedor.set(null);
     //Toma el dato enviado por el router para colocar en el id principal
     this.idProveedor.set(Number(this.route.snapshot.paramMap.get('id')));
     this.route.paramMap.subscribe(params => {
