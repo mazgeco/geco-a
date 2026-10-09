@@ -53,13 +53,13 @@ export interface InsumosResponse {
 
 export interface Insumos {
   idInsumo?: number | null;
-  idTipoInsumo?: number | null;
+  idTipoInsumo: number | null;
   idTipoPresentacion?: number | null;
   idUbicacionExistencia?: number | null;
-  idUnidadMedida?: string | null;
+  idUnidadMedida: string | null;
   idProveedor?: number | null;
   porcionXMedida?: number | null;
-  descripcionInsumo?: string | null;
+  descripcionInsumo: string | null;
   costoPresupuestado?: number | null;
   costoPromedio?: number | null;
   idMonedaPresupuesto?: number | null;
@@ -74,7 +74,7 @@ export interface Insumos {
   tipoBien?: string | null;
   darAnticipo?: string | null;
   codigoExterno?: string | null;
-  cajaChica?: string | null;
+  cajaChica: string | null;
   idUsuarioCrea?: string | null;
   fechaCrea?: string | null;
   idUsuarioModifica?: string | null;
