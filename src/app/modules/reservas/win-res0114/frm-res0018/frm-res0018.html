@@ -9,38 +9,112 @@
   <p-button
     label="Eliminar día"
     icon="pi pi-trash"
-    severity="danger"
     [disabled]="!dia() || !puedeSalir()"
     (onClick)="eliminar()"
   />
 </div>
-@if (mensaje()) {
-  <p-message [severity]="error() ? 'error' : 'success'">{{ mensaje() }}</p-message>
-}
-@if (cargando()) {
-  <div class="p-3" role="status">Cargando itinerario...</div>
-}
-<nav class="flex gap-2 overflow-x-auto my-3" aria-label="Días del itinerario">
+<!-- Carrusel de días: mismas tarjetas cuadradas que FrmPrd0004. -->
+<nav
+  class="flex align-items-center gap-3 mb-5 overflow-x-auto p-3 border-1 surface-border border-round surface-ground"
+  style="width: 0; min-width: 100%"
+  aria-label="Días del itinerario"
+>
   @for (d of dias(); track d.idItinerarioRes) {
     <button
-      pButton
       type="button"
-      class="flex flex-column flex-shrink-0 p-3"
-      [outlined]="d.idItinerarioRes !== dia()?.idItinerarioRes"
+      class="tarjeta-dia flex flex-column align-items-center justify-content-center border-round cursor-pointer transition-colors transition-duration-150 flex-shrink-0"
+      [class.bg-primary]="d.idItinerarioRes === dia()?.idItinerarioRes"
+      [class.border-1]="d.idItinerarioRes !== dia()?.idItinerarioRes"
+      [class.surface-border]="d.idItinerarioRes !== dia()?.idItinerarioRes"
+      [class.surface-card]="d.idItinerarioRes !== dia()?.idItinerarioRes"
+      [class.hover:surface-100]="d.idItinerarioRes !== dia()?.idItinerarioRes"
+      style="width: 80px; height: 80px"
       [disabled]="guardando() || cargando()"
       (click)="seleccionar(d)"
       [attr.aria-pressed]="d.idItinerarioRes === dia()?.idItinerarioRes"
     >
-      <span>DÍA {{ d.diaItinerario }}</span
-      ><small>{{ d.fechaCumpleItinerario | date: 'yyyy-MM-dd' }}</small>
+      <span
+        class="text-xs font-bold mb-1"
+        [class.text-white]="d.idItinerarioRes === dia()?.idItinerarioRes"
+        [class.text-500]="d.idItinerarioRes !== dia()?.idItinerarioRes"
+        >DÍA</span
+      >
+      <span
+        class="text-3xl font-bold"
+        [class.text-white]="d.idItinerarioRes === dia()?.idItinerarioRes"
+        [class.text-900]="d.idItinerarioRes !== dia()?.idItinerarioRes"
+        >{{ d.diaItinerario }}</span
+      >
+      <small
+        class="text-xs mt-1 white-space-nowrap"
+        [class.text-white]="d.idItinerarioRes === dia()?.idItinerarioRes"
+        [class.text-500]="d.idItinerarioRes !== dia()?.idItinerarioRes"
+        >{{ d.fechaCumpleItinerario | date: 'yyyy-MM-dd' }}</small
+      >
     </button>
   }
 </nav>
 @if (dia(); as actual) {
   <div class="grid">
     <div class="col-12 xl:col-4" style="min-width: 0">
+      <p-toolbar>
+        <ng-template #start>
+          <p-button
+            label="Guardar"
+            icon="pi pi-save"
+            class="mr-1"
+            [loading]="guardando()"
+            [disabled]="!sucio() || cargando() || guardando()"
+            (onClick)="guardar()"
+          />
+          <p-button
+            label="Cancelar"
+            severity="secondary"
+            class="mr-1"
+            [disabled]="!sucio() || guardando()"
+            (onClick)="descartar()"
+          />
+          <p-button
+            icon="pi pi-user"
+            class="mr-1"
+            pTooltip="Auditoría del registro actual"
+            tooltipPosition="bottom"
+          />
+          <p-button
+            icon="pi pi-info-circle"
+            pTooltip="Información del objeto actual"
+            tooltipPosition="bottom"
+            (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
+          />
+        </ng-template>
+
+        <ng-template #center>
+          <span></span>
+        </ng-template>
+
+        <ng-template #end>
+          @if (mensaje()) {
+            <p-message [severity]="error() ? 'error' : 'success'">{{ mensaje() }}</p-message>
+          }
+          @if (cargando()) {
+            <div class="p-3" role="status">Cargando itinerario...</div>
+          }
+        </ng-template>
+      </p-toolbar>
       <p-panel [header]="'Ficha operativa · Día ' + actual.diaItinerario">
         <fieldset [disabled]="guardando() || cargando()" class="border-none p-0 m-0">
+          <div class="field">
+            <label class="block mb-1">Idioma</label>
+            <p-select
+              class="w-full"
+              [options]="catalogos().idiomas"
+              optionLabel="etiqueta"
+              optionValue="codigo"
+              [ngModel]="texto.idIdioma"
+              (ngModelChange)="idioma($event)"
+              [disabled]="sucio() || guardando() || cargando()"
+            />
+          </div>
           <div class="field">
             <label class="block">Fecha del día</label
             ><input
@@ -48,15 +122,6 @@
               class="w-full"
               [value]="actual.fechaCumpleItinerario || ''"
               readonly
-            />
-          </div>
-          <div class="field">
-            <label class="block">Imagen del itinerario (archivo)</label
-            ><input
-              pInputText
-              class="w-full"
-              [(ngModel)]="diaModelo.imagenItinerario"
-              (ngModelChange)="cambiar()"
             />
           </div>
           <div class="grid">
@@ -87,18 +152,6 @@
               {{ actual.diaImportacion }}</p-message
             >
           }
-          <div class="field">
-            <label class="block mb-1">Idioma</label>
-            <p-select
-              class="w-full"
-              [options]="catalogos().idiomas"
-              optionLabel="etiqueta"
-              optionValue="codigo"
-              [ngModel]="texto.idIdioma"
-              (ngModelChange)="idioma($event)"
-              [disabled]="sucio() || guardando() || cargando()"
-            />
-          </div>
           <div class="field">
             <label class="block mb-1">Descripción</label
             ><p-editor
@@ -170,21 +223,6 @@
             />
           </div>
         </fieldset>
-        <div class="flex gap-2 mt-2">
-          <p-button
-            label="Guardar ficha"
-            icon="pi pi-save"
-            [loading]="guardando()"
-            [disabled]="!sucio() || cargando() || guardando()"
-            (onClick)="guardar()"
-          />
-          <p-button
-            label="Descartar"
-            severity="secondary"
-            [disabled]="!sucio() || guardando()"
-            (onClick)="descartar()"
-          />
-        </div>
       </p-panel>
     </div>
     <div class="col-12 xl:col-8" style="min-width: 0">

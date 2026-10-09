@@ -4,7 +4,16 @@ import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 import { SavedRow } from '../interfaces/general.interface';
-import { InsumosResponse, TipoInsumoResponse, PersonaProveedorResponse, ProveedoresResponse, SuperTipoInsumo, SuperTipoInsumoResponse } from '../interfaces/proveedores.interfaces';
+import {
+  InsumosResponse,
+  TipoInsumoResponse,
+  PersonaProveedorResponse,
+  ProveedoresResponse,
+  SuperTipoInsumo,
+  SuperTipoInsumoResponse,
+  PersonaProveedor,
+  Proveedores,
+} from '../interfaces/proveedores.interfaces';
 import { GraficosResponse } from '../interfaces/general.interface';
 import { AuthService } from './auth.service';
 
@@ -24,18 +33,53 @@ export class ProveedoresService {
   }
 
   //OBTIENE UNA PERSONA PROVEEDOR POR ID PROVEEDOR
-  personaProveedorXIdProveedor(idProveedor: number): Observable<PersonaProveedorResponse>{
+  personaProveedorXIdProveedor(idProveedor: number): Observable<PersonaProveedorResponse> {
     return this.http.get<PersonaProveedorResponse>(
       `${this.apiUrl}proveedores/proveedor?idProveedor=${idProveedor}`,
     );
   }
 
+  //GRABA PROVEEDOR
+  grabaProveedor(proveedor: PersonaProveedor): Observable<SavedRow> {
+    let esPersonaProveedor = true;
+
+    if (proveedor.idProveedor === 0) {
+      proveedor.idProveedor = null;
+      if (proveedor.idPersona !== 0) {
+        const proveedorSimple: Proveedores = {
+          idProveedor: proveedor.idProveedor,
+          idPersona: proveedor.idPersona,
+          estadoProveedor: 'I',
+          tipoIdentificacionAts: proveedor.tipoIdentificacion!,
+        };
+        return this.http.post<SavedRow>(
+          `${this.apiUrl}proveedores/${this.authService.idUsuario()}`,
+          proveedorSimple,
+        );
+      } else {
+        esPersonaProveedor = true;
+      }
+    }
+
+    if (esPersonaProveedor) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}proveedores/persona/${this.authService.idUsuario()}`,
+        proveedor,
+      );
+    }
+
+    return of({
+      status: 'NOT_FOUND',
+      message: 'Datos incompletos',
+      idSecuencial: proveedor.idProveedor!,
+    } as SavedRow);
+  }
+
   //BÚSQUEDA INSUMO
   buscaInsumos(nombre: string): Observable<InsumosResponse> {
-    return this.http.get<InsumosResponse>(
-      `${this.apiUrl}proveedores/insumos/busqueda`,
-      { params: new HttpParams().set('nombre', nombre) },
-    );
+    return this.http.get<InsumosResponse>(`${this.apiUrl}proveedores/insumos/busqueda`, {
+      params: new HttpParams().set('nombre', nombre),
+    });
   }
 
   //BÚSQUEDA TIPO DE INSUMO

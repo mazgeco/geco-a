@@ -1,0 +1,23 @@
+.contenedor-insumos {
+  container-type: inline-size;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Cuando el contenedor tenga menos de 850px */
+@container (max-width: 850px) {
+  .col-detalle {
+    display: none !important;
+  }
+
+  .footer-completo {
+    display: none !important;
+  }
+}
+
+/* Cuando el contenedor tenga 850px o más */
+@container (min-width: 850.01px) {
+  .footer-reducido {
+    display: none !important;
+  }
+}

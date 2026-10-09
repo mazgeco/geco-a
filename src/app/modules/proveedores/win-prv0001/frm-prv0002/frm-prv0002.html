@@ -61,18 +61,18 @@
       <div class="col-12">
         <div class="field mb-1">
           <label>Razon social <span class="asterisco">*</span></label>
-          <!-- <input pInputText class="w-full" formControlName="razonSocial" /> -->
-           <p-autocomplete
-                class="w-full"
-                [fluid]="true"
-                formControlName="razonSocial"
-                [suggestions]="personas()"
-                (completeMethod)="buscarPersona($event)"
-                (onSelect)="seleccionarPersona($event)"
-                optionLabel="razonSocial"
-                [minLength]="3"
-              >
-              </p-autocomplete>
+          <p-autocomplete
+            class="w-full"
+            [fluid]="true"
+            [readonly]="readOnlyPersona()"
+            formControlName="razonSocial"
+            [suggestions]="personas()"
+            (completeMethod)="buscarPersona($event)"
+            (onSelect)="seleccionarPersona($event)"
+            optionLabel="razonSocial"
+            [minLength]="3"
+          >
+          </p-autocomplete>
         </div>
       </div>
       <!-- ======================= -->
@@ -80,7 +80,7 @@
       <!-- ======================= -->
       <div class="col-12">
         <div class="field mb-1">
-          <label>Nombre comercial <span class="asterisco">*</span></label>
+          <label>Nombre comercial</label>
           <input pInputText class="w-full" formControlName="nombreComercial" />
         </div>
       </div>
@@ -89,14 +89,7 @@
       <!-- ======================= -->
       <div class="col-12 md:col-6">
         <div class="field mb-1">
-          <label>Código</label>
-          <input pInputText class="w-full" formControlName="idProveedor" [readOnly]="true" />
-        </div>
-      </div>
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
           <label>Estado</label>
-          <!-- TODO: Poner aquí el estado -->
           <p-select
             class="w-full"
             [options]="estadoCombo()"
@@ -123,12 +116,9 @@
           ></p-select>
         </div>
       </div>
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Correo Electrónico<span class="asterisco">*</span></label>
-          <input pInputText class="w-full" formControlName="email" />
-        </div>
-      </div>
+      <!-- ======================= -->
+      <!-- FILA 4 -->
+      <!-- ======================= -->
       <div class="col-12 md:col-6">
         <div class="field mb-1">
           <label>Tipo de Identificación<span class="asterisco">*</span></label>
@@ -149,18 +139,30 @@
           <input pInputText class="w-full" formControlName="identificacion" />
         </div>
       </div>
+      <!-- ======================= -->
+      <!-- FILA 5 -->
+      <!-- ======================= -->
+      <div class="col-12 md:col-6">
+        <div class="field mb-1">
+          <label>Correo Electrónico<span class="asterisco">*</span></label>
+          <input pInputText class="w-full" formControlName="email" />
+        </div>
+      </div>
       <div class="col-12 md:col-6">
         <div class="field mb-1">
           <label>Teléfono<span class="asterisco">*</span></label>
           <input pInputText class="w-full" formControlName="telefono" />
         </div>
       </div>
-      <div class="col-12 md:col-6">
+      <!-- ======================= -->
+      <!-- FILA 6 -->
+      <!-- ======================= -->
+      <div class="col-12">
         <div class="field mb-1">
           <label>Dirección<span class="asterisco">*</span></label>
           <textarea
             class="w-full"
-            rows="5"
+            rows="3"
             [readOnly]="true"
             pTooltip="La dirección se cambia en el módulo de personas"
             pTextarea

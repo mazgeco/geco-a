@@ -17,8 +17,8 @@ export interface Proveedores {
   tipoIdentificacionAts?: string;
   diasFechaMax?: number;
   diasTimeLimit?: number;
-  idUsuarioCrea: string;
-  fechaCrea: string;
+  idUsuarioCrea?: string;
+  fechaCrea?: string;
   idUsuarioModifica?: string;
   fechaModifica?: string;
 }
