@@ -64,7 +64,7 @@
 
         <div class="col-12 md:col-6">
           <div class="field mb-1">
-            <label>Tipo de Producto</label>
+            <label>Tipo de Producto<span class="asterisco">*</span></label>
             <p-select
               class="w-full"
               [options]="nombreTipoProducto()"
@@ -79,7 +79,7 @@
 
         <div class="col-12 md:col-6">
           <div class="field mb-1">
-            <label>Nombre comercial del Producto</label>
+            <label>Nombre comercial del Producto<span class="asterisco">*</span></label>
             <input
               pInputText
               class="w-full"
@@ -123,7 +123,7 @@
 
         <div class="col-12">
           <div class="field mb-1">
-            <label>Descripción del Producto</label>
+            <label>Descripción del Producto<span class="asterisco">*</span></label>
             <textarea
               pTextarea
               [autoResize]="true"

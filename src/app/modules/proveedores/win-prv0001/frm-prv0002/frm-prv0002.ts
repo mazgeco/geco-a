@@ -204,9 +204,17 @@ seleccionarPersona(event: any): void {
   // Autocompletas automáticamente otros campos del formulario basándote en la persona elegida
   this.frmPrv0002.patchValue({
     // Ajusta las variables según tu interfaz de Persona y tu FormGroup
-    idPersona: persona.idPersona,
-    nombreComercial: persona.nombreCompleto,
-    identificacion: persona.cedulaRuc 
+   idPersona: persona.idPersona,
+  nombreComercial: persona.nombreComercial, 
+  identificacion: persona.identificacion,
+  tipoIdentificacion: persona.tipoIdentificacion === 'P' ? '06' : 
+                      persona.tipoIdentificacion === 'C' ? '05' : 
+                      persona.tipoIdentificacion === 'R' ? '04' : persona.tipoIdentificacion,
+  tipoPersona: persona.tipoPersona,
+  email: persona.correoElectronico, 
+  telefono: persona.telefono,
+  direccion: persona.direccion,
+  estadoProveedor: persona.estadoPersona === 'A' ? 'A' : 'I', 
   });
 }
 
