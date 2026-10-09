@@ -42,11 +42,12 @@ export class ProveedoresService {
   //GRABA PROVEEDOR
   grabaProveedor(proveedor: PersonaProveedor): Observable<SavedRow> {
     let esPersonaProveedor = true;
-    
+
     if (proveedor.idProveedor === 0) {
       proveedor.idProveedor = null;
       if (proveedor.idPersona !== 0) {
         const proveedorSimple: Proveedores = {
+          idProveedor: proveedor.idProveedor,
           idPersona: proveedor.idPersona,
           estadoProveedor: 'I',
           tipoIdentificacionAts: proveedor.tipoIdentificacion!,

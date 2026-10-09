@@ -357,7 +357,7 @@ export class FrmPer0001 implements OnInit {
           'Error',
           'Ha ocurrido un error al grabar: ' + err.error.message,
         );
-      },
+      }
     });
   }
 

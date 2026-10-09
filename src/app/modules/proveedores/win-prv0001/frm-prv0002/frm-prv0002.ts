@@ -7,7 +7,11 @@ import { Router } from '@angular/router';
 import { Combo } from '../../../../interfaces/general.interface';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
 import { Personas } from '../../../../interfaces/personas.interfaces';
-import { EstadoProveedor, PersonaProveedor, Proveedores } from '../../../../interfaces/proveedores.interfaces';
+import {
+  EstadoProveedor,
+  PersonaProveedor,
+  Proveedores,
+} from '../../../../interfaces/proveedores.interfaces';
 
 //Servicios propios
 import { ToastService } from '../../../../services/toast.service';
@@ -157,8 +161,20 @@ export class FrmPrv0002 implements OnInit {
   }
 
   //GRABA FORMA
-  saveForm(proveedor: PersonaProveedor, newRow: boolean): void {
-    console.log(proveedor);
+  saveForm(proveedor: PersonaProveedor): void {
+    this.proveedoresService.grabaProveedor(proveedor).subscribe({
+      next: (resp) => {
+        this.idProveedor = resp.idSecuencial!;
+        this.frmPrv0002.patchValue({ idProveedor: resp.idSecuencial }, { emitEvent: false });
+      },
+      error: (err) => {
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al grabar: ' + err.error.message,
+        );
+      }
+    });
   }
 
   //MÉTODO QUE CAMBIA EL ESTADO DEL PRODUCTO
@@ -227,11 +243,10 @@ export class FrmPrv0002 implements OnInit {
       estadoProveedor: persona.estadoPersona === 'A' ? 'A' : 'I',
     });
 
-    this.saveForm(this.currentData, true);
+    this.saveForm(this.currentData);
   }
 
   readOnlyPersona(): boolean {
     return this.idProveedor !== 0 && this.idProveedor !== null;
   }
-
 }
