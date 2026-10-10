@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { AuthService } from './auth.service';
 import { ListaTipoProductoResponse, ListaProductosResponse, ProductoResponse, ItinerarioResponse, RespuestaIdiomaItinerario, Productos, DiaItinerario, InsumoItinerario, InsumoItinerarioResponse, IdiomaXItinerario, Operacion, ListaOperacionResponse, UnidadEstrategica, ListaUnidadEstrategicaResponse, Temporadas, ListaTemporadasResponse, ListaPrecioProductoResponse, GraficosResponse, TipoOperacionResponse, Impuesto, ImpuestoResponse, ImpuestoProducto, ImpuestosProductoResponse, TipoProducto,TipoProductoResponse, TarifaFila} from '../interfaces/productos.interfaces';
 import { SavedRow } from '../interfaces/general.interface'
 
@@ -12,7 +13,8 @@ export class ProductosService {
 
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
-  private idUsuario = "mparraga";
+  //private idUsuario = "mparraga";
+  private authService = inject(AuthService);
  
     // buscaProducto(nombre: string): Observable<ListaProductosResponse> {
     // return this.http.get<ListaProductosResponse>(`${this.apiUrl}productos/busqueda?nombre=${nombre}`)
@@ -54,12 +56,12 @@ export class ProductosService {
         // Mantenemos el ID como string vacío respetando tu interfaz estricta
         producto.idProducto = ''; 
         // Enviamos el POST para que el backend inserte y devuelva el nuevo código
-        return this.http.post<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}`, producto);
+        return this.http.post<SavedRow>(`${this.apiUrl}productos/${this.authService.idUsuario()}`, producto);
       } else {
         
         // Si ya tiene un código (ej. ADL001), se procesa como una actualización (PUT)
         const params = new HttpParams().set('idProducto', idProducto);
-        return this.http.put<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}`, producto, {
+        return this.http.put<SavedRow>(`${this.apiUrl}productos/${this.authService.idUsuario()}`, producto, {
           params,
         }); 
       }
@@ -155,13 +157,13 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
         if (nuevaFila) {
           insumo.idInsumoXItinerario = null;
           return this.http.post<SavedRow>(
-            `${this.apiUrl}productos/insumosxitinerario/${this.idUsuario}`,
+            `${this.apiUrl}productos/insumosxitinerario/${this.authService.idUsuario()}`,
             insumo,
           );
         } else {
           const params = new HttpParams().set('idInsumoXItinerario', insumo.idInsumoXItinerario!);
           return this.http.put<SavedRow>(
-            `${this.apiUrl}productos/insumosxitinerario/${this.idUsuario}`,
+            `${this.apiUrl}productos/insumosxitinerario/${this.authService.idUsuario()}`,
             insumo,
             { params },
           );
@@ -172,7 +174,7 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
 
   eliminaInsumoItinerario(idInsumoXItinerario: number): Observable<SavedRow> {
     const params = new HttpParams().set('idInsumoXItinerario', idInsumoXItinerario!);
-    return this.http.delete<SavedRow>(`${this.apiUrl}productos/insumosxitinerario/${this.idUsuario}`, {
+    return this.http.delete<SavedRow>(`${this.apiUrl}productos/insumosxitinerario/${this.authService.idUsuario()}`, {
       params,
     });
   }
@@ -191,13 +193,13 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
         if (nuevaFila) {
           operacion.idOperacion = null;
           return this.http.post<SavedRow>(
-            `${this.apiUrl}productos/${this.idUsuario}/operaciones`,
+            `${this.apiUrl}productos/${this.authService.idUsuario()}/operaciones`,
             operacion,
           );
         } else {
           const params = new HttpParams().set('idOperacion', operacion.idOperacion!);
           return this.http.put<SavedRow>(
-            `${this.apiUrl}productos/${this.idUsuario}/operaciones`,
+            `${this.apiUrl}productos/${this.authService.idUsuario()}/operaciones`,
             operacion,
             { params },
           );
@@ -206,7 +208,7 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
 
     eliminaOperacion(idOperacion: number): Observable<SavedRow> {
     const params = new HttpParams().set('idOperacion', idOperacion);
-    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/operaciones`, {
+    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.authService.idUsuario()}/operaciones`, {
       params,
     });
   }
@@ -221,13 +223,13 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
         if (nuevaFila) {
           unidad.idUnidadEstrategica = null;
           return this.http.post<SavedRow>(
-            `${this.apiUrl}productos/${this.idUsuario}/unidadesestrategicas`,
+            `${this.apiUrl}productos/${this.authService.idUsuario()}/unidadesestrategicas`,
             unidad,
           );
         } else {
           const params = new HttpParams().set('idUnidadEstrategica', unidad.idUnidadEstrategica!);
           return this.http.put<SavedRow>(
-            `${this.apiUrl}productos/${this.idUsuario}/unidadesestrategicas`,
+            `${this.apiUrl}productos/${this.authService.idUsuario()}/unidadesestrategicas`,
             unidad,
             { params },
           );
@@ -236,7 +238,7 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
 
   eliminaUnidadEstrategica(idUnidadEstrategica: number): Observable<SavedRow> {
     const params = new HttpParams().set('idUnidadEstrategica', idUnidadEstrategica);
-    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/unidadesestrategicas`, {
+    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.authService.idUsuario()}/unidadesestrategicas`, {
       params,
     });
   }
@@ -250,13 +252,13 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
         if (nuevaFila) {
           temporada.idTemporada = null;
           return this.http.post<SavedRow>(
-            `${this.apiUrl}productos/${this.idUsuario}/temporadas`,
+            `${this.apiUrl}productos/${this.authService.idUsuario()}/temporadas`,
             temporada,
           );
         } else {
           const params = new HttpParams().set('idTemporada', temporada.idTemporada!);
           return this.http.put<SavedRow>(
-            `${this.apiUrl}productos/${this.idUsuario}/temporadas`,
+            `${this.apiUrl}productos/${this.authService.idUsuario()}/temporadas`,
             temporada,
             { params },
           );
@@ -265,7 +267,7 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
 
   eliminaTemporada(idTemporada: number): Observable<SavedRow> {
     const params = new HttpParams().set('idTemporada', idTemporada);
-    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/temporadas`, {
+    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.authService.idUsuario()}/temporadas`, {
       params,
     });
   }
@@ -304,13 +306,13 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
         if (nuevaFila) {
          // impuesto.idImpuesto = '';
           return this.http.post<SavedRow>(
-            `${this.apiUrl}productos/${this.idUsuario}/impuestos`,
+            `${this.apiUrl}productos/${this.authService.idUsuario()}/impuestos`,
             impuesto,
           );
         } else {
           const params = new HttpParams().set('idImpuesto', impuesto.idImpuesto!);
           return this.http.put<SavedRow>(
-            `${this.apiUrl}productos/${this.idUsuario}/impuestos`,
+            `${this.apiUrl}productos/${this.authService.idUsuario()}/impuestos`,
             impuesto,
             { params },
           );
@@ -318,7 +320,7 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
       }
   eliminaImpuesto(idImpuesto: string): Observable<SavedRow> {
     const params = new HttpParams().set('idImpuesto', idImpuesto!);
-    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/impuestos`, {
+    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.authService.idUsuario()}/impuestos`, {
       params,
     });
   }
@@ -334,11 +336,11 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
   grabaImpuestoProducto(impuesto: ImpuestoProducto, idUsuario: string): Observable<SavedRow> {
       if (!impuesto.idImpuestoXProducto || impuesto.idImpuestoXProducto === 0) {
     // POST (Nuevo): Envía el usuario en la url y el objeto en el body
-    return this.http.post<SavedRow>(`${this.apiUrl}productos/${idUsuario}/impuestosxproductos`, impuesto);
+    return this.http.post<SavedRow>(`${this.apiUrl}productos/${this.authService.idUsuario()}/impuestosxproductos`, impuesto);
   } else {
     // PUT (Actualizar): Envía el usuario en la url y el idItinerario como QueryParam
     return this.http.put<SavedRow>(
-      `${this.apiUrl}productos/${idUsuario}/impuestosxproductos?idImpuestoXProducto=${impuesto.idImpuestoXProducto}`,
+      `${this.apiUrl}productos/${this.authService.idUsuario()}/impuestosxproductos?idImpuestoXProducto=${impuesto.idImpuestoXProducto}`,
       impuesto
     );
   } 
@@ -346,7 +348,7 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
 
 eliminaImpuestoProducto(idImpuestoXProducto: number, idUsuario: string): Observable<any> {
   return this.http.delete<any>(
-    `${this.apiUrl}productos/${idUsuario}/impuestosxproductos?idImpuestoXProducto=${idImpuestoXProducto}`
+    `${this.apiUrl}productos/${this.authService.idUsuario()}/impuestosxproductos?idImpuestoXProducto=${idImpuestoXProducto}`
   );
 }
 
@@ -356,7 +358,7 @@ cargarTipoProducto(): Observable<TipoProductoResponse> {
 
     eliminaTipoProducto(idTipoProducto: string): Observable<SavedRow> {
     const params = new HttpParams().set('idTipoProducto', idTipoProducto!);
-    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/tipoproductos`, {
+    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.authService.idUsuario()}/tipoproductos`, {
       params,
     });
   }
@@ -367,13 +369,13 @@ cargarTipoProducto(): Observable<TipoProductoResponse> {
         if (nuevaFila) {
           //TipoProducto.idTipoProducto = null;
           return this.http.post<SavedRow>(
-            `${this.apiUrl}productos/${this.idUsuario}/tipoproductos`,
+            `${this.apiUrl}productos/${this.authService.idUsuario()}/tipoproductos`,
             TipoProducto,
           );
         } else {
           const params = new HttpParams().set('idTipoProducto', TipoProducto.idTipoProducto!);
           return this.http.put<SavedRow>(
-            `${this.apiUrl}productos/${this.idUsuario}/tipoproductos`,
+            `${this.apiUrl}productos/${this.authService.idUsuario()}/tipoproductos`,
             TipoProducto,
             { params },
           );
@@ -384,11 +386,11 @@ cargarTipoProducto(): Observable<TipoProductoResponse> {
     if (Tarifa.idPrecioProductoXTemporada === 0) {
        //Tarifa.idPrecioProductoXTemporada = null;
       // POST (Nuevo): Pasamos el idUsuario en la URL
-      return this.http.post<any>(`${this.apiUrl}productos/${idUsuario}/preciosproductoxtemporada`, Tarifa);
+      return this.http.post<any>(`${this.apiUrl}productos/${this.authService.idUsuario()}/preciosproductoxtemporada`, Tarifa);
     } else {
       // PUT (Actualizar): Pasamos idUsuario en URL y el idInsumoXItinerario como Query Param
       return this.http.put<any>(
-        `${this.apiUrl}productos/${idUsuario}/preciosproductoxtemporada?idPrecioProductoXTemporada=${Tarifa.idPrecioProductoXTemporada}`, 
+        `${this.apiUrl}productos/${this.authService.idUsuario()}/preciosproductoxtemporada?idPrecioProductoXTemporada=${Tarifa.idPrecioProductoXTemporada}`, 
         Tarifa
       );
     }
@@ -396,7 +398,7 @@ cargarTipoProducto(): Observable<TipoProductoResponse> {
 
   eliminaTarifa(idPrecioProductoXTemporada: number): Observable<SavedRow> {
     const params = new HttpParams().set('idPrecioProductoXTemporada', idPrecioProductoXTemporada!);
-    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.idUsuario}/preciosproductoxtemporada`, {
+    return this.http.delete<SavedRow>(`${this.apiUrl}productos/${this.authService.idUsuario()}/preciosproductoxtemporada`, {
       params,
     });
   }
