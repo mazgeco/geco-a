@@ -1,4 +1,4 @@
-import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, Input, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
 import { DatePipe, NgClass } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
 import { PRIMENG_MODULES } from '../../../../shared/primeng/primeng.imports';
@@ -15,7 +15,7 @@ import { ToastService } from '../../../../services/toast.service';
   imports: [...PRIMENG_MODULES, NgClass, DatePipe],
   templateUrl: './grd-per0010.html',
 })
-export class GrdPer0010 implements OnInit {
+export class GrdPer0010 implements OnInit, OnChanges {
   /******************************************************************************************
    * TOMA DEL PARÁMETRO ENVIADO EN LA LLAMADA DEL SELECTOR
    *******************************************************************************************/
@@ -62,6 +62,12 @@ export class GrdPer0010 implements OnInit {
   ngOnInit(): void {
     //CARGA LAS IDENTIFICACIONES DE LA PERSONA CONSULTADA
     this.cargaDatos();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['idPersona'] && this.idPersona !== 0) {
+      this.cargaDatos();
+    }
   }
 
   //MÉTODO QUE INSERTA UNA FILA EN EL GRID

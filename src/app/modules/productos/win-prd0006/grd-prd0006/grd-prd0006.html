@@ -60,6 +60,7 @@
               <p-autocomplete
                 class="w-full"
                 [fluid]="true"
+                appendTo="body"
                 [(ngModel)]="rowData.nombreTipoInsumo"
                 [disabled]="rowData.nombreInsumo ? true : false"
                 [ngModelOptions]="{standalone: true}"
