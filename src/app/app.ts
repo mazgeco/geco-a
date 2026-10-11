@@ -6,10 +6,7 @@ import { RouterOutlet } from '@angular/router';
   imports: [RouterOutlet],
   templateUrl: './app.html'
 })
-export class App implements OnInit {
+export class App  {
   protected readonly title = signal('Geco ERP');
 
-  ngOnInit(): void {
-    
-  }
 }

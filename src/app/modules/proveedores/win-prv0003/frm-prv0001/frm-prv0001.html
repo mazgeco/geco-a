@@ -1,199 +1,216 @@
 <p-toast />
 <p-confirmdialog />
 
-<div class="col-12">
-  <p-toolbar>
-    <ng-template #start>
-      @if (esActivo()) {
+<div class="grid">
+  <div class="col-12 md:col-6">
+    <p-toolbar>
+      <ng-template #start>
+        @if (esActivo()) {
+          <p-button
+            icon="pi pi-check"
+            class="mr-1"
+            label="Inactivar"
+            pTooltip="Inactiva al producto"
+            tooltipPosition="bottom"
+          />
+        } @else {
+          <p-button
+            icon="pi pi-check"
+            class="mr-1"
+            label="Activar"
+            pTooltip="Activa al producto"
+            tooltipPosition="bottom"
+          />
+        }
         <p-button
-          icon="pi pi-check"
+          icon="pi pi-user"
           class="mr-1"
-          label="Inactivar"
-          pTooltip="Inactiva al producto"
+          pTooltip="Auditoría del registro actual"
           tooltipPosition="bottom"
+          (onClick)="funciones.muestraAuditoria(idInsumo, idTabla(), currentData)"
         />
-      } @else {
         <p-button
-          icon="pi pi-check"
-          class="mr-1"
-          label="Activar"
-          pTooltip="Activa al producto"
+          icon="pi pi-info-circle"
+          pTooltip="Información del objeto actual"
           tooltipPosition="bottom"
+          (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
         />
-      }
-      <p-button
-        icon="pi pi-user"
-        class="mr-1"
-        pTooltip="Auditoría del registro actual"
-        tooltipPosition="bottom"
-        (onClick)="funciones.muestraAuditoria(idInsumo, idTabla(), currentData)"
-      />
-      <p-button
-        icon="pi pi-info-circle"
-        pTooltip="Información del objeto actual"
-        tooltipPosition="bottom"
-        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
-      />
-    </ng-template>
+      </ng-template>
 
-    <ng-template #center>
-      <span></span>
-    </ng-template>
+      <ng-template #center>
+        <span></span>
+      </ng-template>
 
-    <ng-template #end>
-      @if (proveedorMessage()?.visible) {
-        <div class="message-container">
-          <p-message [severity]="proveedorMessage()!.severity" [icon]="proveedorMessage()!.icon">
-            {{ proveedorMessage()!.text }}
-          </p-message>
-        </div>
-      }
-    </ng-template>
-  </p-toolbar>
-</div>
+      <ng-template #end>
+        @if (proveedorMessage()?.visible) {
+          <div class="message-container">
+            <p-message [severity]="proveedorMessage()!.severity" [icon]="proveedorMessage()!.icon">
+              {{ proveedorMessage()!.text }}
+            </p-message>
+          </div>
+        }
+      </ng-template>
+    </p-toolbar>
 
-<form id="frmPrv0001" class="grid m-0" [formGroup]="frmPrv0001">
-  <p-panel class="col-12">
-    <div class="grid">
+    <form id="frmPrv0001" class="grid m-0" [formGroup]="frmPrv0001">
+      <p-panel class="col-12">
+        <div class="grid">
           <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Insumo</label>
-          <input pInputText class="w-full" formControlName="idInsumo" [readOnly]="true" />
+            <div class="field mb-1">
+              <label>Insumo</label>
+              <input pInputText class="w-full" formControlName="idInsumo" [readOnly]="true" />
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Tipo de Insumo<span class="asterisco">*</span></label>
+              <p-select
+                class="w-full"
+                [options]="tipoInsumo()"
+                formControlName="idTipoInsumo"
+                pTooltip="Tipo de insumo"
+                tooltipPosition="bottom"
+                [filter]="true"
+                optionLabel="descripcionTipoInsumo"
+                optionValue="idTipoInsumo"
+              ></p-select>
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Descripción Insumo<span class="asterisco">*</span></label>
+              <input pInputText class="w-full" formControlName="descripcionInsumo" />
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Tipo precio</label>
+              <p-select
+                class="w-full"
+                [options]="tipoPrecio()"
+                formControlName="tipoPrecioInsumo"
+                pTooltip="Tipo de precio"
+                tooltipPosition="bottom"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Estado</label>
+              <p-select
+                class="w-full"
+                [options]="estadoInsumo()"
+                formControlName="estadoInsumo"
+                pTooltip="Estado"
+                tooltipPosition="bottom"
+                [readonly]="true"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Publico/Privado</label>
+              <p-select
+                class="w-full"
+                [options]="publicoPrivado()"
+                formControlName="publicoPrivado"
+                pTooltip="Publico/Privado"
+                tooltipPosition="bottom"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Individual/General</label>
+              <p-select
+                class="w-full"
+                [options]="individualGeneral()"
+                formControlName="individualGeneral"
+                pTooltip="Individual/General"
+                tooltipPosition="bottom"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Unidad de medida<span class="asterisco">*</span></label>
+              <p-select
+                class="w-full"
+                [options]="unidadMedida()"
+                formControlName="idUnidadMedida"
+                pTooltip="Tipo bien"
+                tooltipPosition="bottom"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Tipo bien</label>
+              <p-select
+                class="w-full"
+                [options]="tipoBienCombo()"
+                formControlName="tipoBien"
+                pTooltip="Tipo bien"
+                tooltipPosition="bottom"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Dar Anticipo</label>
+              <p-select
+                class="w-full"
+                [options]="darAnticipo()"
+                formControlName="darAnticipo"
+                pTooltip="Dar Anticipo"
+                tooltipPosition="bottom"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label>Costo promedio</label>
+              <input pInputText class="w-full" formControlName="costoPromedio" />
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
+              <label for="porcionXMedida">Porciones por medida</label>
+              <p-inputNumber
+                inputId="porcionXMedida"
+                class="w-full"
+                formControlName="porcionXMedida"
+                [min]="1"
+                [max]="100"
+                [showButtons]="true"
+              >
+              </p-inputNumber>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Tipo de Insumo<span class="asterisco">*</span></label>
-          <input pInputText class="w-full" formControlName="idTipoInsumo" />
-        </div>
-      </div>
-        <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Descripción Insumo<span class="asterisco">*</span></label>
-          <input pInputText class="w-full" formControlName="descripcionInsumo" />
-        </div>
-      </div>
-      <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Tipo precio</label>
-          <input pInputText class="w-full" formControlName="tipoPrecioInsumo" />
-        </div>
-      </div>
- <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Estado</label>
-          <p-select
-            class="w-full"
-            [options]="estadoInsumo()"
-            formControlName="estadoInsumo"
-            pTooltip="Estado"
-            tooltipPosition="bottom"
-            optionLabel="etiqueta"
-            optionValue="codigo"
-          ></p-select>
-        </div>
-      </div>
-            <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Publico/Privado</label>
-          <p-select
-            class="w-full"
-            [options]="publicoPrivado()"
-            formControlName="publicoPrivado"
-            pTooltip="Publico/Privado"
-            tooltipPosition="bottom"
-            optionLabel="etiqueta"
-            optionValue="codigo"
-          ></p-select>
-        </div>
-      </div>
-            <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Individual/General</label>
-          <p-select
-            class="w-full"
-            [options]="individualGeneral()"
-            formControlName="individualGeneral"
-            pTooltip="Individual/General"
-            tooltipPosition="bottom"
-            optionLabel="etiqueta"
-            optionValue="codigo"
-          ></p-select>
-        </div>
-      </div>
-            <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Caja Chica<span class="asterisco">*</span></label>
-          <p-select
-            class="w-full"
-            [options]="cajaChica()"
-            formControlName="cajaChica"
-            pTooltip="Caja Chica"
-            tooltipPosition="bottom"
-            optionLabel="etiqueta"
-            optionValue="codigo"
-          ></p-select>
-        </div>
-      </div>
-           <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Unidad de medida<span class="asterisco">*</span></label>
-          <input pInputText class="w-full" formControlName="idUnidadMedida" />
-        </div>
-      </div>
-        <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Código Externo</label>
-          <input pInputText class="w-full" formControlName="codigoExterno" />
-        </div>
-      </div>
-            <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Tipo bien</label>
-          <p-select
-            class="w-full"
-            [options]="tipoBienCombo()"
-            formControlName="tipoBien"
-            pTooltip="Tipo bien"
-            tooltipPosition="bottom"
-            optionLabel="etiqueta"
-            optionValue="codigo"
-          ></p-select>
-        </div>
-      </div>
-            <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Dar Anticipo</label>
-          <p-select
-            class="w-full"
-            [options]="darAnticipo()"
-            formControlName="darAnticipo"
-            pTooltip="Dar Anticipo"
-            tooltipPosition="bottom"
-            optionLabel="etiqueta"
-            optionValue="codigo"
-          ></p-select>
-        </div>
-      </div>
-        <div class="col-12 md:col-6">
-        <div class="field mb-1">
-          <label>Costo promedio</label>
-          <input pInputText class="w-full" formControlName="costoPromedio" />
-        </div>
-      </div>
-            <div class="col-12 md:col-6">
-  <div class="field mb-1">
-    <label for="porcionXMedida">Porciones por medida</label>
-    <p-inputNumber 
-      inputId="porcionXMedida" 
-      class="w-full"
-      formControlName="porcionXMedida" 
-      [min]="1" 
-      [max]="100" 
-      [showButtons]="true">
-    </p-inputNumber>
+      </p-panel>
+    </form>
   </div>
+  <div class="col-12 md:col-6">
+    <p-panel>
+        <app-grd-prv0004 [idInsumo]="idInsumo"></app-grd-prv0004>
+    </p-panel>
+    <p-panel>
+      <app-grd-prv0002 [idInsumo]="idInsumo"></app-grd-prv0002>
+    </p-panel>
+  </div>  
 </div>
-</div>
-  </p-panel>
-</form>

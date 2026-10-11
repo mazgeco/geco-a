@@ -1,0 +1,214 @@
+<p-toast />
+<p-confirmdialog />
+<div class="col-12" class="border-1 border-200 border-round p-3">
+  <span>Lista de precios</span>
+  <p-toolbar>
+    <ng-template #start>
+      <p-button
+        id="btnGrdPrv00041"
+        icon="pi pi-plus"
+        class="mr-1"
+        label="Insertar"
+        pTooltip="Inserta una fila"
+        tooltipPosition="bottom"
+        (onClick)="insertarFila()"
+      />
+      <p-button
+        id="btnGrdPrv00042"
+        icon="pi pi-trash"
+        class="mr-1"
+        label="Eliminar"
+        pTooltip="Elimina varias filas seleccionadas"
+        tooltipPosition="bottom"
+        (onClick)="eliminarVarias()"
+      />
+      <p-button
+        id="btnGrdPrv00043"
+        icon="pi pi-refresh"
+        class="mr-1"
+        pTooltip="Refresca los datos del grid"
+        tooltipPosition="bottom"
+        (onClick)="cargaDatos(idInsumo)"
+      />
+      <p-button
+        id="btnGrdPrv00044"
+        icon="pi pi-user"
+        class="mr-1"
+        pTooltip="Auditoría del registro actual"
+        tooltipPosition="bottom"
+        (onClick)="muestraAuditoriaRegistro()"
+      />
+      <p-button
+        id="btnGrdPrv00045"
+        icon="pi pi-info-circle"
+        pTooltip="Información del objeto actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
+      />
+    </ng-template>
+
+    <ng-template #center>
+      <span></span>
+    </ng-template>
+
+    <ng-template #end>
+      @if (barraMessage()?.visible) {
+        <div class="message-container">
+          <p-message [severity]="barraMessage()!.severity" [icon]="barraMessage()!.icon">
+            {{ barraMessage()!.text }}
+          </p-message>
+        </div>
+      }
+    </ng-template>
+  </p-toolbar>
+  <!-- ===================================== -->
+  <!-- LISTADO DE DATOS -->
+  <!-- ===================================== -->
+  <p-table
+    id="grdPrv0004"
+    [value]="filas()"
+    editMode="row"
+    selectionMode="multiple"
+    [(selection)]="selectedRows"
+    [metaKeySelection]="metaKey"
+    dataKey="_rowId"
+    class="p-datatable-sm"
+    [paginator]="true"
+    [rows]="3"
+    showGridlines
+    [size]="'small'"
+  >
+    <!-- HEADER -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 15%">Precio</th>
+        <th style="width: 13%">Fecha inicio</th>
+        <th style="width: 13%">Fecha fin</th>
+        <th style="width: 13%">Pax desde</th>
+        <th style="width: 13%">Pax hasta</th>
+        <th style="width: 13%">Preferido</th>
+        <th style="width: 20%"></th>
+      </tr>
+    </ng-template>
+    <!-- BODY -->
+    <ng-template pTemplate="body" let-rowData let-editing="editing" let-rowIndex="rowIndex">
+      <tr [pEditableRow]="rowData" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+        <!-- PRECIO -->
+        <td class="text-right">
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ rowData.precioInsumo | number: '1.2-2' }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- FECHA INICIO -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ rowData.fechaInicioVigencia }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- FECHA FIN -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ rowData.fechaFinVigencia }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- PAX INICIO -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ rowData.paxIni }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- PAX FIN -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ rowData.paxFin }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- PRINCIPAL -->
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ rowData.principalPrecioInsumo === "S" ? "Si" : "No" }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <!-- ACCIONES -->
+        <td class="text-center">
+          <!-- EDITAR -->
+          @if (!editing) {
+            <button
+              pButton
+              [id]="'btnGrdPrv00046' + rowIndex"
+              pInitEditableRow
+              icon="pi pi-pencil"
+              text
+              rounded
+              severity="primary"
+            ></button>
+            <button
+              pButton
+              [id]="'btnGrdPrv00047' + rowIndex"
+              icon="pi pi-trash"
+              text
+              rounded
+              severity="danger"
+              (click)="eliminarFila(rowData)"
+            ></button>
+          }
+          <!-- GUARDAR / CANCELAR -->
+          @if (editing) {
+            <button
+              pButton
+              [id]="'btnGrdPrv00048' + rowIndex"
+              pSaveEditableRow
+              icon="pi pi-check"
+              text
+              rounded
+              severity="success"
+              class="mr-1"
+              (click)="saveRow(rowData)"
+            ></button>
+            <button
+              pButton
+              [id]="'btnGrdPrv00049' + rowIndex"
+              pCancelEditableRow
+              icon="pi pi-times"
+              text
+              rounded
+              severity="danger"
+            ></button>
+          }
+        </td>
+      </tr>
+    </ng-template>
+    <!-- FOOTER -->
+    <ng-template pTemplate="paginatorleft"> {{ filas().length }} ítems </ng-template>
+  </p-table>
+</div>

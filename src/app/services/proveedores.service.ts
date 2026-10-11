@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 
 import { SavedRow } from '../interfaces/general.interface';
 import {
-  InsumosResponse,
+  ListaInsumosResponse,
   TipoInsumoResponse,
   PersonaProveedorResponse,
   ProveedoresResponse,
@@ -14,6 +14,12 @@ import {
   PersonaProveedor,
   Proveedores,
   TipoInsumo,
+  InsumosResponse,
+  PrecioInsumoResponse,
+  PrecioInsumo,
+  ListaPrecioInsumoResponse,
+  ListaImpuestoXInsumoResponse,
+  ImpuestoXInsumo,
 } from '../interfaces/proveedores.interfaces';
 import { GraficosResponse } from '../interfaces/general.interface';
 import { AuthService } from './auth.service';
@@ -77,11 +83,18 @@ export class ProveedoresService {
   }
 
   //BÚSQUEDA INSUMO
-  buscaInsumos(nombre: string): Observable<InsumosResponse> {
-    return this.http.get<InsumosResponse>(`${this.apiUrl}proveedores/insumos/busqueda`, {
+  buscaInsumos(nombre: string): Observable<ListaInsumosResponse> {
+    return this.http.get<ListaInsumosResponse>(`${this.apiUrl}proveedores/insumos/busqueda`, {
       params: new HttpParams().set('nombre', nombre),
     });
   }
+
+  //CARGA INSUMO
+  cargaInsumo(idInsumo: number): Observable<InsumosResponse> {
+    return this.http.get<InsumosResponse>(`${this.apiUrl}proveedores/insumos/${idInsumo}`);
+  }
+
+  //GRABA INSUMO
 
   //BÚSQUEDA TIPO DE INSUMO
   buscaTipoInsumo(nombre: string): Observable<TipoInsumoResponse> {
@@ -91,19 +104,17 @@ export class ProveedoresService {
   }
 
   listaTipoInsumo(): Observable<TipoInsumoResponse> {
-    return this.http.get<TipoInsumoResponse>(
-      `${this.apiUrl}proveedores/tipoinsumos`,
-    );
+    return this.http.get<TipoInsumoResponse>(`${this.apiUrl}proveedores/tipoinsumos`);
   }
 
   grabaTipoInsumo(tipoInsumo: TipoInsumo): Observable<SavedRow> {
     return this.http.post<SavedRow>(
-        `${this.apiUrl}proveedores/${this.authService.idUsuario()}/tipoinsumos`,
-        tipoInsumo,
-      );
+      `${this.apiUrl}proveedores/${this.authService.idUsuario()}/tipoinsumos`,
+      tipoInsumo,
+    );
   }
 
-  eliminaTipoInsumo(idTipoInsumo: number): Observable<SavedRow>{
+  eliminaTipoInsumo(idTipoInsumo: number): Observable<SavedRow> {
     return of({
       status: 'NOT_FOUND',
       message: 'Datos incompletos',
@@ -149,6 +160,72 @@ export class ProveedoresService {
     const params = new HttpParams().set('idSuperTipoInsumo', idSuperTipoInsumo!);
     return this.http.delete<SavedRow>(
       `${this.apiUrl}proveedores/${this.authService.idUsuario()}/supertipoinsumos`,
+      {
+        params,
+      },
+    );
+  }
+
+  //PRECIO INSUMO
+  listaPrecioInsumo(idInsumo: number): Observable<ListaPrecioInsumoResponse> {
+    return this.http.get<ListaPrecioInsumoResponse>(
+      `${this.apiUrl}productos/precioinsumos/${idInsumo}`,
+    );
+  }
+
+  grabaPrecioInsumo(superTipoInsumo: PrecioInsumo, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}productos/${this.authService.idUsuario()}/precioinsumos`,
+        superTipoInsumo,
+      );
+    } else {
+      const params = new HttpParams().set('idPrecioInsumo', superTipoInsumo.idPrecioInsumo!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}productos/${this.authService.idUsuario()}/precioinsumos`,
+        superTipoInsumo,
+        { params },
+      );
+    }
+  }
+
+  eliminaPrecioInsumo(idPrecioInsumo: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idPrecioInsumo', idPrecioInsumo!);
+    return this.http.delete<SavedRow>(
+      `${this.apiUrl}productos/${this.authService.idUsuario()}/precioinsumos`,
+      {
+        params,
+      },
+    );
+  }
+
+  //IMPUESTO X INSUMO
+  listaImpuestoXInsumo(idInsumo: number): Observable<ListaImpuestoXInsumoResponse> {
+    return this.http.get<ListaImpuestoXInsumoResponse>(
+      `${this.apiUrl}productos/impuestosxinsumos/${idInsumo}`,
+    );
+  }
+
+  grabaImpuestoXInsumo(impuestoXInsumo: ImpuestoXInsumo, nuevaFila: boolean): Observable<SavedRow> {
+    if (nuevaFila) {
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}productos/${this.authService.idUsuario()}/impuestosxinsumos`,
+        impuestoXInsumo,
+      );
+    } else {
+      const params = new HttpParams().set('idimpuestoXInsumo', impuestoXInsumo.idImpuestoXInsumo!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}productos/${this.authService.idUsuario()}/impuestosxinsumos`,
+        impuestoXInsumo,
+        { params },
+      );
+    }
+  }
+
+  eliminaImpuestoXInsumo(idImpuestoXInsumo: number): Observable<SavedRow> {
+    const params = new HttpParams().set('idImpuestoXInsumo', idImpuestoXInsumo!);
+    return this.http.delete<SavedRow>(
+      `${this.apiUrl}productos/${this.authService.idUsuario()}/impuestosxinsumos`,
       {
         params,
       },

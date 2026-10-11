@@ -45,10 +45,16 @@ export interface SuperTipoInsumo {
   fechaModifica?: string | null;
 }
 
-export interface InsumosResponse {
+export interface ListaInsumosResponse {
   status: string;
   message: string;
   data: Insumos[];
+}
+
+export interface InsumosResponse {
+  status: string;
+  message: string;
+  data: Insumos;
 }
 
 export interface Insumos {
@@ -133,6 +139,58 @@ export interface PersonaProveedor {
   identificacion: string | null;
   telefono: string | null;
   direccion: string | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+//PRECIO INSUMO
+export interface ListaPrecioInsumoResponse {
+  status: string;
+  message: string;
+  data: PrecioInsumo[];
+}
+
+export interface PrecioInsumoResponse {
+  status: string;
+  message: string;
+  data: PrecioInsumo;
+}
+
+export interface PrecioInsumo {
+  idPrecioInsumo?: number | null;
+  idInsumo?: number | null;
+  precioInsumo?: number | null;
+  fechaInicioVigencia?: string | null;
+  fechaFinVigencia?: string | null;
+  principalPrecioInsumo?: string | null;
+  paxIni?: number | null;
+  paxFin?: number | null;
+  idUsuarioCrea?: string | null;
+  fechaCrea?: string | null;
+  idUsuarioModifica?: string | null;
+  fechaModifica?: string | null;
+}
+
+//IMPUESTO X INSUMO
+export interface ListaImpuestoXInsumoResponse {
+  status: string;
+  message: string;
+  data: ImpuestoXInsumo[];
+}
+
+export interface ImpuestoXInsumoResponse {
+  status: string;
+  message: string;
+  data: PrecioInsumo;
+}
+
+export interface ImpuestoXInsumo {
+  idImpuestoXInsumo?: number | null;
+  idInsumo?: number | null;
+  idImpuesto?: string | null;
+  valorImpuesto?: number | null;
   idUsuarioCrea?: string | null;
   fechaCrea?: string | null;
   idUsuarioModifica?: string | null;

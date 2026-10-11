@@ -188,42 +188,6 @@ export interface InsumoItinerarioResponse {
   data: InsumoItinerario[]; 
 }
 
-// export interface InsumosResponse {
-//   status: string;
-//   message: string;
-//   data: Insumos[];
-// }
-
-// export interface Insumos {
-//   idInsumo?: number | null;
-//   idTipoInsumo?: number | null;
-//   idTipoPresentacion?: number | null;
-//   idUbicacionExistencia?: number | null;
-//   idUnidadMedida?: string | null;
-//   idProveedor?: number | null;
-//   porcionXMedida?: number | null;
-//   descripcionInsumo?: string | null;
-//   costoPresupuestado?: number | null;
-//   costoPromedio?: number | null;
-//   idMonedaPresupuesto?: number | null;
-//   estadoInsumo?: string | null;
-//   individualGeneral?: string | null;
-//   imagenInsumo?: string | null;
-//   stockMaximo?: number | null;
-//   stockMinimo?: number | null;
-//   publicoPrivado?: string | null;
-//   tipoPrecioInsumo?: string | null;
-//   observacionInsumo?: string | null;
-//   tipoBien?: string | null;
-//   darAnticipo?: string | null;
-//   codigoExterno?: string | null;
-//   cajaChica?: string | null;
-//   idUsuarioCrea?: string | null;
-//   fechaCrea?: string | null;
-//   idUsuarioModifica?: string | null;
-//   fechaModifica?: string | null;
-// }
-
 export interface Operacion {
   idOperacion: number | null;
   descripcionOperacion: string;
