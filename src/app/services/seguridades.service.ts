@@ -42,8 +42,7 @@ export class SeguridadesService {
   }
 
   usuarioXToken(token: string): Observable<UsuariosResponse> {
-    const params = new HttpParams().set('token', token);
-    return this.http.get<UsuariosResponse>(`${this.apiUrl}seguridades/usuarios/token`, { params });
+    return this.http.get<UsuariosResponse>(`${this.apiUrl}seguridades/usuarios/token`);
   }
 
   buscaUsuario(nombre: string): Observable<ListaUsuariosResponse> {

@@ -1,0 +1,1 @@
+{"extends":"./tsconfig.json","compilerOptions":{"outDir":"./check-jwt-output","moduleResolution":"bundler","types":["vitest/globals"]},"files":["src/app/shared/security/auth.jwt.spec.ts"],"include":[],"references":[]}

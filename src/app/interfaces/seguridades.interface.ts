@@ -113,7 +113,11 @@ export interface UsuarioValidadoResponse {
 export interface UsuarioValidado {
   idUsuario: string;
   nombre: string;
-  token: string
+  token: string;
+  tokenType?: string;
+  expiresAt?: string;
+  idPerfil?: string;
+  roles?: string[];
 }
 
 export interface UsuarioSesion {

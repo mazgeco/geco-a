@@ -1,3 +1,5 @@
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { jwtInterceptor } from './shared/interceptors/jwt.interceptor';
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { provideRouter } from '@angular/router';
@@ -38,6 +40,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
+    provideHttpClient(withInterceptors([jwtInterceptor])),
     MessageService,
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     providePrimeNG({

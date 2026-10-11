@@ -60,6 +60,9 @@
             </a>
           </div>
 
+          @if (sesionExpirada) {
+          <p-message severity="warn">Tu sesión venció o dejó de ser válida. Ingresa nuevamente.</p-message>
+          }
           @if (invalidLogin()) {
           <div class="text-danger mt-3">
             <small>

@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { PRIMENG_MODULES } from '../../shared/primeng/primeng.imports';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgClass } from '@angular/common';
@@ -19,6 +19,7 @@ export class AuthLayout {
   private authService = inject(AuthService);
 
   invalidLogin = signal(false);
+  sesionExpirada = inject(ActivatedRoute).snapshot.queryParamMap.get('sesion') === 'expirada';
 
   public loginForm = this.fb.group({
     username: ['', [Validators.required, Validators.minLength(3)]],
@@ -42,7 +43,10 @@ export class AuthLayout {
           this.invalidLogin.set(true);
           return;
         }
-        this.authService.login(response.data);
+        if (!this.authService.login(response.data)) {
+          this.invalidLogin.set(true);
+          return;
+        }
         this.router.navigate(['/main']);
       },
       error: () => {
