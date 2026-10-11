@@ -98,29 +98,29 @@ export class ProductosService {
     return this.http.get<any>(`${this.apiUrl}proveedores`);
   }
 
-grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedRow> {
+grabaItinerario(itinerario: DiaItinerario): Observable<SavedRow> {
   if (!itinerario.idItinerario) {
     // POST (Nuevo): Envía el usuario en la url y el objeto en el body
-    return this.http.post<SavedRow>(`${this.apiUrl}productos/${idUsuario}/itinerarios`, itinerario);
+    return this.http.post<SavedRow>(`${this.apiUrl}productos/${this.authService.idUsuario()}/itinerarios`, itinerario);
   } else {
     // PUT (Actualizar): Envía el usuario en la url y el idItinerario como QueryParam
     return this.http.put<SavedRow>(
-      `${this.apiUrl}productos/${idUsuario}/itinerarios?idItinerario=${itinerario.idItinerario}`, 
+      `${this.apiUrl}productos/${this.authService.idUsuario()}/itinerarios?idItinerario=${itinerario.idItinerario}`, 
       itinerario
     );
   }
 }
 
 // Guardado o actualización de textos operativos para la segunda tabla (prd_idioma_x_itinerario)
-  grabarTextosOperativos(dto: IdiomaXItinerario, idUsuario: string): Observable<SavedRow> {
-    if (!dto.idIdiomaXItinerario || dto.idIdiomaXItinerario === 0) {
+  grabarTextosOperativos(idiomaXItinerario: IdiomaXItinerario): Observable<SavedRow> {
+    if (!idiomaXItinerario.idIdiomaXItinerario || idiomaXItinerario.idIdiomaXItinerario === 0) {
       // POST (Nuevo): Cuando no tiene ID, crea el registro
-      return this.http.post<SavedRow>(`${this.apiUrl}productos/${idUsuario}/idiomasxitinerarios`, dto);
+      return this.http.post<SavedRow>(`${this.apiUrl}productos/${this.authService.idUsuario()}/idiomasxitinerarios`, idiomaXItinerario);
     } else {
       // PUT (Actualizar): Cuando ya tiene ID, actualiza enviándolo por query param (o como lo maneje el backend)
       return this.http.put<SavedRow>(
-        `${this.apiUrl}productos/${idUsuario}/idiomasxitinerarios?idIdiomaXItinerario=${dto.idIdiomaXItinerario}`,
-        dto
+        `${this.apiUrl}productos/${this.authService.idUsuario()}/idiomasxitinerarios?idIdiomaXItinerario=${idiomaXItinerario.idIdiomaXItinerario}`,
+        idiomaXItinerario
       );
     }
   }
@@ -273,8 +273,8 @@ grabaItinerario(itinerario: DiaItinerario, idUsuario: string): Observable<SavedR
   }
 
   // En tu productos.service.ts
-  actualizarTipoPrecio(idProducto: string, payload: any, idUsuario: string): Observable<any> {
-  const url = `${this.apiUrl}productos/${idUsuario}?idProducto=${idProducto}`;
+  actualizarTipoPrecio(idProducto: string, payload: any): Observable<any> {
+  const url = `${this.apiUrl}productos/${this.authService.idUsuario()}?idProducto=${idProducto}`;
   return this.http.put(url, payload);
   }
 

@@ -133,10 +133,8 @@ export class FrmPrd0003 implements OnInit {
   // ASEGÚRATE de que this.idProducto no esté undefined o vacío
   console.log('📦 2. Datos a enviar. ID Producto:', this.idProducto, 'Payload:', payloadUpdateParcial);
 
-  const idUsuario = 'ddiaz'; // Reemplaza con tu variable de usuario real
-
   // 3. Disparamos la petición
-  this.productosService.actualizarTipoPrecio(this.idProducto, payloadUpdateParcial, idUsuario)
+  this.productosService.actualizarTipoPrecio(this.idProducto, payloadUpdateParcial)
     .subscribe({
       next: (resp) => {
         console.log('✅ 3. ÉXITO: La base de datos respondió:', resp);

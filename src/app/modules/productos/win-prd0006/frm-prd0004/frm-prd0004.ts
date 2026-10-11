@@ -346,7 +346,7 @@ export class FrmPrd0004 implements OnInit, OnChanges {
   // EL GUARDADO CENTRAL (Ejecutado por el autoguardado)
   saveForm(itinerario: DiaItinerario): void {
     const idActual = this.frmPrd0004.get('idItinerario')?.value || '';
-    this.productosService.grabaItinerario(itinerario, 'ADMIN').subscribe({
+    this.productosService.grabaItinerario(itinerario).subscribe({
       next: (resp) => {
         console.log('Respuesta del guardado en Java:', resp);
         if (resp && resp.idSecuencial && (!idActual || idActual === 0)) {
@@ -392,7 +392,7 @@ export class FrmPrd0004 implements OnInit, OnChanges {
             duracionItinerario: formValues.duracionItinerario || '',
             observaciones: formValues.observaciones || ''
           };
-          this.productosService.grabarTextosOperativos(dtoTextos, 'ADMIN').subscribe({
+          this.productosService.grabarTextosOperativos(dtoTextos).subscribe({
             next: (resTextos: any) => {
               console.log('Textos operativos guardados', resTextos);
                 this.messageService.mostrar(
