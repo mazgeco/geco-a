@@ -4,35 +4,35 @@
 <div class="col-12">
   <p-toolbar>
     <ng-template #start>
-      <!-- CONTENEDOR FLEX CON WRAP: Los botones bajarán a la siguiente línea en móviles -->
-      <div class="flex flex-wrap gap-2">
-        <p-button
-          icon="pi pi-plus"
-          label="Agregar Día"
-          pTooltip="Agregar Día Secuencial al itinerario"
-          tooltipPosition="bottom"
-          (onClick)="agregarDiaSecuencial()"
-        />
-        <p-button
-          icon="pi pi-trash"
-          label="Eliminar Día"
-          pTooltip="Eliminar día del itinerario"
-          tooltipPosition="bottom"
-          (onClick)="eliminarDia()"
-        />
-        <p-button
-          icon="pi pi-user"
-          pTooltip="Auditoría del registro actual"
-          tooltipPosition="bottom"
-          (onClick)="funciones.muestraAuditoria(idItinerarioActivo(), idTabla(), currentData)"
-        />
-        <p-button
-          icon="pi pi-info-circle"
-          pTooltip="Información del objeto actual"
-          tooltipPosition="bottom"
-          (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
-        />
-      </div>
+      <p-button
+        icon="pi pi-plus"
+        class="mr-1"
+        label="Agregar Día"
+        pTooltip="Agregar Día Secuencial al itinerario"
+        tooltipPosition="bottom"
+        (onClick)="agregarDiaSecuencial()"
+      />
+      <p-button
+        icon="pi pi-trash"
+        class="mr-1"
+        label="Eliminar Día"
+        pTooltip="Eliminar día del itinerario"
+        tooltipPosition="bottom"
+        (onClick)="eliminarDia()"
+      />
+      <p-button
+        icon="pi pi-user"
+        class="mr-1"
+        pTooltip="Auditoría del registro actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraAuditoria(idItinerarioActivo(), idTabla(), currentData)"
+      />
+      <p-button
+        icon="pi pi-info-circle"
+        pTooltip="Información del objeto actual"
+        tooltipPosition="bottom"
+        (onClick)="funciones.muestraInfoObjeto(idContenedor(), idObjeto(), idTabla(), permiso())"
+      />
     </ng-template>
 
     <ng-template #center>
@@ -49,60 +49,69 @@
       }
     </ng-template>
   </p-toolbar>
-
-  <form id="frmPrd0004" class="grid m-0 mt-3" [formGroup]="frmPrd0004">
-    <p-panel class="col-12 p-0">
-      
-      <!-- ========================================== -->
-      <!-- UN SOLO GRID PRINCIPAL ORDENADO            -->
-      <!-- ========================================== -->
+  <form id="frmPrd0004" class="grid m-0" [formGroup]="frmPrd0004">
+    <!-- CONTENEDOR PRINCIPAL ESTÁNDAR -->
+    <p-panel class="col-12">
       <div class="grid">
-        
-        <!-- CABECERA (Envuelto en col-12) -->
-        <div class="col-12 mb-2">
+      <!-- ========================================== -->
+      <!-- CABECERA DE LA PESTAÑA                     -->
+      <!-- ========================================== -->
+      <div class="flex justify-content-between align-items-center mb-4">
+        <div>
           <h3 class="m-0">Itinerario Secuencial y Recursos Operativos</h3>
           <p class="text-color-secondary text-sm m-0 mt-1">
             Planificación de jornadas, comidas incluidas e insumos.
           </p>
         </div>
+      </div>
 
-        <!-- CARRUSEL DE DÍAS (Envuelto en col-12) -->
-        <div class="col-12 mb-4">
-          <!-- Eliminado el style hardcodeado. Usamos w-full de PrimeFlex -->
-          <div class="flex align-items-center gap-3 overflow-x-auto p-3 border-1 surface-border border-round surface-ground w-full">
-            @for (dia of listaCompletaDias(); track dia.diaItinerario; let last = $last) {
-              <!-- Agregado flex-shrink-0 para que las tarjetas no se aplasten -->
-              <div
-                (click)="seleccionarDia(dia.diaItinerario)"
-                class="flex flex-column align-items-center justify-content-center border-round cursor-pointer transition-colors transition-duration-150 flex-shrink-0"
-                [class.bg-primary]="diaActivo() === dia.diaItinerario"
-                [class.border-1]="diaActivo() !== dia.diaItinerario"
-                [class.surface-border]="diaActivo() !== dia.diaItinerario"
-                [class.surface-card]="diaActivo() !== dia.diaItinerario"
-                [class.hover:surface-100]="diaActivo() !== dia.diaItinerario"
-                style="width: 80px; height: 80px"
-              >
-                <span
-                  class="text-xs font-bold mb-1"
-                  [class.text-white]="diaActivo() === dia.diaItinerario"
-                  [class.text-500]="diaActivo() !== dia.diaItinerario"
-                  >DÍA</span
-                >
-                <span
-                  class="text-3xl font-bold"
-                  [class.text-white]="diaActivo() === dia.diaItinerario"
-                  [class.text-900]="diaActivo() !== dia.diaItinerario"
-                  >{{ dia.diaItinerario }}</span
-                >
-              </div>
-            }
+      <!-- ========================================== -->
+      <!-- CARRUSEL DE DÍAS (Tarjetas Cuadradas)      -->
+      <!-- ========================================== -->
+      <div
+        class="flex align-items-center gap-3 mb-5 overflow-x-auto p-3 border-1 surface-border border-round surface-ground"
+        style="width: 0; min-width: 100%"
+      >
+        @for (dia of listaCompletaDias(); track dia.diaItinerario; let last = $last) {
+          <!-- Tarjeta de Día (Ahora cuadrada: 80x80) -->
+          <div
+            (click)="seleccionarDia(dia.diaItinerario)"
+            class="flex flex-column align-items-center justify-content-center border-round cursor-pointer transition-colors transition-duration-150 flex-shrink-0"
+            [class.bg-primary]="diaActivo() === dia.diaItinerario"
+            [class.border-1]="diaActivo() !== dia.diaItinerario"
+            [class.surface-border]="diaActivo() !== dia.diaItinerario"
+            [class.surface-card]="diaActivo() !== dia.diaItinerario"
+            [class.hover:surface-100]="diaActivo() !== dia.diaItinerario"
+            style="width: 80px; height: 80px"
+          >
+            <span
+              class="text-xs font-bold mb-1"
+              [class.text-white]="diaActivo() === dia.diaItinerario"
+              [class.text-500]="diaActivo() !== dia.diaItinerario"
+              >DÍA</span
+            >
+            <span
+              class="text-3xl font-bold"
+              [class.text-white]="diaActivo() === dia.diaItinerario"
+              [class.text-900]="diaActivo() !== dia.diaItinerario"
+              >{{ dia.diaItinerario }}</span
+            >
           </div>
-        </div>
+        }
+      </div>
 
+      <!-- ========================================== -->
+      <!-- CONTENEDOR DE DOS COLUMNAS                 -->
+      <!-- ========================================== -->
+      <div class="grid">
         <!-- COLUMNA IZQUIERDA: Ficha Operativa -->
-        <div class="col-12 md:col-5">
+        <div class="col-12 md:col-5" style="min-width: 0">
+         
           <div class="border-1 surface-border border-round p-3 h-full surface-card">
-            <div class="flex justify-content-between align-items-center mb-4 border-bottom-1 surface-border pb-2">
+            <!-- Título y Botón Eliminar -->
+            <div
+              class="flex justify-content-between align-items-center mb-4 border-bottom-1 surface-border pb-2"
+            >
               <h4 class="m-0 text-primary">Ficha Operativa - Día {{ diaActivo() }}</h4>
             </div>
 
@@ -179,19 +188,23 @@
         </div>
 
         <!-- COLUMNA DERECHA: Insumos -->
-        <div class="col-12 md:col-7">
+        <div class="col-12 md:col-7" style="min-width: 0">
           <div class="border-1 surface-border border-round p-3 h-full surface-card">
-            <div class="flex justify-content-between align-items-center mb-4 border-bottom-1 surface-border pb-2">
+            <div
+              class="flex justify-content-between align-items-center mb-4 border-bottom-1 surface-border pb-2"
+            >
               <div>
                 <h4 class="m-0 text-primary mb-1">Insumos y Servicios Operativos</h4>
                 <span class="text-sm text-500">Recursos requeridos para la ejecución del día</span>
               </div>
             </div>
             <app-grd-prd0006 [idItinerario]="idItinerarioActivo()"></app-grd-prd0006>
+
+            <!-- Tabla de PrimeNG (Modo Edición en Línea) -->
           </div>
         </div>
-
       </div>
+       </div>
     </p-panel>
   </form>
 </div>
