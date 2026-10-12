@@ -97,36 +97,6 @@
         >
           <div class="grid">
             <!-- ======================= -->
-            <!-- FILA 1 -->
-            <!-- ======================= -->
-            <div class="col-12 md:col-6">
-              <div class="field mb-1">
-                <label for="codigoAgencia"> Código agencia <span class="asterisco">*</span></label>
-                <input
-                  id="codigoAgencia"
-                  type="text"
-                  pInputText
-                  class="w-full"
-                  formControlName="codigoAgencia"
-                />
-              </div>
-            </div>
-            <div class="col-12 md:col-6">
-              <div class="field mb-1">
-                <label>Estado</label>
-                <p-select
-                  class="w-full"
-                  [options]="estado"
-                  [readonly]="true"
-                  formControlName="estadoReserva"
-                  pTooltip="Estado de la reserva"
-                  tooltipPosition="bottom"
-                  optionLabel="etiqueta"
-                  optionValue="codigo"
-                ></p-select>
-              </div>
-            </div>
-            <!-- ======================= -->
             <!-- FILA 2 -->
             <!-- ======================= -->
             <div class="col-12 md:col-6">
@@ -172,6 +142,36 @@
                   [forceSelection]="true"
                 >
                 </p-autocomplete>
+              </div>
+            </div>
+            <!-- ======================= -->
+            <!-- FILA 1 -->
+            <!-- ======================= -->
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label for="codigoAgencia"> Código agencia <span class="asterisco">*</span></label>
+                <input
+                  id="codigoAgencia"
+                  type="text"
+                  pInputText
+                  class="w-full"
+                  formControlName="codigoAgencia"
+                />
+              </div>
+            </div>
+            <div class="col-12 md:col-6">
+              <div class="field mb-1">
+                <label>Estado</label>
+                <p-select
+                  class="w-full"
+                  [options]="estado"
+                  [readonly]="true"
+                  formControlName="estadoReserva"
+                  pTooltip="Estado de la reserva"
+                  tooltipPosition="bottom"
+                  optionLabel="etiqueta"
+                  optionValue="codigo"
+                ></p-select>
               </div>
             </div>
             <!-- ======================= -->

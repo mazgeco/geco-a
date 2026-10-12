@@ -1,6 +1,6 @@
 <p-toast />
 <p-confirmdialog />
-<div class="col-12">
+<div class="col-12 contenedor-detalles">
   <p-toolbar>
     <ng-template #start>
       <p-button
@@ -86,11 +86,11 @@
       <tr>
         <th style="width: 5%"></th>
         <th style="width: 25%">Producto</th>
-        <th style="width: 10%">Fecha inicio</th>
-        <th style="width: 10%">Fecha fin</th>
-        <th style="width: 10%">Cantidad</th>
-        <th style="width: 10%">Precio U.</th>
-        <th style="width: 10%">%Dscto.</th>
+        <th style="width: 10%" class="col-detalle">Fecha inicio</th>
+        <th style="width: 10%" class="col-detalle">Fecha fin</th>
+        <th style="width: 10%" class="col-detalle">Cantidad</th>
+        <th style="width: 10%" class="col-detalle">Precio U.</th>
+        <th style="width: 10%" class="col-detalle">%Dscto.</th>
         <th style="width: 10%">Subtotal</th>
         <th style="width: 10%"></th>
       </tr>
@@ -107,23 +107,23 @@
           {{ rowData.nombreProducto }}
         </td>
         <!-- FECHA INICIO -->
-        <td>
+        <td class="col-detalle">
           {{ rowData.fechaInicio | date: 'yyyy-MM-dd' }}
         </td>
         <!-- FECHA FIN -->
-        <td>
+        <td class="col-detalle">
           {{ rowData.fechaFin | date: 'yyyy-MM-dd' }}
         </td>
         <!-- CANTIDAD -->
-        <td class="text-right">
+        <td class="text-right col-detalle">
           {{ rowData.cantidadTotal ?? 0 }}
         </td>
         <!-- PRECIO UNITARIO -->
-        <td class="text-right">
+        <td class="text-right col-detalle">
           {{ rowData.precioUnitario ?? 0 | number: '1.2-2' }}
         </td>
         <!-- %DSCTO -->
-        <td class="text-right">
+        <td class="text-right col-detalle">
           {{ rowData.porcentajeDescuento ?? 0 | number: '1.2-2' }}
         </td>
         <!-- SUBTOTAL -->
@@ -155,12 +155,20 @@
               (click)="eliminarFila(rowData)"
             ></button>
           }
-          @if(!editing && rowData.idDetalleReserva){
-            <button pButton type="button" icon="pi pi-map" text rounded
-              [severity]="itinerarioAbierto()===rowData._rowId?'info':'secondary'"
-              pTooltip="Itinerario e insumos" aria-label="Ver itinerario e insumos"
-              [attr.aria-expanded]="itinerarioAbierto()===rowData._rowId"
-              [disabled]="guardando()[rowData._rowId]" (click)="verItinerario(rowData)"></button>
+          @if (!editing && rowData.idDetalleReserva) {
+            <button
+              pButton
+              type="button"
+              icon="pi pi-map"
+              text
+              rounded
+              [severity]="itinerarioAbierto() === rowData._rowId ? 'info' : 'secondary'"
+              pTooltip="Itinerario e insumos"
+              aria-label="Ver itinerario e insumos"
+              [attr.aria-expanded]="itinerarioAbierto() === rowData._rowId"
+              [disabled]="guardando()[rowData._rowId]"
+              (click)="verItinerario(rowData)"
+            ></button>
           }
           <!-- GUARDAR / CANCELAR -->
           @if (editing) {
@@ -172,7 +180,12 @@
               rounded
               severity="success"
               class="mr-1"
-              [disabled]="calculando()[rowData._rowId] || guardando()[rowData._rowId] || errorCalculo()[rowData._rowId] || !rowData.idProducto"
+              [disabled]="
+                calculando()[rowData._rowId] ||
+                guardando()[rowData._rowId] ||
+                errorCalculo()[rowData._rowId] ||
+                !rowData.idProducto
+              "
               (click)="saveRow(rowData)"
             ></button>
             <button
@@ -188,9 +201,16 @@
           }
         </td>
       </tr>
-      @if(itinerarioAbierto()===rowData._rowId && !editing){
-        <tr><td colspan="9"><app-win-res0114 [idDetalleReserva]="rowData.idDetalleReserva"
-          [nombreProducto]="rowData.nombreProducto || ''" (modificado)="actualizaDesdeItinerario(rowData)" /></td></tr>
+      @if (itinerarioAbierto() === rowData._rowId && !editing) {
+        <tr>
+          <td colspan="9">
+            <app-win-res0114
+              [idDetalleReserva]="rowData.idDetalleReserva"
+              [nombreProducto]="rowData.nombreProducto || ''"
+              (modificado)="actualizaDesdeItinerario(rowData)"
+            />
+          </td>
+        </tr>
       }
       @if (editing) {
         <tr>
@@ -203,39 +223,47 @@
                 @if (guardando()[rowData._rowId]) {
                   <span><i class="pi pi-spin pi-spinner mr-1"></i>Guardando...</span>
                 }
-                <p-button icon="pi pi-refresh" label="Recalcular" size="small"
+                <p-button
+                  icon="pi pi-refresh"
+                  label="Recalcular"
+                  size="small"
                   [disabled]="!rowData.idProducto || guardando()[rowData._rowId]"
-                  (onClick)="recalcular(rowData, 'VALORES', true)" />
+                  (onClick)="recalcular(rowData, 'VALORES', true)"
+                />
               </div>
               <p-panel class="col-12" header="General">
                 <div class="field mb-1">
                   <label>Producto <span class="asterisco">*</span></label>
 
-                    <p-autocomplete
-                      class="w-full"
-                      [fluid]="true"
-                      [(ngModel)]="rowData._producto"
-                      [ngModelOptions]="{standalone: true}"
-                      [suggestions]="productos()"
-                      (completeMethod)="buscarProducto($event)"
-                      (onSelect)="seleccionarProducto($event, rowData)"
-                      optionLabel="nombreCorto"
-                      [forceSelection]="true"
-                      [showClear]="true"
-                      (onClear)="limpiarProducto(rowData)"
-                      (onBlur)="validarProducto(rowData)"
-                      [disabled]="guardando()[rowData._rowId]"
-                      [minLength]="3"
-                    >
-                    </p-autocomplete>
-
+                  <p-autocomplete
+                    class="w-full"
+                    [fluid]="true"
+                    appendTo="body"
+                    [(ngModel)]="rowData._producto"
+                    [ngModelOptions]="{ standalone: true }"
+                    [suggestions]="productos()"
+                    (completeMethod)="buscarProducto($event)"
+                    (onSelect)="seleccionarProducto($event, rowData)"
+                    optionLabel="nombreCorto"
+                    [forceSelection]="true"
+                    [showClear]="true"
+                    (onClear)="limpiarProducto(rowData)"
+                    (onBlur)="validarProducto(rowData)"
+                    [disabled]="guardando()[rowData._rowId]"
+                    [minLength]="3"
+                  >
+                  </p-autocomplete>
                 </div>
                 <div class="field mb-1">
                   <label>Precio producto</label>
                   <input
                     pInputText
                     class="w-full"
-                    [value]="rowData._calculo?.nombrePrecioProducto || rowData.idProductoXPrecioProducto || ''"
+                    [value]="
+                      rowData._calculo?.nombrePrecioProducto ||
+                      rowData.idProductoXPrecioProducto ||
+                      ''
+                    "
                     [readOnly]="true"
                     [name]="'idProductoXPrecioProducto' + rowData.idDetalleReserva"
                   />
@@ -304,7 +332,11 @@
                             hourFormat="24"
                             [(ngModel)]="rowData.fechaFin"
                             (ngModelChange)="recalcular(rowData, 'FECHAS')"
-                            [disabled]="guardando()[rowData._rowId] || ((rowData._calculo?.diasItinerario ?? 0) > 0 && rowData._calculo?.cortaItinerario === 'N')"
+                            [disabled]="
+                              guardando()[rowData._rowId] ||
+                              ((rowData._calculo?.diasItinerario ?? 0) > 0 &&
+                                rowData._calculo?.cortaItinerario === 'N')
+                            "
                             [name]="'fechaFin' + rowData.idDetalleReserva"
                           ></p-datepicker>
                         </div>
@@ -329,7 +361,9 @@
                           <input
                             pInputText
                             class="w-full"
-                            [value]="rowData._calculo?.nombreTemporada || rowData.idPrecioXTemporada || ''"
+                            [value]="
+                              rowData._calculo?.nombreTemporada || rowData.idPrecioXTemporada || ''
+                            "
                             [readOnly]="true"
                             [name]="'idPrecioXTemporada' + rowData.idDetalleReserva"
                           />
@@ -343,8 +377,8 @@
                       <p-inputnumber
                         class="w-full"
                         [(ngModel)]="rowData.comisionFija"
-                            (ngModelChange)="recalcular(rowData, 'VALORES')"
-                            [disabled]="guardando()[rowData._rowId]"
+                        (ngModelChange)="recalcular(rowData, 'VALORES')"
+                        [disabled]="guardando()[rowData._rowId]"
                         [name]="'comisionFija' + rowData.idDetalleReserva"
                       />
                     </div>
@@ -353,8 +387,8 @@
                       <p-inputnumber
                         class="w-full"
                         [(ngModel)]="rowData.porcentajeUtilidad"
-                            (ngModelChange)="recalcular(rowData, 'VALORES')"
-                            [disabled]="guardando()[rowData._rowId]"
+                        (ngModelChange)="recalcular(rowData, 'VALORES')"
+                        [disabled]="guardando()[rowData._rowId]"
                         [name]="'porcentajeUtilidad' + rowData.idDetalleReserva"
                       />
                     </div>
@@ -368,12 +402,16 @@
                       />
                     </div>
                     <div class="field mb-1">
-                      <label>{{ rowData._calculo?.esEspacio === 'S' ? 'Número de espacios' : 'Cantidad parcial' }}</label>
+                      <label>{{
+                        rowData._calculo?.esEspacio === 'S'
+                          ? 'Número de espacios'
+                          : 'Cantidad parcial'
+                      }}</label>
                       <p-inputnumber
                         class="w-full"
                         [(ngModel)]="rowData.cantidadParcial"
-                            (ngModelChange)="recalcular(rowData, 'VALORES')"
-                            [disabled]="guardando()[rowData._rowId]"
+                        (ngModelChange)="recalcular(rowData, 'VALORES')"
+                        [disabled]="guardando()[rowData._rowId]"
                         [name]="'cantidadParcial' + rowData.idDetalleReserva"
                       />
                     </div>
@@ -445,8 +483,16 @@
     <!-- FOOTER -->
     <ng-template pTemplate="paginatorleft"> {{ filas().length }} ítems </ng-template>
     <ng-template #footer>
-      <tr>
+      <tr class="footer-completo">
         <td colspan="7" class="text-right font-bold">TOTAL:</td>
+        <td class="font-bold text-right">
+          {{ totalPrecio | number: '1.2-2' }}
+        </td>
+        <td></td>
+      </tr>
+
+      <tr class="footer-reducido">
+        <td colspan="2" class="text-right font-bold">TOTAL:</td>
         <td class="font-bold text-right">
           {{ totalPrecio | number: '1.2-2' }}
         </td>

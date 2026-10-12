@@ -95,8 +95,9 @@
               <p-autocomplete
                 class="w-full"
                 [fluid]="true"
+                appendTo="body"
                 [(ngModel)]="rowData.razonSocial"
-                [ngModelOptions]="{standalone: true}"
+                [ngModelOptions]="{ standalone: true }"
                 [suggestions]="proveedores()"
                 (completeMethod)="buscarProveedores($event)"
                 (onSelect)="seleccionarProveedor($event, rowData)"

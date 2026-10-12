@@ -124,7 +124,7 @@ export class FrmRes0003 implements OnInit {
       nombrePersona: [null as string | null],
       nombrePersonaContacto: [null as string | null],
       estadoReserva: [EstadoReserva.ING],
-      codigoAgencia: [null as string | null, Validators.required],
+      codigoAgencia: [null as string | null],
       observacionReserva: [null as string | null],
       observacionPrivada: [null as string | null],
       fechaGeneracion: [new Date() as Date | null, Validators.required],
@@ -179,7 +179,7 @@ export class FrmRes0003 implements OnInit {
       return;
     }
 
-    this.personasService.buscaPersonaParaCrearUsuario(nombre).subscribe({
+    this.personasService.buscaPersona(nombre).subscribe({
       next: (resp) => {
         this.personas.set(resp.data);
       },

@@ -32,6 +32,7 @@ type FilaReserva = FilaTabla<DetalleReserva> & {
   imports: [...PRIMENG_MODULES, DatePipe, DecimalPipe, WinRes0114],
   providers: [ConfirmationService],
   templateUrl: './grd-res0021.html',
+  styleUrl: './grd-res0021.css'
 })
 export class GrdRes0021 implements OnChanges, OnDestroy {
   //LLAMADA AL ID Master

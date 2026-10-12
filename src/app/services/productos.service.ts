@@ -181,7 +181,7 @@ grabaItinerario(itinerario: DiaItinerario): Observable<SavedRow> {
 
   // Asegúrate de importar Observable desde 'rxjs'
   eliminarItinerario(idItinerario: number, idUsuario: string): Observable<any> {
-    const url = `${this.apiUrl}productos/${idUsuario}/itinerarios?idItinerario=${idItinerario}`;
+    const url = `${this.apiUrl}productos/${this.authService.idUsuario()}/itinerarios?idItinerario=${idItinerario}`;
     return this.http.delete(url);
   }
 
