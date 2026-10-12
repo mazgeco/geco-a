@@ -382,7 +382,7 @@ cargarTipoProducto(): Observable<TipoProductoResponse> {
         }
       }
 
-    grabaTarifa(Tarifa: TarifaFila, idUsuario: string) {
+    grabaTarifa(Tarifa: TarifaFila) {
     if (Tarifa.idPrecioProductoXTemporada === 0) {
        //Tarifa.idPrecioProductoXTemporada = null;
       // POST (Nuevo): Pasamos el idUsuario en la URL

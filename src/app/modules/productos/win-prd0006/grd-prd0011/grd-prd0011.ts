@@ -160,7 +160,7 @@ export class GrdPrd0011 implements OnInit {
    // CREATE / UPDATE
     saveData(Tarifa: TarifaFila): void {
       // 1. Agregamos el 'ADMIN' quemado temporalmente
-      this.productosService.grabaTarifa(Tarifa, 'mparraga').subscribe({
+      this.productosService.grabaTarifa(Tarifa).subscribe({
         next: (resp) => {
           console.log('🔴 RESPUESTA DEL BACKEND AL GRABAR TARIFA:', resp);
           // 2. Usamos el nombre correcto de la llave primaria
