@@ -64,6 +64,7 @@ export interface Insumos {
   idUbicacionExistencia?: number | null;
   idUnidadMedida?: string | null;
   idProveedor?: number | null;
+  nombreTipoInsumo?: string | null;
   porcionXMedida?: number | null;
   descripcionInsumo?: string | null;
   costoPresupuestado?: number | null;

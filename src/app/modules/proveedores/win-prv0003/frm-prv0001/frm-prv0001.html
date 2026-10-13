@@ -42,10 +42,10 @@
       </ng-template>
 
       <ng-template #end>
-        @if (proveedorMessage()?.visible) {
+        @if (insumoMessage()?.visible) {
           <div class="message-container">
-            <p-message [severity]="proveedorMessage()!.severity" [icon]="proveedorMessage()!.icon">
-              {{ proveedorMessage()!.text }}
+            <p-message [severity]="insumoMessage()!.severity" [icon]="insumoMessage()!.icon">
+              {{ insumoMessage()!.text }}
             </p-message>
           </div>
         }
@@ -55,30 +55,26 @@
     <form id="frmPrv0001" class="grid m-0" [formGroup]="frmPrv0001">
       <p-panel class="col-12">
         <div class="grid">
-          <div class="col-12 md:col-6">
-            <div class="field mb-1">
-              <label>Insumo</label>
-              <input pInputText class="w-full" formControlName="idInsumo" [readOnly]="true" />
-            </div>
-          </div>
-          <div class="col-12 md:col-6">
+          <div class="col-12">
             <div class="field mb-1">
               <label>Tipo de Insumo<span class="asterisco">*</span></label>
-              <p-select
+              <p-autocomplete
                 class="w-full"
-                [options]="tipoInsumo()"
-                formControlName="idTipoInsumo"
-                pTooltip="Tipo de insumo"
-                tooltipPosition="bottom"
-                [filter]="true"
+                [fluid]="true"
+                [readonly]="readOnlyTipoInsumo()"
+                formControlName="nombreTipoInsumo"
+                [suggestions]="tipoInsumo()"
+                (completeMethod)="buscarTipoInsumo($event)"
+                (onSelect)="seleccionarTipoInsumo($event)"
                 optionLabel="descripcionTipoInsumo"
-                optionValue="idTipoInsumo"
-              ></p-select>
+                [minLength]="3"
+              >
+              </p-autocomplete>
             </div>
           </div>
-          <div class="col-12 md:col-6">
+          <div class="col-12">
             <div class="field mb-1">
-              <label>Descripción Insumo<span class="asterisco">*</span></label>
+              <label>Nombre Insumo<span class="asterisco">*</span></label>
               <input pInputText class="w-full" formControlName="descripcionInsumo" />
             </div>
           </div>
@@ -172,7 +168,7 @@
               <label>Dar Anticipo</label>
               <p-select
                 class="w-full"
-                [options]="darAnticipo()"
+                [options]="opcionSN()"
                 formControlName="darAnticipo"
                 pTooltip="Dar Anticipo"
                 tooltipPosition="bottom"
@@ -183,8 +179,22 @@
           </div>
           <div class="col-12 md:col-6">
             <div class="field mb-1">
+              <label>Caja chica</label>
+              <p-select
+                class="w-full"
+                [options]="opcionSN()"
+                formControlName="cajaChica"
+                pTooltip="Caja chica"
+                tooltipPosition="bottom"
+                optionLabel="etiqueta"
+                optionValue="codigo"
+              ></p-select>
+            </div>
+          </div>
+          <div class="col-12 md:col-6">
+            <div class="field mb-1">
               <label>Costo promedio</label>
-              <input pInputText class="w-full" formControlName="costoPromedio" />
+              <input pInputText class="w-full" formControlName="costoPromedio" [readOnly]="true" />
             </div>
           </div>
           <div class="col-12 md:col-6">
@@ -193,6 +203,7 @@
               <p-inputNumber
                 inputId="porcionXMedida"
                 class="w-full"
+                [fluid]="true"
                 formControlName="porcionXMedida"
                 [min]="1"
                 [max]="100"
@@ -201,16 +212,27 @@
               </p-inputNumber>
             </div>
           </div>
+          <div class="col-12">
+            <div class="field mb-1">
+              <label for="observacionInsumo">Observaciones</label>
+              <textarea
+                class="w-full"
+                rows="3"
+                pTextarea
+                formControlName="observacionInsumo"
+              ></textarea>
+            </div>
+          </div>
         </div>
       </p-panel>
     </form>
   </div>
   <div class="col-12 md:col-6">
     <p-panel>
-        <app-grd-prv0004 [idInsumo]="idInsumo"></app-grd-prv0004>
+      <app-grd-prv0004 [idInsumo]="idInsumo"></app-grd-prv0004>
     </p-panel>
     <p-panel>
       <app-grd-prv0002 [idInsumo]="idInsumo"></app-grd-prv0002>
     </p-panel>
-  </div>  
+  </div>
 </div>

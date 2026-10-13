@@ -20,6 +20,7 @@ import {
   ListaPrecioInsumoResponse,
   ListaImpuestoXInsumoResponse,
   ImpuestoXInsumo,
+  Insumos,
 } from '../interfaces/proveedores.interfaces';
 import { GraficosResponse } from '../interfaces/general.interface';
 import { AuthService } from './auth.service';
@@ -95,6 +96,22 @@ export class ProveedoresService {
   }
 
   //GRABA INSUMO
+  grabaInsumo(insumo: Insumos): Observable<SavedRow> {
+    if (insumo.idInsumo === 0) {
+      insumo.idInsumo = null;
+      return this.http.post<SavedRow>(
+        `${this.apiUrl}proveedores/${this.authService.idUsuario()}/insumos`,
+        insumo,
+      );
+    } else {
+      const params = new HttpParams().set('idInsumo', insumo.idInsumo!);
+      return this.http.put<SavedRow>(
+        `${this.apiUrl}proveedores/${this.authService.idUsuario()}/insumos`,
+        insumo,
+        { params },
+      );
+    }
+  }
 
   //BÚSQUEDA TIPO DE INSUMO
   buscaTipoInsumo(nombre: string): Observable<TipoInsumoResponse> {

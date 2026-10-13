@@ -5,9 +5,23 @@ import { Insumos, EstadoInsumo } from "../../../interfaces/proveedores.interface
    providedIn: 'root' 
   })
 export class StateService {
-  proveedor = signal<Insumos | null>(null);
+  insumo = signal<Insumos | null>(null);
 
-  estadoInsumo = computed(() => 
-    this.proveedor()?.estadoInsumo === EstadoInsumo.A
+  codigo = computed(() =>
+    this.insumo()?.idInsumo ?? 0
   );
+
+  nombre = computed(() =>
+    this.insumo()?.descripcionInsumo ?? ''
+  );
+
+  estado = computed(() =>
+    this.insumo()?.estadoInsumo === 'A' ? true : false
+  );
+
+  estadoNombre = computed(() => {
+    return this.insumo()?.estadoInsumo === "A" ? "Activo" : "Inactivo"
+  }
+  );
+
 }

@@ -58,12 +58,10 @@ export class FrmPrv0001 implements OnInit {
   //VARIABLES PARA EL MANEJO DE LOS MENSAJES
   messageService = inject(MessageService);
   statusMessages = signal<Record<string, StatusMessage>>({});
-  proveedorMessage = computed(() =>
-    this.messageService.obtener(this.statusMessages, 'msgFrmPrv0002'),
-  );
+  insumoMessage = computed(() => this.messageService.obtener(this.statusMessages, 'msgFrmPrv0001'));
 
   //DECLARACIÓN DE VARIABLES
-  loadingInsumo = signal(true);
+  loadingInsumo = signal(false);
   EstadoInsumo = signal<string>('INACTIVO');
   esActivo = signal<boolean>(false);
   tipoInsumo = signal<TipoInsumo[]>([]);
@@ -98,7 +96,7 @@ export class FrmPrv0001 implements OnInit {
       etiqueta: 'General',
     },
   ]);
-  darAnticipo = signal<Combo[]>([
+  opcionSN = signal<Combo[]>([
     {
       codigo: 'S',
       etiqueta: 'Si',
@@ -155,6 +153,7 @@ export class FrmPrv0001 implements OnInit {
       idTipoInsumo: [null as number | null],
       idTipoPresentacion: [null as number | null],
       idUnidadMedida: [null as string | null],
+      nombreTipoInsumo: [null as string | null],
       porcionXMedida: [1 as number | null],
       descripcionInsumo: ['' as string | null],
       costoPresupuestado: [0 as number | null],
@@ -164,6 +163,7 @@ export class FrmPrv0001 implements OnInit {
       publicoPrivado: ['P' as string | null],
       tipoPrecioInsumo: ['L' as string | null],
       observacionInsumo: ['' as string | null],
+      cajaChica: ['N' as string | null],
       tipoBien: ['B' as string | null],
       darAnticipo: ['N' as string | null],
       idUsuarioCrea: [null as string | null],
@@ -179,6 +179,20 @@ export class FrmPrv0001 implements OnInit {
   ngOnInit(): void {
     this.cargaCombos();
     this.cargaDatos();
+    this.frmPrv0001.valueChanges.pipe(debounceTime(300)).subscribe((insumo) => {
+      //Si la insumo se está cargando no ejecuta
+      if (this.loadingInsumo()) {
+        return;
+      }
+      if (
+        insumo.idTipoInsumo !== 0 &&
+        insumo.idTipoInsumo !== null &&
+        insumo.descripcionInsumo !== '' &&
+        insumo.descripcionInsumo !== null
+      ) {
+        this.saveForm(insumo as Insumos);
+      }
+    });
   }
 
   cargaDatos(): void {
@@ -188,8 +202,14 @@ export class FrmPrv0001 implements OnInit {
         next: (resp) => {
           this.frmPrv0001.reset(resp.data);
           this.loadingInsumo.set(false);
-          this.stateService.proveedor.set(resp.data);
+          this.stateService.insumo.set(resp.data);
           this.esActivo.set(resp.data.estadoInsumo === 'A' ? true : false);
+          this.messageService.mostrar(
+            this.statusMessages,
+            'msgFrmPrv0001',
+            'success',
+            'Datos cargados correctamente.',
+          );
         },
         error: (err) => {
           this.toastService.showMessage(
@@ -217,5 +237,66 @@ export class FrmPrv0001 implements OnInit {
         );
       },
     });
+  }
+
+  saveForm(insumo: Insumos): void {
+    this.proveedoresService.grabaInsumo(insumo)?.subscribe({
+      next: (resp) => {
+        this.idInsumo = resp.idSecuencial!;
+        this.frmPrv0001.patchValue({ idInsumo: resp.idSecuencial }, { emitEvent: false });
+        insumo.idInsumo = resp.idSecuencial;
+        this.stateService.insumo.set(insumo);
+        this.messageService.mostrar(
+          this.statusMessages,
+          'msgFrmPrv0001',
+          'success',
+          'Dato grabado correctamente.',
+        );
+      },
+      error: (err) => {
+        this.toastService.showMessage(
+          'error',
+          'Error',
+          'Ha ocurrido un error al grabar: ' + err.error.message,
+        );
+      },
+    });
+  }
+
+  buscarTipoInsumo(event: any): void {
+    const termino = event.query.trim();
+    if (termino.length < 3) {
+      this.tipoInsumo.set([]);
+      return;
+    }
+
+    // Llama a tu servicio de personas (ajusta el nombre del servicio)
+    this.proveedoresService.buscaTipoInsumo(termino).subscribe({
+      next: (resp) => {
+        this.tipoInsumo.set(resp.data);
+      },
+      error: (err) => {
+        this.toastService.showMessage('error', 'Error', 'No se pudo buscar la persona');
+      },
+    });
+  }
+
+  // 3. Método para capturar la selección y llenar el formulario
+  seleccionarTipoInsumo(event: any): void {
+    // Como quitamos optionValue en el HTML, event.value trae el objeto completo de la persona
+    const tipoInsumo = event.value;
+
+    // Autocompletas automáticamente otros campos del formulario basándote en la persona elegida
+    this.frmPrv0001.patchValue(
+      {
+        idTipoInsumo: tipoInsumo.idTipoInsumo,
+        nombreTipoInsumo: tipoInsumo.descripcionTipoInsumo
+      },
+      { emitEvent: false },
+    );
+  }
+
+  readOnlyTipoInsumo(): boolean {
+    return this.idInsumo !== 0 && this.idInsumo !== null;
   }
 }

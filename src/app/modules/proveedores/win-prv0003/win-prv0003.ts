@@ -13,8 +13,7 @@ import { FrmPrv0001 } from './frm-prv0001/frm-prv0001';
   selector: 'app-win-prv0003',
   imports: [...PRIMENG_MODULES, FrmPrv0001],
   providers: [ConfirmationService],
-  templateUrl: './win-prv0003.html',
-  styleUrl: './win-prv0003.css',
+  templateUrl: './win-prv0003.html'
 })
 
 export class WinPrv0003 implements OnInit {
@@ -24,6 +23,7 @@ export class WinPrv0003 implements OnInit {
   stateService = inject(StateService);
 
   ngOnInit(): void {
+    this.stateService.insumo.set(null);
     //Toma el dato enviado por el router para colocar en el id principal
     this.idInsumo.set(Number(this.route.snapshot.paramMap.get('id')));
     this.route.paramMap.subscribe(params => {

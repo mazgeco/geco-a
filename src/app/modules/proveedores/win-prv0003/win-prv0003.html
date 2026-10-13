@@ -1,1 +1,22 @@
+<p-toast />
+<p-confirmdialog />
+
+<p-toolbar>
+  <ng-template #start>
+    <label class="font-bold">
+      COD. {{ stateService.codigo() }}
+    </label>
+  </ng-template>
+  <ng-template #center>
+    <label class="font-bold topName">
+      {{ stateService.nombre() }}
+    </label>
+  </ng-template>
+  <ng-template #end>
+    <label class="font-bold" [style.color]="stateService.estado() ? '#4caf50' : '#f44336'">
+      {{ stateService.estadoNombre() }}
+    </label>
+  </ng-template>
+</p-toolbar>
+
 <app-frm-prv0001 [idInsumo]="idInsumo()" ></app-frm-prv0001>
